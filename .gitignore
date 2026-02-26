@@ -1,14 +1,7 @@
-# Data Files (Too large for Git)
-data/*.csv
-data/*.txt
-data/processed/
-data/raw/
+# Data Files
+data/nm2.xlsx.csv
 
-# Model Binaries
-models/*.joblib
-models/*.pkl
-
-# Python
+# Python & Environment
 __pycache__/
 *.py[cod]
 *$py.class
@@ -16,11 +9,11 @@ venv/
 env/
 .env
 
-# Reports & Logs
-reports/*.json
-reports/*.png
-reports/*.html
-.system_generated/
+# Workspace artifacts (permitted smaller files)
+#!data/*.csv
+#!data/*.txt
+#!models/*.joblib
+#!reports/*
 
 # OS
 .DS_Store

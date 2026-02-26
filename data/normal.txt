@@ -1,0 +1,103 @@
+Categories of Normal Traffic (50 Categories)
+-------------------------------------------
+1. Homepage Access: GET /
+2. Static Asset (CSS): GET /static/css/style.css
+3. Static Asset (JS): GET /assets/js/bundle.min.js
+4. Static Asset (Image): GET /images/logo.png
+5. Static Asset (Favicon): GET /favicon.ico
+6. Robots.txt: GET /robots.txt
+7. Sitemap: GET /sitemap.xml
+8. Health Check: GET /health
+9. API Ping: GET /api/v1/ping
+10. Login Page Load: GET /login
+11. Search Query (Simple): GET /search?q=security
+12. Search Query (Spaces): GET /search?q=machine+learning
+13. Search Query (Symbols): GET /search?q=C%23
+14. Search Query (Quote): GET /search?q=O'Reilly
+15. Search Query (Math): GET /search?q=1+1=2
+16. API GET (List Products): GET /api/v1/products
+17. API GET (Single Product): GET /api/v1/products/101
+18. API POST (Login): POST /api/v1/login (username/password)
+19. API POST (Submit Order): POST /api/v1/orders (JSON payload)
+20. API PUT (Update Profile): PUT /api/v1/profile (JSON payload)
+21. API PATCH (Update Setting): PATCH /api/v1/settings/theme
+22. API DELETE (Remove Item): DELETE /api/v1/cart/items/5
+23. Form Submit (Contact Us): POST /contact (name, email, message)
+24. Form Submit (Signup): POST /register (detailed user info)
+25. OAuth Auth Flow: GET /auth/google/callback
+26. Analytics Event: POST /collect?v=1&tid=UA-XXXXX
+27. Error Logging: POST /api/v1/logs/frontend (traceback)
+28. User Profile View: GET /user/profile
+29. Dashboard Page: GET /dashboard?view=summary&time=30d
+30. Settings Navigation: GET /settings/security
+31. Password Reset Request: POST /auth/password-reset-request
+32. Newsletter Subscription: POST /newsletter/subscribe
+33. Cart Add Item: POST /cart/add?product_id=99
+34. Checkout Page: GET /checkout/step1
+35. Order Success: GET /checkout/success?order_id=ord_123
+36. Webhook (GitHub): POST /webhooks/github (Push Event)
+37. Webhook (Stripe): POST /webhooks/stripe (Payment Success)
+38. HEAD Request (CDN): HEAD /assets/large-video.mp4
+39. OPTIONS Preflight (CORS): OPTIONS /api/v1/data
+40. Font Loading: GET /fonts/inter-bold.woff2
+41. Manifest Loading: GET /manifest.json
+42. i18n Localization: GET /locales/vi-VN.json
+43. GraphQL Query (User): POST /graphql (query { me { name } })
+44. Documentation Access: GET /docs/api/introduction
+45. Blog Article: GET /blog/future-of-ai-2026
+46. Comment Submission: POST /blog/comment (valid user text)
+47. Video Fragment: GET /stream/hls/chunk_001.ts
+48. Map Tile Request: GET /maps/v2/tile/10/512/324.png
+49. Admin Statistics: GET /admin/dashboard/users/active
+50. File Download (PDF): GET /downloads/guide-v2.pdf
+51. User Login (Multi-factor Auth Step): POST /auth/mfa/verify {"code": "123456"}
+52. File Upload (Profile Picture JPEG): POST /api/v1/user/avatar (multipart/form-data)
+53. File Upload (Document PDF): POST /api/v1/documents (binary stream)
+54. Search (Autocomplete API): GET /api/v1/search/suggest?q=secur
+55. Search (Filter by Category): GET /products?category=electronics&brand=apple
+56. Search (Sort by Price): GET /products?sort=price_desc&page=1
+57. API POST (Create Comment): POST /api/v1/posts/55/comments {"text": "Great article!"}
+58. API PUT (Update Avatar): PUT /api/v1/user/settings {"avatar_url": "https://img.com/u1.png"}
+59. API GET (Paginated Users List): GET /admin/users?limit=20&offset=40
+60. API GET (CSV Export Request): GET /admin/reports/sales.csv?year=2025
+61. Password Change (Current/New Password): POST /user/password-update {"old": "pass1", "new": "pass2"}
+62. Two-Factor Secret Setup: GET /user/mfa/setup-qr
+63. Newsletter Unsubscribe Link: GET /newsletter/unsubscribe?token=abc123def456
+64. Email Verification Link Click: GET /auth/verify-email?code=v987654321
+65. Invite Team Member Submit: POST /team/invite {"email": "colleague@work.com"}
+66. Project Creation (JSON naming): POST /api/v1/projects {"name": "Security Audit 2026"}
+67. Billing Address Update: PUT /billing/address {"street": "123 Main St", "city": "Hanoi"}
+68. Credit Card Tokenization (Stripe/Internal): POST /api/v1/payment/tokens {"card_last4": "4242"}
+69. Order History Search: GET /user/orders?status=shipped&from=2025-01-01
+70. Knowledge Base Search: GET /help/kb/search?query=how+to+reset+password
+71. API POST (Log Frontend Error): POST /logs/client {"error": "Uncaught TypeError", "stack": "..."}
+72. API POST (Metric Tracking): POST /analytics/metric {"event": "button_click", "label": "signup"}
+73. WebSocket Handshake (Normal): GET /ws/notifications (Upgrade: websocket)
+74. WebSocket Heartbeat (Ping): [Binary Frame] 0x89 (Ping)
+75. Resource Loading (SVG Icon): GET /static/icons/heart.svg
+76. Resource Loading (WebP Image): GET /images/hero-banner.webp
+77. Resource Loading (JSON Config): GET /config/app-settings.json
+78. i18n Change (Language Toggle): GET /api/v1/locale/set?lang=en
+79. Dark Mode Theme Toggle: POST /user/ui/theme {"mode": "dark"}
+80. User Notification Dismiss: DELETE /api/v1/notifications/1024
+81. In-App Message Read Receipt: PATCH /api/v1/messages/500 {"read": true}
+82. Video Playback Progress Sync: POST /api/v1/sync/video {"id": "v_123", "position": 450}
+83. Audio Stream Fragment Load: GET /stream/audio/segment_77.aac
+84. Map Zoom/Pan Coordinates: GET /api/v1/map/data?lat=21.0285&lng=105.8542&zoom=15
+85. Dashboard Widget Refresh: GET /api/v1/dashboard/widgets/sales-chart/data
+86. Report Generation (Polling status): GET /api/v1/tasks/rep_99/status
+87. Terms of Service Acceptance: POST /legal/tos/accept {"version": "2.1.0"}
+88. GDPR Consent Modal Submit: POST /privacy/consent {"analytics": true, "marketing": false}
+89. Site Search (Complex query with AND, OR): GET /search?q=machine+learning+NOT+python
+90. Product Review Submit (Text + Star rating): POST /reviews {"id": "p_50", "stars": 5, "comment": "Amazing quality!"}
+91. Wishlist Add Request: POST /wishlist/add {"item_id": "it_888"}
+92. Compare Products Modal Access: GET /products/compare?base=p1&target=p2
+93. Store Locator Search (Zip codes): GET /stores/find?zip=10001&distance=10
+94. Career Page (Job application submit): POST /careers/apply {"job_id": "eng_01", "name": "John Doe"}
+95. Support Ticket Attachments: GET /api/v1/support/tickets/404/attachments
+96. Live Chat Initiation: POST /chat/init {"user_id": "u_55", "topic": "billing"}
+97. RSS Feed Access: GET /feed/news.rss
+98. Podcast RSS Metadata: GET /podcasts/latest.xml
+99. E-book Kindle Delivery Request: POST /api/v1/deliver/kindle {"book_id": "b_772"}
+100. Logout Confirmation Access: GET /auth/logout/confirm
+101. Test: GET /homess

