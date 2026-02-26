@@ -101,3 +101,6 @@ Categories of Normal Traffic (50 Categories)
 99. E-book Kindle Delivery Request: POST /api/v1/deliver/kindle {"book_id": "b_772"}
 100. Logout Confirmation Access: GET /auth/logout/confirm
 101. Test: GET /homess
+102. Test2: GET /id?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzIzNTEwMzcsImlhdCI6MTc3MjA5MTgzNywidXNlciI6eyJzZXNzaW9uX2lkIjoiMDE5Yzk4ZTctOGFjMi03Mjc0LWFkM2EtMmRiNzFhZTYzZThlIiwic291cmNlIjoiQk8iLCJzdGFmZl9jb2RlIjoibGluaGxoMiIsInVzZXJfZW1haWwiOiJsaW5obGgyQHZucGF5LnZuIiwidXNlcl9mdWxsX25hbWUiOiJMaW5oIEzDqiBIw
+103. Test3: GET /?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzIxODE2MDMsImlhdCI6MTc3MTkyMjQwMywidXNlciI6eyJncm91cF9pZCI6IjAxOWMwZTZlLWI0YTctNzRjYS05MGNlLTUyY2M0Njg5MzZjZSIsImxlYWRlcl9pZCI6IjAxOWMwOWU0LTNmY2QtNzc2ZS05ZGUwLWFiZGYyZjI3ZTYwMyIsInNlc3Npb25faWQiOiIwMTljOGVjZS0zMTkyLTc4MjQtYTI1OS0zZDZmM2JhM2NkM
+104. Only slash: GET /ducbph {UA: curl}

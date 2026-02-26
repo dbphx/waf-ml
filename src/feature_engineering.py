@@ -20,12 +20,12 @@ class FeatureEngineer:
 
     def get_statistical_features(self, text_series):
         features = pd.DataFrame()
-        features['length'] = text_series.apply(len)
+        features['length'] = text_series.apply(len) / 1000.0
         
         def calc_entropy(text):
             if not text: return 0
             counts = pd.Series(list(text)).value_counts()
-            return entropy(counts)
+            return entropy(counts) / 10.0
         
         features['entropy'] = text_series.apply(calc_entropy)
         

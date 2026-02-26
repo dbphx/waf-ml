@@ -25,13 +25,11 @@ def train_model():
     X_val = fe.transform(val_df)
     y_val = val_df['label']
     
-    print("Training Random Forest model (Ultimate Precision)...")
-    # Using deeper trees and more estimators to handle standardized format nuance
-    model = RandomForestClassifier(
-        n_estimators=500,
-        max_depth=15,      # Shallow trees force generalizeable pattern matching
+    print("Training Logistic Regression model (Stable Sparse)...")
+    from sklearn.linear_model import LogisticRegression
+    model = LogisticRegression(
+        max_iter=1000,
         class_weight='balanced',
-        n_jobs=-1,
         random_state=42
     )
     

