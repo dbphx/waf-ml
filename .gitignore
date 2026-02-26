@@ -1,0 +1,27 @@
+# Data Files (Too large for Git)
+data/*.csv
+data/*.txt
+data/processed/
+data/raw/
+
+# Model Binaries
+models/*.joblib
+models/*.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Reports & Logs
+reports/*.json
+reports/*.png
+reports/*.html
+.system_generated/
+
+# OS
+.DS_Store
+Thumbs.db
