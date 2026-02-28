@@ -1,12 +1,29 @@
 import sys
 import os
 import json
-sys.path.append(os.path.join(os.path.dirname(__file__), 'logistic_regression'))
-from predict import HTTPAttackPredictor
+import argparse
 
 def main():
-    models_dir = "/Users/dmac/Desktop/ml/models/logistic_regression"
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', type=str, default='logistic_regression',
+                        choices=['logistic_regression', 'random_forest', 'xgboost'],
+                        help='Model folder to use for predictions')
+    args = parser.parse_args()
     
+    model_name = args.model
+    models_dir = f"/Users/dmac/Desktop/ml/models/{model_name}"
+    
+    # Add model source dir to path and import
+    model_src_dir = os.path.join(os.path.dirname(__file__), model_name)
+    if model_src_dir not in sys.path:
+        sys.path.insert(0, model_src_dir)
+        
+    try:
+        from predict import HTTPAttackPredictor
+    except ImportError as e:
+        print(f"Error importing predictor for {model_name}: {e}")
+        return
+
     if not os.path.exists(os.path.join(models_dir, 'model.joblib')):
         print(f"Error: Model not found at {models_dir}. Please train the model first.")
         return
