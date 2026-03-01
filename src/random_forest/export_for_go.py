@@ -8,11 +8,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from feature_engineering import FeatureEngineer
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
 sys.setrecursionlimit(50000)
 
 def export():
-    models_dir = "/Users/dmac/Desktop/ml/models/random_forest"
-    go_dir = "/Users/dmac/Desktop/ml/go/internal/assets/random_forest"
+    models_dir = f"{PROJECT_ROOT}/models/random_forest"
+    go_dir = f"{PROJECT_ROOT}/go/internal/assets/random_forest"
     os.makedirs(go_dir, exist_ok=True)
     
     # 1. Load Model and Vectorizer
@@ -62,7 +64,7 @@ def export():
         options={type(model): {'zipmap': False}}
     )
     
-    model_go_dir = "/Users/dmac/Desktop/ml/go/internal/assets/random_forest"
+    model_go_dir = f"{PROJECT_ROOT}/go/internal/assets/random_forest"
     os.makedirs(model_go_dir, exist_ok=True)
     
     onnx_path = os.path.join(model_go_dir, "model.onnx")

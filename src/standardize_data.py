@@ -7,6 +7,8 @@ import urllib.parse
 import random
 from sklearn.model_selection import train_test_split
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 def clean_val(v):
     if pd.isna(v) or str(v).lower() == 'nan': return ""
     return str(v).strip()
@@ -26,7 +28,7 @@ def load_txt_categories(filename, label, data_dir):
     return pd.DataFrame(cats)
 
 def process_all_data():
-    data_dir = "/Users/dmac/Desktop/ml/data"
+    data_dir = f"{PROJECT_ROOT}/data"
     
     # Metadata pools for realistic normalcy
     ua_pool = [

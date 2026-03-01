@@ -15,6 +15,11 @@ env/
 #!models/*.joblib
 #!reports/*
 
+# Large Binary Artifacts (over GitHub 100MB limits without LFS)
+*.safetensors
+*.onnx.data
+models/*/results/
+
 # OS
 .DS_Store
 Thumbs.db

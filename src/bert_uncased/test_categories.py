@@ -1,16 +1,14 @@
 import os
 import sys
 import re
+import json
 
-# Allow importing from parent src/ directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from random_forest.predict import HTTPAttackPredictor
+from bert_uncased.predict import HTTPAttackPredictor
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 def parse_file(filepath):
-    """Parses categories and samples from the generated txt files."""
     categories = []
     with open(filepath, 'r') as f:
         lines = f.readlines()
@@ -30,10 +28,10 @@ def parse_file(filepath):
     return categories
 
 def run_categorical_test():
-    models_dir = f"{PROJECT_ROOT}/models/random_forest"
+    models_dir = f"{PROJECT_ROOT}/models/bert_uncased"
     data_dir = f"{PROJECT_ROOT}/data"
     
-    if not (os.path.exists(os.path.join(models_dir, 'model.joblib'))):
+    if not os.path.exists(models_dir):
         print("Error: Model files not found. Run train.py first.")
         return
 
@@ -54,7 +52,6 @@ def run_categorical_test():
     for tf in test_files:
         path = os.path.join(data_dir, tf['file'])
         if not os.path.exists(path):
-            print(f"Warning: {tf['file']} not found.")
             continue
             
         categories = parse_file(path)
@@ -81,10 +78,8 @@ def run_categorical_test():
     accuracy = (passed / total) * 100 if total > 0 else 0
     print(f"SUMMARY: {passed}/{total} Passed ({accuracy:.2f}%)")
     
-    # Save detailed report
-    report_path = f"{PROJECT_ROOT}/reports/random_forest/categorical_results.json"
+    report_path = f"{PROJECT_ROOT}/reports/bert_uncased/categorical_results.json"
     os.makedirs(os.path.dirname(report_path), exist_ok=True)
-    import json
     with open(report_path, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"Detailed categorical report saved to {report_path}")

@@ -11,7 +11,7 @@ func main() {
 	// (Adjust sharedLibPath to your local onnxruntime dylib/so location)
 	modelPath := "../assets/model.onnx"
 	metaPath := "../assets/model_metadata.json"
-	sharedLibPath := "/Users/dmac/Desktop/ml/venv/lib/python3.14/site-packages/onnxruntime/capi/libonnxruntime.1.24.2.dylib"
+	sharedLibPath := "../../../../venv/lib/python3.14/site-packages/onnxruntime/capi/libonnxruntime.1.24.2.dylib"
 
 	// 1. Initialize the Detector
 	detector, err := logistic_regression.NewDetector(modelPath, metaPath, sharedLibPath)

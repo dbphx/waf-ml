@@ -10,8 +10,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from feature_engineering import FeatureEngineer
 from preprocessing import parse_http_string
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
 class HTTPAttackPredictor:
-    def __init__(self, model_dir="/Users/dmac/Desktop/ml/models/random_forest"):
+    def __init__(self, model_dir=f"{PROJECT_ROOT}/models/random_forest"):
         self.model = joblib.load(os.path.join(model_dir, 'model.joblib'))
         self.fe = FeatureEngineer(os.path.join(model_dir, 'vectorizer.joblib'))
 

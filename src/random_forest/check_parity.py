@@ -9,9 +9,11 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from feature_engineering import FeatureEngineer
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
 def check_parity():
-    models_dir = "/Users/dmac/Desktop/ml/models/random_forest"
-    onnx_path = "/Users/dmac/Desktop/ml/go/internal/assets/random_forest/model.onnx"
+    models_dir = f"{PROJECT_ROOT}/models/random_forest"
+    onnx_path = f"{PROJECT_ROOT}/go/internal/assets/random_forest/model.onnx"
     
     # 1. Python Scikit-Learn Prediction
     model = joblib.load(os.path.join(models_dir, 'model.joblib'))

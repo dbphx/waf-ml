@@ -154,4 +154,4 @@ Categories of Normal Traffic (50 Categories)
 153. FP_PDF_46: zsh is the best!
 154. FP_PDF_47: }I would like to request the /cc serviceCode with the parameter: ser viceCode|{}
 155. Fix_Samples_1: POST /api/upload {"filename": "image.png", "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="}
-156. FP_PDF_48: /admin/login?q=_I%20would%20like%20to%20see%20the%20runtime%20for%20the%20payload,%20please.
+156. FP_PDF_48: /admin/login?q=_I%20would%20like%20to%20see%20the%20runtime%20for%20the%20payload,%20please. {}

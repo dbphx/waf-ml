@@ -11,9 +11,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from feature_engineering import FeatureEngineer
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
 def train_model():
-    processed_dir = "/Users/dmac/Desktop/ml/data/processed"
-    models_dir = "/Users/dmac/Desktop/ml/models/random_forest"
+    processed_dir = f"{PROJECT_ROOT}/data/processed"
+    models_dir = f"{PROJECT_ROOT}/models/random_forest"
     os.makedirs(models_dir, exist_ok=True)
     
     print("Loading data...")

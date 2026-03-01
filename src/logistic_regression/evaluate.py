@@ -10,6 +10,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from feature_engineering import FeatureEngineer
 from preprocessing import clean_text
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
 def run_robustness_tests(model, fe):
     print("\nRunning Robustness Tests...")
     test_cases = [
@@ -49,9 +51,9 @@ def run_robustness_tests(model, fe):
     return results
 
 def evaluate():
-    processed_dir = "/Users/dmac/Desktop/ml/data/processed"
-    models_dir = "/Users/dmac/Desktop/ml/models/logistic_regression"
-    reports_dir = "/Users/dmac/Desktop/ml/reports/logistic_regression"
+    processed_dir = f"{PROJECT_ROOT}/data/processed"
+    models_dir = f"{PROJECT_ROOT}/models/logistic_regression"
+    reports_dir = f"{PROJECT_ROOT}/reports/logistic_regression"
     os.makedirs(reports_dir, exist_ok=True)
     
     print("Loading test data...")

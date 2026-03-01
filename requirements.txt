@@ -8,3 +8,7 @@ requests
 joblib
 scipy
 beautifulsoup4
+torch
+transformers
+onnx
+onnxruntime

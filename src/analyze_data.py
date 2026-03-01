@@ -1,7 +1,9 @@
 import pandas as pd
 import os
 
-data_path = "/Users/dmac/Desktop/ml/data/attack.csv"
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+data_path = f"{PROJECT_ROOT}/data/attack.csv"
 df = pd.read_csv(data_path, sep=';')
 
 print(f"Total rows: {len(df)}")

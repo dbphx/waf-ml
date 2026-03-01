@@ -3,28 +3,28 @@ package main
 import (
 	"fmt"
 	"log"
-	random_forest "waf-detector-lib" // This refers to the local package
+	bert_uncased "waf-detector-lib" // Refers to the local package
 )
 
 func main() {
 	// Paths to assets and the shared library
 	// (Adjust sharedLibPath to your local onnxruntime dylib/so location)
 	modelPath := "../assets/model.onnx"
-	metaPath := "../assets/model_metadata.json"
+	vocabPath := "../assets/vocab.txt"
+	// Ensure the user changes this path
 	sharedLibPath := "../../../../venv/lib/python3.14/site-packages/onnxruntime/capi/libonnxruntime.1.24.2.dylib"
 
 	// 1. Initialize the Detector
-	detector, err := random_forest.NewDetector(modelPath, metaPath, sharedLibPath)
+	detector, err := bert_uncased.NewDetector(modelPath, vocabPath, sharedLibPath)
 	if err != nil {
 		log.Fatalf("Failed to initialize detector: %v", err)
 	}
 
 	// 2. Prepare request arguments (simulate a real web request)
-	// Interface requirement: map[string]string
 	attackRequest := map[string]string{
 		"method": "GET",
-		"path":   "/search",
-		"query":  "q=apple' OR '1'='1",
+		"path":   "",
+		"query":  "q=SELECT * FROM users",
 		"body":   "",
 	}
 

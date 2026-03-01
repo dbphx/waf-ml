@@ -3,15 +3,17 @@ import os
 import json
 import argparse
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='logistic_regression',
-                        choices=['logistic_regression', 'random_forest', 'xgboost'],
+                        choices=['logistic_regression', 'random_forest', 'bert_uncased'],
                         help='Model folder to use for predictions')
     args = parser.parse_args()
     
     model_name = args.model
-    models_dir = f"/Users/dmac/Desktop/ml/models/{model_name}"
+    models_dir = f"{PROJECT_ROOT}/models/{model_name}"
     
     # Add model source dir to path and import
     model_src_dir = os.path.join(os.path.dirname(__file__), model_name)

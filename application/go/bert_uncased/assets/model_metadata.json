@@ -1,0 +1,4 @@
+{
+  "model_type": "distilbert",
+  "max_length": 128
+}

@@ -8,6 +8,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from logistic_regression.predict import HTTPAttackPredictor
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
 def parse_file(filepath):
     """Parses categories and samples from the generated txt files."""
     categories = []
@@ -25,8 +27,8 @@ def parse_file(filepath):
     return categories
 
 def run_categorical_test():
-    models_dir = "/Users/dmac/Desktop/ml/models/logistic_regression"
-    data_dir = "/Users/dmac/Desktop/ml/data"
+    models_dir = f"{PROJECT_ROOT}/models/logistic_regression"
+    data_dir = f"{PROJECT_ROOT}/data"
     
     if not (os.path.exists(os.path.join(models_dir, 'model.joblib'))):
         print("Error: Model files not found. Run train.py first.")
@@ -78,7 +80,7 @@ def run_categorical_test():
     print(f"SUMMARY: {passed}/{total} Passed ({accuracy:.2f}%)")
     
     # Save detailed report
-    report_path = "/Users/dmac/Desktop/ml/reports/logistic_regression/categorical_results.json"
+    report_path = f"{PROJECT_ROOT}/reports/logistic_regression/categorical_results.json"
     os.makedirs(os.path.dirname(report_path), exist_ok=True)
     import json
     with open(report_path, 'w') as f:

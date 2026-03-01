@@ -3,8 +3,10 @@ import os
 from preprocessing import clean_text
 from sklearn.model_selection import train_test_split
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 def process_new_files():
-    data_dir = "/Users/dmac/Desktop/ml/data"
+    data_dir = f"{PROJECT_ROOT}/data"
     processed_dir = os.path.join(data_dir, "processed")
     
     # Load new data

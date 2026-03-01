@@ -16,12 +16,17 @@ We currently support multiple models side-by-side, specifically **Logistic Regre
 ├── README.md
 ├── application/
 │   └── go/                      # REUSABLE WAF Libraries
+│       ├── bert_uncased/        # Go-native DistilBERT detector library
 │       ├── logistic_regression/ # Go-native LogReg detector library
 │       └── random_forest/       # Go-native RandomForest detector library
 ├── data/                        # Datasets (attack.txt, normal.txt)
 │   ├── processed/               # Standardized split data
 │   └── raw/
 ├── models/                      # Saved models & vectorizers
+│   ├── bert_uncased/
+│   │   ├── config.json
+│   │   ├── model.safetensors
+│   │   └── vocab.txt
 │   ├── logistic_regression/
 │   │   ├── model.joblib
 │   │   └── vectorizer.joblib
@@ -33,6 +38,12 @@ We currently support multiple models side-by-side, specifically **Logistic Regre
     ├── preprocessing.py         # Data processing logic
     ├── standardize_data.py      # Data preparation pipeline
     ├── test_samples.py          # Unified CLI tester
+    ├── bert_uncased/            # DistilBERT scripts
+    │   ├── check_parity.py
+    │   ├── export_for_go.py
+    │   ├── predict.py
+    │   ├── test_categories.py
+    │   └── train.py
     ├── logistic_regression/     # LogReg scripts
     │   ├── evaluate.py
     │   ├── export_for_go.py
