@@ -1688,6 +1688,22 @@
     "correct": true
   },
   {
+    "category": "Attack_PDF_105",
+    "payload": "/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/?db=monasca&q=SELECT%20mean(%22value%22)%20FROM%20%22mem.used_perc%22%20WHERE%20%22resource_id%22%20%3D~%20%2F%5Ebfb959fd-8128-4a68-98c7-d062ebd2dc4b%2F%20AND%20time%20%3E%3D%20now()%20-%206h%20and%20time%20%3C%3D%20now()%20GROUP%20BY%20time(1m)%2C%20resource_id&epoch=ms",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.71,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_106",
+    "payload": "/inskyXss?db=monasca&q=SELECT%20mean(%22value%22)%20FROM%20%22mem.used_perc%22%20WHERE%20%22resource_id%22%20%3D~%20%2F%5Ebfb959fd-8128-4a68-98c7-d062ebd2dc4b%2F%20AND%20time%20%3E%3D%20now()%20-%206h%20and%20time%20%3C%3D%20now()%20GROUP%20BY%20time(1m)%2C%20resource_id&epoch=ms  {{}}",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.71,
+    "correct": true
+  },
+  {
     "category": "Homepage Access",
     "payload": "GET /",
     "expected": "NORMAL",
@@ -2921,10 +2937,18 @@
   },
   {
     "category": "FP_PDF_48",
-    "payload": "/admin/login?q=_I%20would%20like%20to%20see%20the%20runtime%20for%20the%20payload,%20please. {}",
+    "payload": "/admin/login?q=_I%20would%20like%20to%20see%20the%20runtime%20for%20the%20payload,%20please.",
     "expected": "NORMAL",
     "predicted": "NORMAL",
     "confidence": 0.97,
+    "correct": true
+  },
+  {
+    "category": "FP_PDF_49",
+    "payload": "/api/iaas/portal/ops/volumes?ids=prod_iaas_portal_volume_ops_resourcebd85583cfb1d4442b8ac0cd1fedc9544&ids=prod_iaas_portal_volume_ops_resource257779cf409d4a228fd5cc66ba0ba5f3&ids=prod_iaas_portal_volume_ops_resource9616cd292f0f4e57a2afeba8e8395bf1&ids=prod_iaas_portal_volume_ops_resource762c2b3da1ce44299d6bc955a0fc755d&ids=prod_iaas_portal_volume_ops_resourcefd6b75001cc341498049efa3a4256058&ids=prod_iaas_portal_volume_ops_resource589a8ff097cc4427ade51911c0f491fa&ids=prod_iaas_portal_volume_ops_resourcebe0709aaac474e57a38de2ecd16c5ec2&ids=prod_iaas_portal_volume_ops_resource36996f88d9484f7ca6fd371bd044a369&ids=prod_iaas_portal_volume_ops_resource897b4d9250c64fbaa7ee1d4e2ab4f87e&ids=prod_iaas_portal_volume_ops_resource81958eef18c34ebd99b9ccb1fb8ae1df&page.index=1&page.size=999&page.total=true",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 0.61,
     "correct": true
   }
 ]

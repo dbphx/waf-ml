@@ -23,8 +23,8 @@ func main() {
 	// Interface requirement: map[string]string
 	attackRequest := map[string]string{
 		"method": "GET",
-		"path":   "/search",
-		"query":  "q=apple' OR '1'='1",
+		"path":   "/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues",
+		"query":  "db=monasca&q=SELECT%20mean(%22value%22)%20FROM%20%22mem.used_perc%22%20WHERE%20%22resource_id%22%20%3D~%20%2F%5Ebfb959fd-8128-4a68-98c7-d062ebd2dc4b%2F%20AND%20time%20%3E%3D%20now()%20-%206h%20and%20time%20%3C%3D%20now()%20GROUP%20BY%20time(1m)%2C%20resource_id&epoch=ms",
 		"body":   "",
 	}
 
