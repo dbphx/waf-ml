@@ -2,6 +2,7 @@ import os
 import sys
 import re
 import pandas as pd
+import urllib.parse
 
 # Allow importing from parent src/ directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -42,8 +43,8 @@ def run_categorical_test():
     ]
     
     results = []
-    print(f"{'Category':<50} | {'Expected':<8} | {'Pred':<8} | {'Conf':<6} | {'Status'}")
-    print("-" * 90)
+    print(f"{'Category':<50} | {'Type':<8} | {'Expected':<8} | {'Pred':<8} | {'Conf':<6} | {'Status'}")
+    print("-" * 100)
     
     total = 0
     passed = 0
@@ -56,26 +57,48 @@ def run_categorical_test():
             
         categories = parse_file(path)
         for cat in categories:
+            # 1. Test Original
             total += 1
-            # Run prediction - returns (pred, conf)
             pred, conf = predictor.predict(cat['payload'])
             
             is_correct = pred == tf['expected']
             if is_correct: passed += 1
             
             status = "✅" if is_correct else "❌"
-            print(f"{cat['category'][:50]:<50} | {tf['expected']:<8} | {pred:<8} | {conf:.4f} | {status}")
+            print(f"{cat['category'][:50]:<50} | {'RAW':<8} | {tf['expected']:<8} | {pred:<8} | {conf:.4f} | {status}")
             
             results.append({
                 "category": cat['category'],
                 "payload": cat['payload'],
+                "type": "RAW",
                 "expected": tf['expected'],
                 "predicted": pred,
                 "confidence": conf,
                 "correct": is_correct
             })
 
-    print("-" * 90)
+            # 2. Test Encoded (Only for attacks usually, but we do both)
+            encoded_payload = urllib.parse.quote(cat['payload'])
+            total += 1
+            pred_enc, conf_enc = predictor.predict(encoded_payload)
+            
+            is_correct_enc = pred_enc == tf['expected']
+            if is_correct_enc: passed += 1
+            
+            status_enc = "✅" if is_correct_enc else "❌"
+            print(f"{cat['category'][:50]:<50} | {'ENC':<8} | {tf['expected']:<8} | {pred_enc:<8} | {conf_enc:.4f} | {status_enc}")
+            
+            results.append({
+                "category": cat['category'],
+                "payload": encoded_payload,
+                "type": "ENCODED",
+                "expected": tf['expected'],
+                "predicted": pred_enc,
+                "confidence": conf_enc,
+                "correct": is_correct_enc
+            })
+
+    print("-" * 100)
     accuracy = (passed / total) * 100 if total > 0 else 0
     print(f"SUMMARY: {passed}/{total} Passed ({accuracy:.2f}%)")
     
