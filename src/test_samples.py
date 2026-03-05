@@ -8,7 +8,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='logistic_regression',
-                        choices=['logistic_regression', 'random_forest', 'bert_uncased'],
+                        choices=['logistic_regression', 'random_forest'],
                         help='Model folder to use for predictions')
     args = parser.parse_args()
     

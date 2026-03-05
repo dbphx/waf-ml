@@ -16,17 +16,12 @@ We currently support multiple models side-by-side, specifically **Logistic Regre
 ├── README.md
 ├── application/
 │   └── go/                      # REUSABLE WAF Libraries
-│       ├── bert_uncased/        # Go-native DistilBERT detector library
 │       ├── logistic_regression/ # Go-native LogReg detector library
 │       └── random_forest/       # Go-native RandomForest detector library
 ├── data/                        # Datasets (attack.txt, normal.txt)
 │   ├── processed/               # Standardized split data
 │   └── raw/
 ├── models/                      # Saved models & vectorizers
-│   ├── bert_uncased/
-│   │   ├── config.json
-│   │   ├── model.safetensors
-│   │   └── vocab.txt
 │   ├── logistic_regression/
 │   │   ├── model.joblib
 │   │   └── vectorizer.joblib
@@ -38,12 +33,6 @@ We currently support multiple models side-by-side, specifically **Logistic Regre
     ├── preprocessing.py         # Data processing logic
     ├── standardize_data.py      # Data preparation pipeline
     ├── test_samples.py          # Unified CLI tester
-    ├── bert_uncased/            # DistilBERT scripts
-    │   ├── check_parity.py
-    │   ├── export_for_go.py
-    │   ├── predict.py
-    │   ├── test_categories.py
-    │   └── train.py
     ├── logistic_regression/     # LogReg scripts
     │   ├── evaluate.py
     │   ├── export_for_go.py
@@ -122,8 +111,6 @@ python3 src/test_samples.py --model random_forest
 | ----- | ------------------- | --------------- | --------------- | ------------ |
 | **Logistic Regression** | 100.00% | 0 (0.00%) | 0 (0.00%) | TF-IDF + Logistic Regression (Lightweight, Fastest) |
 | **Random Forest** | 100.00% | 0 (0.00%) | 0 (0.00%) | TF-IDF + Random Forest (Balanced) |
-| **DistilBERT (bert_uncased)** | 98.36% | 6 (3.87%) | 0 (0.00%) | Transformer (High contextual understanding) |
 
 - **Sample Accuracy**: Passes the manual samples with expected detections.
 - **Parity**: Python and Go runtime predictions match consistently via ONNX Runtime deployments.
-
