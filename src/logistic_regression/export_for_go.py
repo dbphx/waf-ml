@@ -14,7 +14,7 @@ sys.setrecursionlimit(50000)
 
 def export():
     models_dir = f"{PROJECT_ROOT}/models/logistic_regression"
-    go_dir = f"{PROJECT_ROOT}/go/internal/assets/logistic_regression"
+    go_dir = f"{PROJECT_ROOT}/application/go/logistic_regression/assets"
     os.makedirs(go_dir, exist_ok=True)
     
     # 1. Load Model and Vectorizer
@@ -64,7 +64,7 @@ def export():
         options={type(model): {'zipmap': False}}
     )
     
-    model_go_dir = f"{PROJECT_ROOT}/go/internal/assets/logistic_regression"
+    model_go_dir = f"{PROJECT_ROOT}/application/go/logistic_regression/assets"
     os.makedirs(model_go_dir, exist_ok=True)
     
     onnx_path = os.path.join(model_go_dir, "model.onnx")
