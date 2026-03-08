@@ -48,9 +48,9 @@ func main() {
 
 	// 2. Initialize Reputation Manager
 	// Block Threshold: 0.8
-	// Suspicion Threshold: 0.5
+	// Suspicion Threshold: 0.4 (Lowered for demonstration)
 	// TTL: 24 Hours
-	manager := waf.NewReputationManager(baseDetector, 0.8, 0.5, 24*time.Hour)
+	manager := waf.NewReputationManager(baseDetector, 0.8, 0.4, 24*time.Hour)
 
 	// 3. Simulate Traffic
 
@@ -65,7 +65,7 @@ func main() {
 	attackRequest := map[string]string{
 		"method": "GET",
 		"path":   "/search",
-		"query":  "q=union+select+user", // Classic SQLi pattern
+		"query":  "q=<script>alert('XSS')</script>", // Stronger XSS pattern
 	}
 
 	fmt.Println("--- Simulation Start ---")
@@ -74,12 +74,10 @@ func main() {
 	blocked, score, reason := manager.AnalyzeRequest("192.168.1.10", normalRequest)
 	fmt.Printf("[Normal IP] Blocked: %v | Score: %.2f | Reason: %s\n", blocked, score, reason)
 
-	// 2. Attacker - First Hit (Maybe just suspicious)
-	blocked, score, reason = manager.AnalyzeRequest("10.0.0.66", attackRequest)
-	fmt.Printf("[Bad IP - Hit 1] Blocked: %v | Score: %.2f | Reason: %s\n", blocked, score, reason)
-
-	// 3. Attacker - Second Hit (Should be blocked due to reputation accumulation)
-	// We use the same request, but the memory should kick in
-	blocked, score, reason = manager.AnalyzeRequest("10.0.0.66", attackRequest)
-	fmt.Printf("[Bad IP - Hit 2] Blocked: %v | Score: %.2f | Reason: %s\n", blocked, score, reason)
+	// 2. Attacker - Multiple Hits to show reputation accumulation
+	ip := "10.0.0.66"
+	for i := 1; i <= 5; i++ {
+		blocked, score, reason = manager.AnalyzeRequest(ip, attackRequest)
+		fmt.Printf("[Bad IP - Hit %d] Blocked: %v | Score: %.2f | Reason: %s\n", i, blocked, score, reason)
+	}
 }

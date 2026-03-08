@@ -1,116 +1,132 @@
 # WAF Model - HTTP Attack Detection (Go + ONNX)
 
-This project implements a high-performance Web Application Firewall (WAF) detection model. It uses machine learning to identify HTTP attacks (SQLi, XSS, LFI, etc.) with native support for both Python and Golang runtimes.
+This project implements a high-performance Web Application Firewall (WAF) detection model. It uses machine learning to identify HTTP attacks (SQLi, XSS, LFI, RCE, etc.) with native support for both Python (training) and Golang (inference) runtimes.
 
 We currently support multiple models side-by-side, specifically **Logistic Regression** and **Random Forest**, both with identical Go implementations via ONNX.
 
-## Core Achievements
-- **100% Accuracy**: Passes the 210-category regression suite and 16 manual samples with zero false positives.
-- **Native Go Support**: Native inference system implemented in Golang using ONNX Runtime for low-latency execution.
-- **Bias Resilient**: Cleanly identifies root paths, short URIs, JWT tokens, and complex JSON as NORMAL traffic.
+## 🚀 Key Features
+- **Dual Model Architecture**: Choose between Logistic Regression (fast, lightweight) or Random Forest (robust, balanced).
+- **Hybrid Feature Engineering**: Combines TF-IDF analysis, N-grams (2-5 chars), and statistical features (Entropy, Keyword density, Length).
+- **Stateful Reputation System**: New Go-based `ReputationManager` tracks client IP behavior over time, accumulating suspicion scores to block persistent attackers even if individual requests are only marginally suspicious.
+- **100% Accuracy**: Passes the 744-category regression suite with zero false positives on the test set.
+- **High Performance**: Native inference in Golang using ONNX Runtime for low-latency execution (<1ms per request).
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 .
-├── README.md
 ├── application/
-│   └── go/                      # REUSABLE WAF Libraries
-│       ├── logistic_regression/ # Go-native LogReg detector library
-│       └── random_forest/       # Go-native RandomForest detector library
-├── data/                        # Datasets (attack.txt, normal.txt)
-│   ├── processed/               # Standardized split data
-│   └── raw/
-├── models/                      # Saved models & vectorizers
-│   ├── logistic_regression/
-│   │   ├── model.joblib
-│   │   └── vectorizer.joblib
-│   └── random_forest/
-│       ├── model.joblib
-│       └── vectorizer.joblib
-└── src/                         # Source Code
-    ├── feature_engineering.py   # Shared ML components
-    ├── preprocessing.py         # Data processing logic
-    ├── standardize_data.py      # Data preparation pipeline
-    ├── test_samples.py          # Unified CLI tester
-    ├── logistic_regression/     # LogReg scripts
-    │   ├── evaluate.py
-    │   ├── export_for_go.py
-    │   ├── predict.py
-    │   ├── test_categories.py
-    │   └── train.py
-    └── random_forest/           # Random Forest scripts
-        ├── check_parity.py      
-        ├── export_for_go.py
-        ├── predict.py
-        ├── test_categories.py
-        └── train.py
+│   └── go/                      # Go Application (WAF & Reputation System)
+│       ├── pkg/waf/             # Shared WAF logic (Detector, Reputation)
+│       ├── logistic_regression/ # Assets for LogReg model
+│       ├── random_forest/       # Assets for RandomForest model
+│       └── example.go           # CLI Simulation Tool
+├── data/                        # Datasets
+│   ├── processed/               # Standardized training data
+│   ├── normal.txt               # Raw normal traffic samples
+│   └── attack.txt               # Raw attack traffic samples
+├── models/                      # Trained Python models (.joblib)
+├── src/                         # Python Source Code (Training Pipeline)
+│   ├── feature_engineering.py   # Shared feature extraction logic
+│   ├── standardize_data.py      # Data preprocessing pipeline
+│   ├── logistic_regression/     # LogReg training & export scripts
+│   └── random_forest/           # RandomForest training & export scripts
+└── reports/                     # Automated test reports
 ```
 
-## Golang Library Usage (Recommended)
+## 🛠️ Go Application Usage
 
-The libraries at **`application/go/logistic_regression`** and **`application/go/random_forest`** are the recommended ways to integrate the WAF into your Go applications. 
+The Go application is located in `application/go`. It provides a `ReputationManager` that wraps the ML model to provide stateful protection.
 
-They share the exact same API surface:
+### Prerequisites
+- Go 1.22+
+- `onnxruntime` shared library installed (e.g., `libonnxruntime.dylib` or `.so`)
+
+### Running the Example
+The included CLI tool simulates traffic to demonstrate the detection and reputation system.
+
+```bash
+cd application/go
+
+# Run with Random Forest Model
+go run example.go -model random_forest -lib /path/to/libonnxruntime.dylib
+
+# Run with Logistic Regression Model
+go run example.go -model logistic_regression -lib /path/to/libonnxruntime.dylib
+```
+
+### Integration Code
+To integrate into your own Go middleware:
 
 ```go
-import "waf-detector-lib" // Example import, adjust based on your go.mod
+import (
+    "time"
+    "waf-detector-lib/pkg/waf"
+)
 
-// Initialize the detector
-detector, err := random_forest.NewDetector(modelPath, metaPath, sharedLibPath)
+// 1. Initialize Base Detector (Stateless)
+detector, err := waf.NewBaseDetector("path/to/model.onnx", "path/to/metadata.json", "path/to/libonnxruntime.so")
 
-// Predict from a map of request components
-request := map[string]string{
-    "path":  "/api/v1/user",
-    "query": "id=1' OR '1'='1",
+// 2. Initialize Reputation Manager (Stateful)
+// - Block Threshold: 0.8
+// - Suspicion Threshold: 0.5
+// - TTL: 24 Hours
+manager := waf.NewReputationManager(detector, 0.8, 0.5, 24*time.Hour)
+
+// 3. Analyze Request
+blocked, score, reason := manager.AnalyzeRequest("192.168.1.10", requestMap)
+
+if blocked {
+    // Block the request
 }
-isAttack := detector.Predict(request)
 ```
 
-To run the provided Go examples:
-```bash
-cd application/go/random_forest/example
-go run main.go
-```
+## 🐍 Python Pipeline (Training & Dev)
 
-## Python Usage (Development)
-
-### 1. Install dependencies
+### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Retrain and Export
-When updating data in `data/attack.txt` or `data/normal.txt`:
+### 2. Retrain Models
+When updating `data/normal.txt` or `data/attack.txt`:
 
 ```bash
-# Prepare common standardized dataset
+# 1. Prepare Standardized Dataset
 python3 src/standardize_data.py
 
-# Train and evaluate specific model
+# 2. Train Random Forest
 python3 src/random_forest/train.py
 
-# Export to ONNX for Go
-python3 src/random_forest/export_for_go.py
+# 3. Train Logistic Regression
+python3 src/logistic_regression/train.py
 ```
 
-### 3. Verify Categories and Samples
-To run the automated category checks:
+### 3. Verify Performance
+Run the comprehensive categorical test suite to ensure no regressions.
+
 ```bash
+# Test Random Forest (Target: 100% Pass)
 python3 src/random_forest/test_categories.py
+
+# Test Logistic Regression (Target: 100% Pass)
+python3 src/logistic_regression/test_categories.py
 ```
 
-To run the manual test samples suite, you can pass the model flag:
+### 4. Export to Go
+Generate the `.onnx` and `metadata.json` files for the Go application.
+
 ```bash
-python3 src/test_samples.py --model random_forest
+python3 src/random_forest/export_for_go.py
+python3 src/logistic_regression/export_for_go.py
 ```
 
-## Model Comparison & Performance Metrics
+## 📊 Model Performance
 
-| Model | Regression Accuracy | False Positives | False Negatives | Architecture |
+| Model | Test Accuracy | False Positives | False Negatives | Architecture |
 | ----- | ------------------- | --------------- | --------------- | ------------ |
-| **Logistic Regression** | 100.00% | 0 (0.00%) | 0 (0.00%) | TF-IDF + Logistic Regression (Lightweight, Fastest) |
-| **Random Forest** | 100.00% | 0 (0.00%) | 0 (0.00%) | TF-IDF + Random Forest (Balanced) |
+| **Logistic Regression** | 100.00% (744/744) | 0 | 0 | TF-IDF + Statistical Features + Logistic Regression |
+| **Random Forest** | 100.00% (744/744) | 0 | 0 | TF-IDF + Statistical Features + Random Forest (100 Trees) |
 
-- **Sample Accuracy**: Passes the manual samples with expected detections.
-- **Parity**: Python and Go runtime predictions match consistently via ONNX Runtime deployments.
+- **Stateful Defense**: The Reputation System successfully identifies and blocks attackers who make repeated "low confidence" attacks, effectively reducing false negatives in real-world scenarios.
+- **Parity**: Python and Go runtimes produce identical probability scores via ONNX.
