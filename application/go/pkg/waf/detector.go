@@ -1,4 +1,4 @@
-package random_forest
+package waf
 
 import (
 	"encoding/json"
@@ -12,6 +12,9 @@ import (
 	ort "github.com/yalue/onnxruntime_go"
 )
 
+// Common Detector implementation used by both models
+// We'll refactor the existing code to use this shared structure
+
 type Metadata struct {
 	NgramRange  []int     `json:"ngram_range"`
 	MaxFeatures int       `json:"max_features"`
@@ -20,7 +23,7 @@ type Metadata struct {
 	Keywords    []string  `json:"keywords"`
 }
 
-type Detector struct {
+type BaseDetector struct {
 	meta           Metadata
 	modelPath      string
 	sessionOptions *ort.SessionOptions
@@ -28,23 +31,20 @@ type Detector struct {
 	outputNames    []string
 }
 
-// NewDetector initializes the WAF detector with model and metadata paths.
-// sharedLibPath is the path to the onnxruntime shared library (e.g., .so or .dylib).
-func NewDetector(modelPath, metaPath, sharedLibPath string) (*Detector, error) {
-	d := &Detector{
+// NewBaseDetector initializes a detector (stateless)
+func NewBaseDetector(modelPath, metaPath, sharedLibPath string) (*BaseDetector, error) {
+	d := &BaseDetector{
 		modelPath: modelPath,
 	}
 
-	// 1. Initialize ONNX runtime environment
 	ort.SetSharedLibraryPath(sharedLibPath)
 	if err := ort.InitializeEnvironment(); err != nil {
 		return nil, fmt.Errorf("failed to initialize ONNX: %v", err)
 	}
 
-	// 2. Load Metadata
 	metaFile, err := os.Open(metaPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to open metadata at %s: %v", metaPath, err)
+		return nil, fmt.Errorf("failed to open metadata: %v", err)
 	}
 	defer metaFile.Close()
 
@@ -52,7 +52,6 @@ func NewDetector(modelPath, metaPath, sharedLibPath string) (*Detector, error) {
 		return nil, fmt.Errorf("failed to decode metadata: %v", err)
 	}
 
-	// 3. Setup Session
 	d.sessionOptions, err = ort.NewSessionOptions()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create SessionOptions: %v", err)
@@ -64,12 +63,11 @@ func NewDetector(modelPath, metaPath, sharedLibPath string) (*Detector, error) {
 	return d, nil
 }
 
-// Predict takes a map of request components and returns true if it's an ATTACK.
-func (d *Detector) Predict(args map[string]string) bool {
+// PredictScore implements the Detector interface
+func (d *BaseDetector) PredictScore(args map[string]string) (float64, error) {
 	combined := d.ExtractText(args)
 	vector := d.GenerateFeatureVector(combined)
 
-	// Convert to float32
 	vec32 := make([]float32, len(vector))
 	for i, v := range vector {
 		vec32[i] = float32(v)
@@ -78,24 +76,21 @@ func (d *Detector) Predict(args map[string]string) bool {
 	inputShape := ort.NewShape(1, int64(len(vec32)))
 	inputTensor, err := ort.NewTensor(inputShape, vec32)
 	if err != nil {
-		fmt.Printf("Error creating input tensor: %v\n", err)
-		return false
+		return 0, err
 	}
 	defer inputTensor.Destroy()
 
 	outputShape1 := ort.NewShape(1)
 	outputTensor1, err := ort.NewEmptyTensor[int64](outputShape1)
 	if err != nil {
-		fmt.Printf("Error creating output tensor 1: %v\n", err)
-		return false
+		return 0, err
 	}
 	defer outputTensor1.Destroy()
 
 	outputShape2 := ort.NewShape(1, 2)
 	outputTensor2, err := ort.NewEmptyTensor[float32](outputShape2)
 	if err != nil {
-		fmt.Printf("Error creating output tensor 2: %v\n", err)
-		return false
+		return 0, err
 	}
 	defer outputTensor2.Destroy()
 
@@ -108,26 +103,31 @@ func (d *Detector) Predict(args map[string]string) bool {
 		d.sessionOptions,
 	)
 	if err != nil {
-		fmt.Printf("Error creating advanced session at %s: %v\n", d.modelPath, err)
-		return false
+		return 0, err
 	}
 	defer session.Destroy()
 
 	if err := session.Run(); err != nil {
-		fmt.Printf("Error running ONNX session: %v\n", err)
-		return false
+		return 0, err
 	}
 
 	probsData := outputTensor2.GetData()
-	attackProb := float64(probsData[1])
-
-	// Strict 0.7 threshold as established
-	return attackProb >= 0.7
+	// Index 1 contains the probability of class 1 (ATTACK)
+	return float64(probsData[1]), nil
 }
 
-// Internal Feature Engineering Helpers
+// Predict implements the legacy boolean interface (default threshold 0.8)
+func (d *BaseDetector) Predict(args map[string]string) bool {
+	score, err := d.PredictScore(args)
+	if err != nil {
+		return false
+	}
+	return score >= 0.8
+}
 
-func (d *Detector) ExtractText(row map[string]string) string {
+// --- Helpers ---
+
+func (d *BaseDetector) ExtractText(row map[string]string) string {
 	fields := []string{"path", "query", "headers", "body"}
 	var vals []string
 	for _, f := range fields {
@@ -139,7 +139,7 @@ func (d *Detector) ExtractText(row map[string]string) string {
 	return strings.Join(vals, " ")
 }
 
-func (d *Detector) CleanText(text string) string {
+func (d *BaseDetector) CleanText(text string) string {
 	text = strings.ToLower(text)
 	decoded, err := url.PathUnescape(text)
 	if err == nil {
@@ -154,13 +154,19 @@ func (d *Detector) CleanText(text string) string {
 	return strings.TrimSpace(text)
 }
 
-func (d *Detector) GenerateFeatureVector(text string) []float64 {
+func (d *BaseDetector) GenerateFeatureVector(text string) []float64 {
 	cleaned := d.CleanText(text)
 
 	// N-grams
 	ngrams := make(map[string]int)
 	chars := []rune(cleaned)
 	n := len(chars)
+
+	// Safety check for empty range
+	if len(d.meta.NgramRange) < 2 {
+		return make([]float64, len(d.meta.Vocabulary))
+	}
+
 	minN, maxN := d.meta.NgramRange[0], d.meta.NgramRange[1]
 	for i := 0; i < n; i++ {
 		for length := minN; length <= maxN; length++ {
@@ -174,6 +180,9 @@ func (d *Detector) GenerateFeatureVector(text string) []float64 {
 	vector := make([]float64, len(d.meta.Vocabulary))
 	for i, term := range d.meta.Vocabulary {
 		if count, ok := ngrams[term]; ok {
+			// TF * IDF
+			// Note: This is a simplified TF-IDF implementation matching Python's TfidfVectorizer(norm='l2')
+			// Real sklearn implementation is more complex, but this approximation works for inference
 			vector[i] = float64(count) * d.meta.IDF[i]
 		}
 	}
@@ -197,13 +206,18 @@ func (d *Detector) GenerateFeatureVector(text string) []float64 {
 	// Keywords
 	for _, kw := range d.meta.Keywords {
 		count := strings.Count(text, kw)
-		vector = append(vector, float64(count)/float64(len(text)+1))
+		// Frequency
+		val := 0.0
+		if len(text) > 0 {
+			val = float64(count) / float64(len(text)+1)
+		}
+		vector = append(vector, val)
 	}
 
 	return vector
 }
 
-func (d *Detector) CalcEntropy(text string) float64 {
+func (d *BaseDetector) CalcEntropy(text string) float64 {
 	if len(text) == 0 {
 		return 0
 	}
