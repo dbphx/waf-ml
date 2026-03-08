@@ -44,7 +44,7 @@ class HTTPAttackPredictor:
         X = self.fe.transform(df)
         prob = self.model.predict_proba(X)[0][1]
         
-        threshold = 0.7
+        threshold = 0.72 # Optimized based on categorical analysis (0.59 < T < 0.84)
         prediction = "ATTACK" if prob >= threshold else "NORMAL"
         confidence = round(float(prob if prob >= threshold else 1 - prob), 4)
         

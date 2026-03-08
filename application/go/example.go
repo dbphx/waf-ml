@@ -23,13 +23,21 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Determine paths based on model selection
+	// Determine paths and thresholds based on model selection
 	var assetDir string
+	var blockThreshold, suspicionThreshold float64
+
 	switch *modelType {
 	case "random_forest":
 		assetDir = "random_forest/assets"
+		// Based on analysis: Min Attack 0.64, Max Normal 0.41
+		blockThreshold = 0.55
+		suspicionThreshold = 0.35 // Start tracking early
 	case "logistic_regression":
 		assetDir = "logistic_regression/assets"
+		// Based on analysis: Min Attack 0.84, Max Normal 0.59
+		blockThreshold = 0.72
+		suspicionThreshold = 0.50
 	default:
 		log.Fatalf("Unknown model type: %s. Use 'random_forest' or 'logistic_regression'", *modelType)
 	}
@@ -38,7 +46,7 @@ func main() {
 	metaPath := fmt.Sprintf("%s/model_metadata.json", assetDir)
 
 	fmt.Printf("Initializing WAF with model: %s\n", *modelType)
-	fmt.Printf("Model Path: %s\n", modelPath)
+	fmt.Printf("Thresholds -> Block: %.2f | Suspicion: %.2f\n", blockThreshold, suspicionThreshold)
 
 	// 1. Initialize the Base Detector
 	baseDetector, err := waf.NewBaseDetector(modelPath, metaPath, *sharedLib)
@@ -47,10 +55,7 @@ func main() {
 	}
 
 	// 2. Initialize Reputation Manager
-	// Block Threshold: 0.8
-	// Suspicion Threshold: 0.4 (Lowered for demonstration)
-	// TTL: 24 Hours
-	manager := waf.NewReputationManager(baseDetector, 0.8, 0.4, 24*time.Hour)
+	manager := waf.NewReputationManager(baseDetector, blockThreshold, suspicionThreshold, 24*time.Hour)
 
 	// 3. Simulate Traffic
 
