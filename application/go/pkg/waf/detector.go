@@ -8,13 +8,13 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
+	"time"
 
 	ort "github.com/yalue/onnxruntime_go"
 )
 
-// Common Detector implementation used by both models
-// We'll refactor the existing code to use this shared structure
-
+// Metadata structure for the model
 type Metadata struct {
 	NgramRange  []int     `json:"ngram_range"`
 	MaxFeatures int       `json:"max_features"`
@@ -23,15 +23,30 @@ type Metadata struct {
 	Keywords    []string  `json:"keywords"`
 }
 
+// BaseDetector holds the session and resources for ONNX inference
 type BaseDetector struct {
 	meta           Metadata
 	modelPath      string
 	sessionOptions *ort.SessionOptions
+	session        *ort.AdvancedSession
 	inputName      string
 	outputNames    []string
+
+	// Reuse tensors to avoid allocation per request
+	inputTensor   *ort.Tensor[float32]
+	outputTensor1 *ort.Tensor[int64]
+	outputTensor2 *ort.Tensor[float32]
+	inputBuffer   []float32
+
+	// Mutex to ensure thread safety when using the single session/buffer
+	mu sync.Mutex
+
+	// Reputation Manager (Optional, initialized if semantic check is needed)
+	reputation *ReputationManager
 }
 
-// NewBaseDetector initializes a detector (stateless)
+// NewBaseDetector initializes a detector and creates the ONNX session once.
+// It also initializes the shared ReputationManager with default settings.
 func NewBaseDetector(modelPath, metaPath, sharedLibPath string) (*BaseDetector, error) {
 	d := &BaseDetector{
 		modelPath: modelPath,
@@ -60,58 +75,92 @@ func NewBaseDetector(modelPath, metaPath, sharedLibPath string) (*BaseDetector, 
 	d.inputName = "float_input"
 	d.outputNames = []string{"label", "probabilities"}
 
+	// Initialize buffer based on vocabulary + stats features
+	featureSize := len(d.meta.Vocabulary) + 2 + len(d.meta.Keywords)
+	d.inputBuffer = make([]float32, featureSize)
+
+	// Create Tensors ONCE
+	inputShape := ort.NewShape(1, int64(featureSize))
+	d.inputTensor, err = ort.NewTensor(inputShape, d.inputBuffer)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create input tensor: %v", err)
+	}
+
+	outputShape1 := ort.NewShape(1)
+	d.outputTensor1, err = ort.NewEmptyTensor[int64](outputShape1)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create output tensor 1: %v", err)
+	}
+
+	outputShape2 := ort.NewShape(1, 2)
+	d.outputTensor2, err = ort.NewEmptyTensor[float32](outputShape2)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create output tensor 2: %v", err)
+	}
+
+	// Create Session ONCE bound to these tensors
+	d.session, err = ort.NewAdvancedSession(
+		d.modelPath,
+		[]string{d.inputName},
+		d.outputNames,
+		[]ort.ArbitraryTensor{d.inputTensor},
+		[]ort.ArbitraryTensor{d.outputTensor1, d.outputTensor2},
+		d.sessionOptions,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create ONNX session: %v", err)
+	}
+
+	// Initialize default Reputation Manager (can be configured later if needed)
+	// Default: Block 0.8, Suspicion 0.5, TTL 24h
+	d.reputation = NewReputationManager(d, 0.8, 0.5, 24*time.Hour)
+
 	return d, nil
 }
 
-// PredictScore implements the Detector interface
+// Destroy cleans up ONNX resources
+func (d *BaseDetector) Destroy() {
+	if d.session != nil {
+		d.session.Destroy()
+	}
+	if d.inputTensor != nil {
+		d.inputTensor.Destroy()
+	}
+	if d.outputTensor1 != nil {
+		d.outputTensor1.Destroy()
+	}
+	if d.outputTensor2 != nil {
+		d.outputTensor2.Destroy()
+	}
+	if d.sessionOptions != nil {
+		d.sessionOptions.Destroy()
+	}
+}
+
+// PredictScore calculates the raw probability of an attack (Stateless)
+// Thread-safe due to internal mutex
 func (d *BaseDetector) PredictScore(args map[string]string) (float64, error) {
 	combined := d.ExtractText(args)
 	vector := d.GenerateFeatureVector(combined)
 
-	vec32 := make([]float32, len(vector))
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	// Update the input buffer in-place
+	// Since d.inputBuffer is the backing slice for d.inputTensor, updating this updates the tensor data
+	if len(vector) != len(d.inputBuffer) {
+		return 0, fmt.Errorf("feature vector size mismatch: expected %d, got %d", len(d.inputBuffer), len(vector))
+	}
 	for i, v := range vector {
-		vec32[i] = float32(v)
+		d.inputBuffer[i] = float32(v)
 	}
 
-	inputShape := ort.NewShape(1, int64(len(vec32)))
-	inputTensor, err := ort.NewTensor(inputShape, vec32)
-	if err != nil {
-		return 0, err
-	}
-	defer inputTensor.Destroy()
-
-	outputShape1 := ort.NewShape(1)
-	outputTensor1, err := ort.NewEmptyTensor[int64](outputShape1)
-	if err != nil {
-		return 0, err
-	}
-	defer outputTensor1.Destroy()
-
-	outputShape2 := ort.NewShape(1, 2)
-	outputTensor2, err := ort.NewEmptyTensor[float32](outputShape2)
-	if err != nil {
-		return 0, err
-	}
-	defer outputTensor2.Destroy()
-
-	session, err := ort.NewAdvancedSession(
-		d.modelPath,
-		[]string{d.inputName},
-		d.outputNames,
-		[]ort.ArbitraryTensor{inputTensor},
-		[]ort.ArbitraryTensor{outputTensor1, outputTensor2},
-		d.sessionOptions,
-	)
-	if err != nil {
-		return 0, err
-	}
-	defer session.Destroy()
-
-	if err := session.Run(); err != nil {
+	// Run inference
+	if err := d.session.Run(); err != nil {
 		return 0, err
 	}
 
-	probsData := outputTensor2.GetData()
+	probsData := d.outputTensor2.GetData()
 	// Index 1 contains the probability of class 1 (ATTACK)
 	return float64(probsData[1]), nil
 }
@@ -123,6 +172,13 @@ func (d *BaseDetector) Predict(args map[string]string) bool {
 		return false
 	}
 	return score >= 0.8
+}
+
+// PredictSemantic implements the stateful check using the Reputation System.
+// It returns (isBlocked, score, reason).
+func (d *BaseDetector) PredictSemantic(clientIP string, args map[string]string) (bool, float64, string) {
+	// Use the internal ReputationManager which calls back to d.PredictScore
+	return d.reputation.AnalyzeRequest(clientIP, args)
 }
 
 // --- Helpers ---
@@ -180,9 +236,6 @@ func (d *BaseDetector) GenerateFeatureVector(text string) []float64 {
 	vector := make([]float64, len(d.meta.Vocabulary))
 	for i, term := range d.meta.Vocabulary {
 		if count, ok := ngrams[term]; ok {
-			// TF * IDF
-			// Note: This is a simplified TF-IDF implementation matching Python's TfidfVectorizer(norm='l2')
-			// Real sklearn implementation is more complex, but this approximation works for inference
 			vector[i] = float64(count) * d.meta.IDF[i]
 		}
 	}
@@ -206,7 +259,6 @@ func (d *BaseDetector) GenerateFeatureVector(text string) []float64 {
 	// Keywords
 	for _, kw := range d.meta.Keywords {
 		count := strings.Count(text, kw)
-		// Frequency
 		val := 0.0
 		if len(text) > 0 {
 			val = float64(count) / float64(len(text)+1)

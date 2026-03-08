@@ -60,24 +60,28 @@ To integrate into your own Go middleware:
 
 ```go
 import (
-    "time"
     "waf-detector-lib/pkg/waf"
 )
 
-// 1. Initialize Base Detector (Stateless)
+// 1. Initialize Detector (Creates Single ONNX Session)
+// This handles thread-safety and session reuse internally.
 detector, err := waf.NewBaseDetector("path/to/model.onnx", "path/to/metadata.json", "path/to/libonnxruntime.so")
+if err != nil {
+    // Handle error
+}
+defer detector.Destroy()
 
-// 2. Initialize Reputation Manager (Stateful)
-// - Block Threshold: 0.8
-// - Suspicion Threshold: 0.5
-// - TTL: 24 Hours
-manager := waf.NewReputationManager(detector, 0.8, 0.5, 24*time.Hour)
+// 2. Method A: Predict (Stateless)
+// Returns simple boolean (true = attack)
+isAttack := detector.Predict(requestMap)
 
-// 3. Analyze Request
-blocked, score, reason := manager.AnalyzeRequest("192.168.1.10", requestMap)
+// 3. Method B: PredictSemantic (Stateful / Reputation)
+// Tracks IP behavior over time. Recommended for production.
+blocked, score, reason := detector.PredictSemantic("192.168.1.10", requestMap)
 
 if blocked {
     // Block the request
+    fmt.Printf("Blocked: %s (Score: %.2f)\n", reason, score)
 }
 ```
 
