@@ -125,8 +125,8 @@ python3 src/logistic_regression/export_for_go.py
 
 | Model | Test Accuracy | False Positives | False Negatives | Architecture |
 | ----- | ------------------- | --------------- | --------------- | ------------ |
-| **Logistic Regression** | 100.00% (744/744) | 0 | 0 | TF-IDF + Statistical Features + Logistic Regression |
 | **Random Forest** | 100.00% (744/744) | 0 | 0 | TF-IDF + Statistical Features + Random Forest (100 Trees) |
+| **Logistic Regression** | 99.87% (743/744) | 0 | 1 | TF-IDF + Statistical Features + Logistic Regression |
 
 - **Stateful Defense**: The Reputation System successfully identifies and blocks attackers who make repeated "low confidence" attacks, effectively reducing false negatives in real-world scenarios.
 - **Parity**: Python and Go runtimes produce identical probability scores via ONNX.
