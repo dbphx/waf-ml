@@ -12,3 +12,5 @@ torch
 transformers
 onnx
 onnxruntime
+skl2onnx
+onnxconverter-common
