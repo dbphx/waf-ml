@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"waf-detector-lib/pkg/waf"
@@ -14,6 +16,8 @@ func main() {
 	// Parse command line arguments
 	modelType := flag.String("model", "random_forest", "Model type to use: 'random_forest' or 'logistic_regression'")
 	sharedLib := flag.String("lib", "", "Path to onnxruntime shared library (e.g., libonnxruntime.dylib or .so)")
+	payloadFile := flag.String("payload-file", "", "Optional path to a .txt file containing a payload to test")
+	payloadContains := flag.String("payload-contains", "", "If set, select the first line containing this substring from payload-file")
 	flag.Parse()
 
 	if *sharedLib == "" {
@@ -56,7 +60,35 @@ func main() {
 	// We re-initialize the internal reputation manager to use the correct model-specific thresholds
 	detector.InitReputationManager(blockThreshold, suspicionThreshold, 24*time.Hour)
 
-	// 2. Simulate Traffic using the two methods requested
+	// 2. Optional: Use payload from file
+	if *payloadFile != "" {
+		payload, err := readPayloadFromFile(*payloadFile, *payloadContains)
+		if err != nil {
+			log.Fatalf("Failed to read payload: %v", err)
+		}
+
+		req := map[string]string{
+			"method": "GET",
+			"path":   payload,
+		}
+
+		score, err := detector.PredictScore(req)
+		if err != nil {
+			log.Fatalf("PredictScore failed: %v", err)
+		}
+
+		isAttack := detector.Predict(req)
+		blocked, semScore, reason := detector.PredictSemantic("1.1.1.1", req)
+
+		fmt.Println("--- Single Payload Test ---")
+		fmt.Printf("Payload: %s\n", payload)
+		fmt.Printf("Raw Score: %.4f\n", score)
+		fmt.Printf("Predict (Threshold %.2f): %v\n", blockThreshold, isAttack)
+		fmt.Printf("PredictSemantic: Blocked=%v | Score=%.4f | Reason=%s\n", blocked, semScore, reason)
+		return
+	}
+
+	// 3. Simulate Traffic using the two methods requested
 
 	// Case A: Normal User
 	normalRequest := map[string]string{
@@ -90,4 +122,31 @@ func main() {
 	// Attacker IP - Hit 2 (Reputation kicking in)
 	blocked, score, reason = detector.PredictSemantic("10.0.0.66", attackRequest)
 	fmt.Printf("[Semantic]  Bad IP (Hit 2) -> Blocked: %v | Score: %.2f | Reason: %s\n", blocked, score, reason)
+}
+
+func readPayloadFromFile(path string, contains string) (string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
+		}
+		if contains == "" || strings.Contains(line, contains) {
+			return line, nil
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return "", err
+	}
+	if contains != "" {
+		return "", fmt.Errorf("no line found containing %q", contains)
+	}
+	return "", fmt.Errorf("no non-empty line found in %s", path)
 }
