@@ -43,13 +43,17 @@ type BaseDetector struct {
 
 	// Reputation Manager (Optional, initialized if semantic check is needed)
 	reputation *ReputationManager
+
+	// Default threshold for stateless Predict()
+	predictThreshold float64
 }
 
 // NewBaseDetector initializes a detector and creates the ONNX session once.
 // It also initializes the shared ReputationManager with default settings.
 func NewBaseDetector(modelPath, metaPath, sharedLibPath string) (*BaseDetector, error) {
 	d := &BaseDetector{
-		modelPath: modelPath,
+		modelPath:        modelPath,
+		predictThreshold: 0.55, // Default to RF optimal threshold
 	}
 
 	ort.SetSharedLibraryPath(sharedLibPath)
@@ -165,13 +169,27 @@ func (d *BaseDetector) PredictScore(args map[string]string) (float64, error) {
 	return float64(probsData[1]), nil
 }
 
-// Predict implements the legacy boolean interface (default threshold 0.8)
+// SetPredictThreshold updates the threshold used by the stateless Predict method.
+func (d *BaseDetector) SetPredictThreshold(threshold float64) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	d.predictThreshold = threshold
+}
+
+// Predict implements the legacy boolean interface using the configured threshold.
 func (d *BaseDetector) Predict(args map[string]string) bool {
 	score, err := d.PredictScore(args)
 	if err != nil {
 		return false
 	}
-	return score >= 0.8
+	return score >= d.predictThreshold
+}
+
+// InitReputationManager allows re-configuring the built-in reputation manager
+func (d *BaseDetector) InitReputationManager(block, suspicion float64, ttl time.Duration) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	d.reputation = NewReputationManager(d, block, suspicion, ttl)
 }
 
 // PredictSemantic implements the stateful check using the Reputation System.

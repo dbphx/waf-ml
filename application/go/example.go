@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"waf-detector-lib/pkg/waf"
 )
@@ -22,11 +23,17 @@ func main() {
 
 	// Determine paths
 	var assetDir string
+	var blockThreshold, suspicionThreshold float64
+
 	switch *modelType {
 	case "random_forest":
 		assetDir = "random_forest/assets"
+		blockThreshold = 0.55
+		suspicionThreshold = 0.35
 	case "logistic_regression":
 		assetDir = "logistic_regression/assets"
+		blockThreshold = 0.72
+		suspicionThreshold = 0.50
 	default:
 		log.Fatalf("Unknown model type: %s", *modelType)
 	}
@@ -43,6 +50,11 @@ func main() {
 		log.Fatalf("Failed to initialize detector: %v", err)
 	}
 	defer detector.Destroy()
+
+	// Apply correct thresholds based on the model chosen
+	detector.SetPredictThreshold(blockThreshold)
+	// We re-initialize the internal reputation manager to use the correct model-specific thresholds
+	detector.InitReputationManager(blockThreshold, suspicionThreshold, 24*time.Hour)
 
 	// 2. Simulate Traffic using the two methods requested
 
