@@ -7414,5 +7414,41 @@
     "predicted": "NORMAL",
     "confidence": 1.0,
     "correct": true
+  },
+  {
+    "category": "FP_USER_57",
+    "payload": "/uploads/628668cae9db4d51b4edf55214b73fca-Facebook%20Image.jpg?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%276b67c704b68a4517aa6664c1df2f7afe&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=9wnmzzHYVGwlnTscRdzx%2F20260310%2F%2Fs3%2Faws4_request&X-Amz-Date=20260310T023341Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=5bfffbe1cc40d1ef12ee72b2126381daf34408143c87a1c0bf11e66c162e101b&q=union%20was%20a%20great%20select",
+    "type": "RAW",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 1.0,
+    "correct": true
+  },
+  {
+    "category": "FP_USER_57",
+    "payload": "/uploads/628668cae9db4d51b4edf55214b73fca-Facebook%2520Image.jpg%3Fresponse-content-disposition%3Dinline%253B%2520filename%252A%253DUTF-8%2527%25276b67c704b68a4517aa6664c1df2f7afe%26X-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3D9wnmzzHYVGwlnTscRdzx%252F20260310%252F%252Fs3%252Faws4_request%26X-Amz-Date%3D20260310T023341Z%26X-Amz-Expires%3D3600%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D5bfffbe1cc40d1ef12ee72b2126381daf34408143c87a1c0bf11e66c162e101b%26q%3Dunion%2520was%2520a%2520great%2520select",
+    "type": "ENCODED",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 1.0,
+    "correct": true
+  },
+  {
+    "category": "FP_USER_58",
+    "payload": "/uploads/628668cae9db4d51b4edf55214b73fca-Facebook%20Image.jpg?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%276b67c704b68a4517aa6664c1df2f7afe&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=9wnmzzHYVGwlnTscRdzx%2F20260310%2F%2Fs3%2Faws4_request&X-Amz-Date=20260310T023341Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=5bfffbe1cc40d1ef12ee72b2126381daf34408143c87a1c0bf11e66c162e101b&q=_I%20would%20like%20to%20see%20the%20runtime%20for%20the%20payload,%20please.",
+    "type": "RAW",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 1.0,
+    "correct": true
+  },
+  {
+    "category": "FP_USER_58",
+    "payload": "/uploads/628668cae9db4d51b4edf55214b73fca-Facebook%2520Image.jpg%3Fresponse-content-disposition%3Dinline%253B%2520filename%252A%253DUTF-8%2527%25276b67c704b68a4517aa6664c1df2f7afe%26X-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3D9wnmzzHYVGwlnTscRdzx%252F20260310%252F%252Fs3%252Faws4_request%26X-Amz-Date%3D20260310T023341Z%26X-Amz-Expires%3D3600%26X-Amz-SignedHeaders%3Dhost%26X-Amz-Signature%3D5bfffbe1cc40d1ef12ee72b2126381daf34408143c87a1c0bf11e66c162e101b%26q%3D_I%2520would%2520like%2520to%2520see%2520the%2520runtime%2520for%2520the%2520payload%2C%2520please.",
+    "type": "ENCODED",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 1.0,
+    "correct": true
   }
 ]

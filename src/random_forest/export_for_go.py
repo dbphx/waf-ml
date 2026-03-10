@@ -71,6 +71,12 @@ def export():
     with open(onnx_path, "wb") as f:
         f.write(onnx_model.SerializeToString())
     print(f"Exported ONNX model to {onnx_path}")
+    
+    # Also save to python models dir for parity checking
+    onnx_python_path = os.path.join(models_dir, "model.onnx")
+    with open(onnx_python_path, "wb") as f:
+        f.write(onnx_model.SerializeToString())
+    print(f"Exported ONNX model to {onnx_python_path}")
 
 if __name__ == "__main__":
     export()

@@ -30,15 +30,21 @@ def parse_file(filepath):
             pass
     return categories
 
-def run_categorical_test():
+def run_categorical_test(use_onnx=False):
     models_dir = f"{PROJECT_ROOT}/models/random_forest"
     data_dir = f"{PROJECT_ROOT}/data"
     
-    if not (os.path.exists(os.path.join(models_dir, 'model.joblib'))):
-        print("Error: Model files not found. Run train.py first.")
-        return
+    if use_onnx:
+        onnx_path = f"{PROJECT_ROOT}/application/go/random_forest/assets/model.onnx"
+        if not os.path.exists(onnx_path) and not os.path.exists(os.path.join(models_dir, 'model.onnx')):
+             print("Error: ONNX model file not found.")
+             return
+    else:
+        if not (os.path.exists(os.path.join(models_dir, 'model.joblib'))):
+            print("Error: Model files not found. Run train.py first.")
+            return
 
-    predictor = HTTPAttackPredictor(models_dir)
+    predictor = HTTPAttackPredictor(models_dir, use_onnx=use_onnx)
     
     test_files = [
         {"file": "attack.txt", "expected": "ATTACK"},
@@ -51,6 +57,35 @@ def run_categorical_test():
     
     total = 0
     passed = 0
+
+    def predict_as_runtime_request(payload):
+        method = "GET"
+        url = str(payload)
+        headers = ""
+        body = ""
+        user_agent = ""
+
+        first_line = url.strip().splitlines()[0] if url.strip() else ""
+        m = re.match(r'^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)\s+(\S+)', first_line, re.IGNORECASE)
+        if m:
+            method = m.group(1).upper()
+            url = m.group(2)
+            remainder = str(payload)[m.end():].lstrip()
+            if remainder:
+                parts = re.split(r'\r\n\r\n|\n\n', remainder, maxsplit=1)
+                headers = parts[0].strip()
+                body = parts[1].strip() if len(parts) > 1 else ""
+                ua_match = re.search(r'(?im)^User-Agent:\s*(.+)$', headers)
+                if ua_match:
+                    user_agent = ua_match.group(1).strip()
+
+        return predictor.predict({
+            "method": method,
+            "url": url,
+            "headers": headers,
+            "body": body,
+            "user_agent": user_agent
+        })
     
     for tf in test_files:
         path = os.path.join(data_dir, tf['file'])
@@ -62,7 +97,7 @@ def run_categorical_test():
         for cat in categories:
             # 1. Test Original
             total += 1
-            pred, conf = predictor.predict(cat['payload'])
+            pred, conf = predict_as_runtime_request(cat['payload'])
             
             is_correct = pred == tf['expected']
             if is_correct: passed += 1
@@ -83,7 +118,7 @@ def run_categorical_test():
             # 2. Test Encoded
             encoded_payload = urllib.parse.quote(cat['payload'])
             total += 1
-            pred_enc, conf_enc = predictor.predict(encoded_payload)
+            pred_enc, conf_enc = predict_as_runtime_request(encoded_payload)
             
             is_correct_enc = pred_enc == tf['expected']
             if is_correct_enc: passed += 1
@@ -114,4 +149,9 @@ def run_categorical_test():
     print(f"Detailed categorical report saved to {report_path}")
 
 if __name__ == "__main__":
-    run_categorical_test()
+    import argparse
+    parser = argparse.ArgumentParser(description="Test classification of various payloads")
+    parser.add_argument('--onnx', action='store_true', help="Use ONNX model instead of Joblib")
+    args = parser.parse_args()
+    
+    run_categorical_test(use_onnx=args.onnx)

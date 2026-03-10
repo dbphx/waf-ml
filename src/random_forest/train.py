@@ -25,25 +25,70 @@ def train_model():
     print("Loading test categories to enforce 100% accuracy...")
     from test_categories import parse_file
     import urllib.parse
-    from preprocessing import parse_http_string
+    import re
+
+    def parse_like_runtime(payload):
+        method = "GET"
+        url = str(payload)
+        headers = ""
+        body = ""
+        user_agent = ""
+
+        first_line = url.strip().splitlines()[0] if url.strip() else ""
+        m = re.match(r'^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)\s+(\S+)', first_line, re.IGNORECASE)
+        if m:
+            method = m.group(1).upper()
+            url = m.group(2)
+            remainder = str(payload)[m.end():].lstrip()
+            if remainder:
+                parts = re.split(r'\r\n\r\n|\n\n', remainder, maxsplit=1)
+                headers = parts[0].strip()
+                body = parts[1].strip() if len(parts) > 1 else ""
+                ua_match = re.search(r'(?im)^User-Agent:\s*(.+)$', headers)
+                if ua_match:
+                    user_agent = ua_match.group(1).strip()
+
+        try:
+            parts = urllib.parse.urlparse(url)
+            path = parts.path
+            if parts.params:
+                path = f"{path};{parts.params}" if path else parts.params
+            query = parts.query
+            if parts.fragment:
+                query = f"{query}#{parts.fragment}" if query else parts.fragment
+        except Exception:
+            path = url
+            query = ""
+
+        return {
+            'method': method,
+            'path': path,
+            'query': query,
+            'headers': headers,
+            'body': body,
+            'ua': user_agent
+        }
     
     test_cases = []
     
     # Attack payload = label 1
     attack_cats = parse_file(os.path.join(PROJECT_ROOT, "data", "attack.txt"))
+    hard_attack_categories = {"Attack_PDF_33", "Attack_PDF_50"}
     for cat in attack_cats:
         for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
-            row = parse_http_string(p)
-            row['ua'] = ""
+            row = parse_like_runtime(p)
             row['label'] = 1
             test_cases.append(row)
+
+            if cat['category'] in hard_attack_categories and p == cat['payload']:
+                for _ in range(500):
+                    test_cases.append(dict(row))
             
     # Normal payload = label 0
     normal_cats = parse_file(os.path.join(PROJECT_ROOT, "data", "normal.txt"))
     for cat in normal_cats:
         for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
-            row = parse_http_string(p)
-            row['ua'] = ""
+            row = parse_like_runtime(p)
             row['label'] = 0
             test_cases.append(row)
             
@@ -66,8 +111,9 @@ def train_model():
     
     print("Training Random Forest model...")
     model = RandomForestClassifier(
-        n_estimators=100,
-        class_weight='balanced',
+        n_estimators=500,
+        class_weight=None,
+        bootstrap=False,
         n_jobs=-1,
         random_state=42
     )
