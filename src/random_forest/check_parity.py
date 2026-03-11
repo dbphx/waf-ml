@@ -13,7 +13,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 def check_parity():
     models_dir = f"{PROJECT_ROOT}/models/random_forest"
-    onnx_path = f"{PROJECT_ROOT}/go/internal/assets/random_forest/model.onnx"
+    onnx_path = f"{PROJECT_ROOT}/application/go/random_forest/assets/model.onnx"
     
     # 1. Python Scikit-Learn Prediction
     model = joblib.load(os.path.join(models_dir, 'model.joblib'))
@@ -34,6 +34,7 @@ def check_parity():
     sess = ort.InferenceSession(onnx_path)
     input_name = sess.get_inputs()[0].name
     outputs = sess.run(None, {input_name: X_dense})
+
     
     # In skl2onnx, outputs are typically [label, probabilities_dict]
     # or probabilities array depending on zipmap. We turned off zipmap.

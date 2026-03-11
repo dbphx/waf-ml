@@ -23,7 +23,7 @@ def train_model():
     val_df = pd.read_csv(os.path.join(processed_dir, 'val.csv'))
 
     print("Loading test categories to enforce 100% accuracy...")
-    from test_categories import parse_file
+    from random_forest.test_categories import parse_file
     import urllib.parse
     import re
 
