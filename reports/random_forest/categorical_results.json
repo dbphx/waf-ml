@@ -7450,5 +7450,23 @@
     "predicted": "NORMAL",
     "confidence": 1.0,
     "correct": true
+  },
+  {
+    "category": "FP_OAUTH_1",
+    "payload": "GET /auth/google/callback/?authuser=5&code=8%2F6EMesrMYFyiH1mJGviehH6jYvoz06sllZxOj3XBNacHw8OmauT6gDlQwxFg6H5DV_OomhUV&hd=NUQRR.jC&iss=kPmVQ%3A%2F%2FTITjAnYS.cmgDAL.dPJ&prompt=XEwuPGe&scope=opBke+FfNxLjr+ZFUKX%3A%2F%2FTHB.vshTKTBguO.fGa%2FeulP%2FsMAyiRrk.LyDkQpU+FCbpc%3A%2F%2FnNN.rPcXDzvVQq.jxI%2FHfYw%2FySdZiQIw.bjucY+BVFhFO&state=60S26jB222q37EA7y51196B90e62g6q6",
+    "type": "RAW",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 1.0,
+    "correct": true
+  },
+  {
+    "category": "FP_OAUTH_1",
+    "payload": "GET%20/auth/google/callback/%3Fauthuser%3D5%26code%3D8%252F6EMesrMYFyiH1mJGviehH6jYvoz06sllZxOj3XBNacHw8OmauT6gDlQwxFg6H5DV_OomhUV%26hd%3DNUQRR.jC%26iss%3DkPmVQ%253A%252F%252FTITjAnYS.cmgDAL.dPJ%26prompt%3DXEwuPGe%26scope%3DopBke%2BFfNxLjr%2BZFUKX%253A%252F%252FTHB.vshTKTBguO.fGa%252FeulP%252FsMAyiRrk.LyDkQpU%2BFCbpc%253A%252F%252FnNN.rPcXDzvVQq.jxI%252FHfYw%252FySdZiQIw.bjucY%2BBVFhFO%26state%3D60S26jB222q37EA7y51196B90e62g6q6",
+    "type": "ENCODED",
+    "expected": "NORMAL",
+    "predicted": "NORMAL",
+    "confidence": 1.0,
+    "correct": true
   }
 ]
