@@ -1,0 +1,74 @@
+[
+    {
+        "test": "Case mutation (Normal)",
+        "input": "/LoGiN",
+        "expected": "NORMAL",
+        "prediction": "ATTACK",
+        "confidence": "0.9900",
+        "status": "FAIL"
+    },
+    {
+        "test": "SQL Injection (Attack)",
+        "input": "SELECT * FROM users",
+        "expected": "ATTACK",
+        "prediction": "ATTACK",
+        "confidence": "1.0000",
+        "status": "PASS"
+    },
+    {
+        "test": "Case mutation (Attack)",
+        "input": "SeLeCt * FrOm users",
+        "expected": "ATTACK",
+        "prediction": "ATTACK",
+        "confidence": "1.0000",
+        "status": "PASS"
+    },
+    {
+        "test": "URL Encoded Path Traversal",
+        "input": "%2e%2e%2fetc%2fpasswd",
+        "expected": "ATTACK",
+        "prediction": "ATTACK",
+        "confidence": "1.0000",
+        "status": "PASS"
+    },
+    {
+        "test": "URL Encoded XSS",
+        "input": "%3cscript%3ealert(1)%3c/script%3e",
+        "expected": "ATTACK",
+        "prediction": "ATTACK",
+        "confidence": "1.0000",
+        "status": "PASS"
+    },
+    {
+        "test": "SQLi Obfuscation",
+        "input": "/**/union/**/select",
+        "expected": "ATTACK",
+        "prediction": "ATTACK",
+        "confidence": "1.0000",
+        "status": "PASS"
+    },
+    {
+        "test": "Benign lookalike (SS)",
+        "input": "/homeSS",
+        "expected": "NORMAL",
+        "prediction": "ATTACK",
+        "confidence": "1.0000",
+        "status": "FAIL"
+    },
+    {
+        "test": "Benign lookalike (selecta)",
+        "input": "/selecta",
+        "expected": "NORMAL",
+        "prediction": "ATTACK",
+        "confidence": "1.0000",
+        "status": "FAIL"
+    },
+    {
+        "test": "Benign lookalike (scripture)",
+        "input": "/scripture",
+        "expected": "NORMAL",
+        "prediction": "ATTACK",
+        "confidence": "1.0000",
+        "status": "FAIL"
+    }
+]
