@@ -62,8 +62,7 @@ class HTTPAttackPredictor:
             }])
             signature_text = ' '.join([
                 str(http_data.get('method', '')),
-                path,
-                query,
+                str(http_data.get('url', '')),
                 str(http_data.get('headers', '')),
                 str(http_data.get('body', ''))
             ])

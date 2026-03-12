@@ -4482,6 +4482,24 @@
     "correct": true
   },
   {
+    "category": "PADDED_XSS",
+    "payload": "GET /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/?group_by=state_id&order_by=-created_at&sub_issue=true&filters=%7B%22created_by_id__in%22:%22d5bfcc01-0096-4c85-a741-3309c3099472%22%7D&layout=kanban&cursor=30:0:0&per_page=30&xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=setInterval(%27fet%27+%27ch(document.domain)%27)",
+    "type": "RAW",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 1.0,
+    "correct": true
+  },
+  {
+    "category": "PADDED_XSS",
+    "payload": "GET%20/api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/%3Fgroup_by%3Dstate_id%26order_by%3D-created_at%26sub_issue%3Dtrue%26filters%3D%257B%2522created_by_id__in%2522%3A%2522d5bfcc01-0096-4c85-a741-3309c3099472%2522%257D%26layout%3Dkanban%26cursor%3D30%3A0%3A0%26per_page%3D30%26xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx%3DsetInterval%28%2527fet%2527%2B%2527ch%28document.domain%29%2527%29",
+    "type": "ENCODED",
+    "expected": "ATTACK",
+    "predicted": "ATTACK",
+    "confidence": 1.0,
+    "correct": true
+  },
+  {
     "category": "Homepage Access",
     "payload": "GET /",
     "type": "RAW",

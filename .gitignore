@@ -23,3 +23,5 @@ models/*/results/
 # OS
 .DS_Store
 Thumbs.db
+AGENTS.md
+agent.md
