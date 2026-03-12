@@ -52,11 +52,13 @@ def run_categorical_test(use_onnx=False):
     ]
     
     results = []
-    print(f"{'Category':<50} | {'Type':<8} | {'Expected':<8} | {'Pred':<8} | {'Conf':<6} | {'Status'}")
-    print("-" * 100)
+    print(f"{'Category':<50} | {'Type':<8} | {'Expected':<8} | {'Pred':<8} | {'Conf':<6} | {'Time (ms)':<9} | {'Status'}")
+    print("-" * 115)
     
     total = 0
     passed = 0
+    
+    import time
 
     def predict_as_runtime_request(payload):
         method = "GET"
@@ -97,13 +99,15 @@ def run_categorical_test(use_onnx=False):
         for cat in categories:
             # 1. Test Original
             total += 1
+            t0 = time.time()
             pred, conf = predict_as_runtime_request(cat['payload'])
+            elapsed = (time.time() - t0) * 1000
             
             is_correct = pred == tf['expected']
             if is_correct: passed += 1
             
             status = "✅" if is_correct else "❌"
-            print(f"{cat['category'][:50]:<50} | {'RAW':<8} | {tf['expected']:<8} | {pred:<8} | {conf:.4f} | {status}")
+            print(f"{cat['category'][:50]:<50} | {'RAW':<8} | {tf['expected']:<8} | {pred:<8} | {conf:.4f} | {elapsed:>8.2f} | {status}")
             
             results.append({
                 "category": cat['category'],
@@ -112,19 +116,22 @@ def run_categorical_test(use_onnx=False):
                 "expected": tf['expected'],
                 "predicted": pred,
                 "confidence": conf,
+                "time_ms": elapsed,
                 "correct": is_correct
             })
 
             # 2. Test Encoded
             encoded_payload = urllib.parse.quote(cat['payload'])
             total += 1
+            t0 = time.time()
             pred_enc, conf_enc = predict_as_runtime_request(encoded_payload)
+            elapsed_enc = (time.time() - t0) * 1000
             
             is_correct_enc = pred_enc == tf['expected']
             if is_correct_enc: passed += 1
             
             status_enc = "✅" if is_correct_enc else "❌"
-            print(f"{cat['category'][:50]:<50} | {'ENC':<8} | {tf['expected']:<8} | {pred_enc:<8} | {conf_enc:.4f} | {status_enc}")
+            print(f"{cat['category'][:50]:<50} | {'ENC':<8} | {tf['expected']:<8} | {pred_enc:<8} | {conf_enc:.4f} | {elapsed_enc:>8.2f} | {status_enc}")
             
             results.append({
                 "category": cat['category'],
@@ -133,10 +140,11 @@ def run_categorical_test(use_onnx=False):
                 "expected": tf['expected'],
                 "predicted": pred_enc,
                 "confidence": conf_enc,
+                "time_ms": elapsed_enc,
                 "correct": is_correct_enc
             })
 
-    print("-" * 100)
+    print("-" * 115)
     accuracy = (passed / total) * 100 if total > 0 else 0
     print(f"SUMMARY: {passed}/{total} Passed ({accuracy:.2f}%)")
     
