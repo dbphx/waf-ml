@@ -8,7 +8,7 @@ We currently support multiple models side-by-side, specifically **Logistic Regre
 - **Dual Model Architecture**: Choose between Logistic Regression (fast, lightweight) or Random Forest (robust, balanced).
 - **Hybrid Feature Engineering**: Combines TF-IDF analysis, N-grams (2-5 chars), and statistical features (Entropy, Keyword density, Length).
 - **Stateful Reputation System**: New Go-based `ReputationManager` tracks client IP behavior over time, accumulating suspicion scores to block persistent attackers even if individual requests are only marginally suspicious.
-- **100% Accuracy**: Passes the 744-category regression suite with zero false positives on the test set.
+- **100% Accuracy**: Passes the 832-category regression suite with zero false positives on the test set.
 - **High Performance**: Native inference in Golang using ONNX Runtime for low-latency execution (<1ms per request).
 
 ## 📂 Project Structure
@@ -129,8 +129,8 @@ python3 src/logistic_regression/export_for_go.py
 
 | Model | Test Accuracy | False Positives | False Negatives | Architecture |
 | ----- | ------------------- | --------------- | --------------- | ------------ |
-| **Random Forest** | 100.00% (744/744) | 0 | 0 | TF-IDF + Statistical Features + Random Forest (100 Trees) |
-| **Logistic Regression** | 100.00% (744/744) | 0 | 0 | TF-IDF + Statistical Features + Logistic Regression |
+| **Random Forest** | 100.00% (832/832) | 0 | 0 | TF-IDF + Statistical Features + Random Forest (100 Trees) |
+| **Logistic Regression** | 100.00% (832/832) | 0 | 0 | TF-IDF + Statistical Features + Logistic Regression |
 
 - **Stateful Defense**: The Reputation System successfully identifies and blocks attackers who make repeated "low confidence" attacks, effectively reducing false negatives in real-world scenarios.
 - **Parity**: Python and Go runtimes produce identical probability scores via ONNX.
