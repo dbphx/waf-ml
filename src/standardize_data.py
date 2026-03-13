@@ -91,7 +91,13 @@ def process_all_data():
         "GET /products?category=electronics&brand=apple",
         'POST /logs/client {"error": "Uncaught TypeError", "stack": "..."}',
         "GET / User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
-        "POST /login Content-Type: application/x-www-form-urlencoded user=john&pass=doe"
+                "POST /login Content-Type: application/x-www-form-urlencoded user=john&pass=doe",
+        "GET /assets/octagon-alert-7zrgUous.js HTTP/1.1",
+        "GET /assets/octagon-alert-7zrgUous.css HTTP/1.1",
+        "GET /assets/script-tag-2befZuvx.js HTTP/1.1",
+        "GET /static/js/select.min.js HTTP/1.1",
+        "GET /static/js/alert.min.js HTTP/1.1",
+        "GET /js/components/AlertDialog.js HTTP/1.1"
     ]
     norm_reg_rows = [parse_http_string(p) for p in normal_regression]
     for r in norm_reg_rows: r['label'] = 0
