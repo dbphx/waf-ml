@@ -72,7 +72,11 @@ def process_all_data():
         '{"$gt": ""}',
         "onerror=alert(1)",
         "union select",
-        "select from"
+        "select from",
+        "GET /assets/octagon-alert-7zrgUous.js?q=%27or%201=1;-- HTTP/1.1",
+        "GET /assets/octagon-alert-7zrgUous.js?q=%3Cscript%3E%3C/script%3E HTTP/1.1",
+        "GET /static/js/select.min.js?id=1%20UNION%20SELECT%201,2,3 HTTP/1.1",
+        "GET /assets/script-tag-2befZuvx.js?file=../../../../etc/passwd HTTP/1.1"
     ]
     for p in failed_patterns:
         row = parse_http_string(p)
