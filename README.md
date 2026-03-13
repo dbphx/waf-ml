@@ -129,7 +129,7 @@ python3 src/logistic_regression/export_for_go.py
 
 | Model | Test Accuracy | False Positives | False Negatives | Architecture |
 | ----- | ------------------- | --------------- | --------------- | ------------ |
-| **Random Forest** | 100.00% (832/832) | 0 | 0 | TF-IDF + Statistical Features + Random Forest (100 Trees) |
+| **Random Forest** | 100.00% (852/852) | 0 | 0 | TF-IDF + Statistical Features + Random Forest (100 Trees) |
 | **Logistic Regression** | 100.00% (832/832) | 0 | 0 | TF-IDF + Statistical Features + Logistic Regression |
 
 - **Stateful Defense**: The Reputation System successfully identifies and blocks attackers who make repeated "low confidence" attacks, effectively reducing false negatives in real-world scenarios.

@@ -171,3 +171,13 @@ Categories of Normal Traffic (50 Categories)
 169. Benign Comment: POST /api/comments {"text": "I dropped my database today!"}
 170. Benign Tutorial: GET /tutorial/xss-prevention-script-tags HTTP/1.1
 171. Benign Asset: GET /assets/octagon-alert-7zrgUous.js HTTP/1.1
+172. Benign NLP Query 1: GET /search?q=I%20select%20like%20you%20union HTTP/1.1
+173. Benign NLP Query 2: GET /api/chat?message=can%20you%20select%20the%20best%20union%20for%20me HTTP/1.1
+174. Benign NLP Query 3: GET /forum/post?title=why%20I%20drop%20out%20of%20the%20student%20union HTTP/1.1
+175. Benign NLP Query 4: GET /query?text=please%20insert%20the%20coin%20and%20select%20your%20drink HTTP/1.1
+176. Benign NLP Query 5: GET /help?q=how%20to%20update%20my%20profile%20and%20delete%20old%20photos HTTP/1.1
+177. Benign NLP Query 6: GET /translate?text=the%20trade%20union%20will%20select%20a%20new%20leader HTTP/1.1
+178. Benign NLP Query 7: GET /search?q=where%20can%20I%20find%20a%20credit%20union%20near%20me HTTP/1.1
+179. Benign NLP Query 8: GET /api/bot?prompt=select%20all%20the%20images%20that%20have%20a%20cat HTTP/1.1
+180. Benign NLP Query 9: GET /feedback?msg=I%20tried%20to%20insert%20my%20card%20but%20it%20gave%20an%20error HTTP/1.1
+181. Benign NLP Query 10: GET /search?q=union%20station%20train%20schedule HTTP/1.1
