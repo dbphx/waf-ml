@@ -25,6 +25,13 @@ def load_txt_categories(filename, label, data_dir):
                     row = parse_http_string(match.group(2))
                     row['label'] = label
                     cats.append(row)
+                else:
+                    # Handle raw lines without category prefix
+                    line = line.strip()
+                    if line and not line.startswith('#'):
+                        row = parse_http_string(line)
+                        row['label'] = label
+                        cats.append(row)
     return pd.DataFrame(cats)
 
 def process_all_data():
