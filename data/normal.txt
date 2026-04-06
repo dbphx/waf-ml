@@ -181,3 +181,5 @@ Categories of Normal Traffic (50 Categories)
 179. Benign NLP Query 8: GET /api/bot?prompt=select%20all%20the%20images%20that%20have%20a%20cat HTTP/1.1
 180. Benign NLP Query 9: GET /feedback?msg=I%20tried%20to%20insert%20my%20card%20but%20it%20gave%20an%20error HTTP/1.1
 181. Benign NLP Query 10: GET /search?q=union%20station%20train%20schedule HTTP/1.1
+182. FP_USER_59: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/?group_by=state_id&order_by=-created_at&sub_issue=true&filters=%7B%22created_by_id__in%22:%22d5bfcc01-0096-4c85-a741-3309c3099472%22%7D&layout=kanban&cursor=30:0:0&per_page=30
+183. FP_USER_60: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/
