@@ -101,7 +101,12 @@ def process_all_data():
         "GET /assets/script-tag-2befZuvx.js HTTP/1.1",
         "GET /static/js/select.min.js HTTP/1.1",
         "GET /static/js/alert.min.js HTTP/1.1",
-        "GET /js/components/AlertDialog.js HTTP/1.1"
+                "GET /js/components/AlertDialog.js HTTP/1.1",
+        "GET /search?q=I%20select%20like%20you%20union HTTP/1.1",
+        "GET /api/chat?message=can%20you%20select%20the%20best%20union%20for%20me HTTP/1.1",
+        "GET /forum/post?title=why%20I%20drop%20out%20of%20the%20student%20union HTTP/1.1",
+        "GET /query?text=please%20insert%20the%20coin%20and%20select%20your%20drink HTTP/1.1",
+        "GET /help?q=how%20to%20update%20my%20profile%20and%20delete%20old%20photos HTTP/1.1"
     ]
     norm_reg_rows = [parse_http_string(p) for p in normal_regression]
     for r in norm_reg_rows: r['label'] = 0
