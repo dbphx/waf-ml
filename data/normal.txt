@@ -185,3 +185,5 @@ Categories of Normal Traffic (50 Categories)
 183. FP_USER_60: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/
 184. FP_USER_61: ?href=%2F_astro%2Fsystem-rule.CQ1lX61g.png&w=1910&h=988&f=webp
 185. FP_USER_62: /firebase-messaging-sw.js?apiKey=AIzaSyDSIcHYAtD1PSDh6YEf-fair8tJPAapBSk&authDomain=vnshop-consumer.firebaseapp.com&databaseURL=https%3A%2F%2Fvnshop-consumer.firebaseio.com&projectId=vnshop-consumer&storageBucket=vnshop-consumer.appspot.com&messagingSenderId=5.63692749265e%2B11&appId=1%3A563692749265%3Aweb%3A28fa5910ee1fb71dbf20f0&measurementId=G-2ZCHWBR4PS&externalScripts=
+186. FP_USER_63: GET http://dyn9c6472638136.dynamic.insky.io.vn/
+187. FP_USER_64: GET /static/imports/container.json

@@ -38,11 +38,11 @@ def run_categorical_test(use_onnx=False):
         onnx_path = f"{PROJECT_ROOT}/application/go/random_forest/assets/model.onnx"
         if not os.path.exists(onnx_path) and not os.path.exists(os.path.join(models_dir, 'model.onnx')):
              print("Error: ONNX model file not found.")
-             return
+             return False
     else:
         if not (os.path.exists(os.path.join(models_dir, 'model.joblib'))):
             print("Error: Model files not found. Run train.py first.")
-            return
+            return False
 
     predictor = HTTPAttackPredictor(models_dir, use_onnx=use_onnx)
     
@@ -155,6 +155,7 @@ def run_categorical_test(use_onnx=False):
     with open(report_path, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"Detailed categorical report saved to {report_path}")
+    return passed == total and total > 0
 
 if __name__ == "__main__":
     import argparse
@@ -162,4 +163,5 @@ if __name__ == "__main__":
     parser.add_argument('--onnx', action='store_true', help="Use ONNX model instead of Joblib")
     args = parser.parse_args()
     
-    run_categorical_test(use_onnx=args.onnx)
+    ok = run_categorical_test(use_onnx=args.onnx)
+    sys.exit(0 if ok else 1)

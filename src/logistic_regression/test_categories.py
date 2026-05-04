@@ -33,7 +33,7 @@ def run_categorical_test():
     
     if not (os.path.exists(os.path.join(models_dir, 'model.joblib'))):
         print("Error: Model files not found. Run train.py first.")
-        return
+        return False
 
     predictor = HTTPAttackPredictor(models_dir)
     
@@ -116,6 +116,8 @@ def run_categorical_test():
     with open(report_path, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"Detailed categorical report saved to {report_path}")
+    return passed == total and total > 0
 
 if __name__ == "__main__":
-    run_categorical_test()
+    ok = run_categorical_test()
+    sys.exit(0 if ok else 1)

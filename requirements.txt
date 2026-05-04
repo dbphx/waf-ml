@@ -1,6 +1,7 @@
 pandas
 numpy
-scikit-learn
+# joblib models must match train-time sklearn; bump the cap only after retraining.
+scikit-learn>=1.6.1,<1.8
 matplotlib
 seaborn
 flask
