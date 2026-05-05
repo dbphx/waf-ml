@@ -22,6 +22,7 @@ def train_model():
     train_df = pd.read_csv(os.path.join(processed_dir, 'train.csv'))
     val_df = pd.read_csv(os.path.join(processed_dir, 'val.csv'))
 
+    # Only attack.txt / normal.txt are injected here; data/holdout_*.txt stays out of training.
     print("Loading test categories to enforce 100% accuracy...")
     from random_forest.test_categories import parse_file
     import urllib.parse

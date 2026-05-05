@@ -8,7 +8,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='logistic_regression',
-                        choices=['logistic_regression', 'random_forest'],
+                        choices=['logistic_regression', 'random_forest', 'securebert2'],
                         help='Model folder to use for predictions')
     args = parser.parse_args()
     
@@ -24,11 +24,15 @@ def main():
         from predict import HTTPAttackPredictor
     except ImportError as e:
         print(f"Error importing predictor for {model_name}: {e}")
-        return
+        return False
 
-    if not os.path.exists(os.path.join(models_dir, 'model.joblib')):
+    if model_name == 'securebert2':
+        if not os.path.exists(os.path.join(models_dir, 'head.joblib')):
+            print(f"Error: SecureBERT2 not found at {models_dir}. Run src/securebert2/train.py first.")
+            return False
+    elif not os.path.exists(os.path.join(models_dir, 'model.joblib')):
         print(f"Error: Model not found at {models_dir}. Please train the model first.")
-        return
+        return False
 
     predictor = HTTPAttackPredictor(models_dir)
 
@@ -212,6 +216,8 @@ def main():
 
     print("-" * 85)
     print(f"Passed {passed}/{len(samples)} samples.")
+    return passed == len(samples)
 
 if __name__ == "__main__":
-    main()
+    ok = main()
+    sys.exit(0 if ok else 1)

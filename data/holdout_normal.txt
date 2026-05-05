@@ -1,0 +1,17 @@
+Hold-out benign traffic (NOT merged in train.py)
+Different product surfaces than data/normal.txt (k8s paths, Next.js, CDN, OAuth, geo API, etc.)
+-----------------------------------------------------------------------------------------------
+1. ACME well-known: GET /.well-known/acme-challenge/aGVsbG8td29ybGQ
+2. Kubernetes list pods: GET /api/v1/namespaces/kube-system/pods?limit=10&fieldSelector=status.phase=Running
+3. Open-Meteo style forecast: GET /v1/forecast?latitude=48.85&longitude=2.35&hourly=temperature_2m
+4. Map tile static: GET /tiles/12/2204/1345.png
+5. Cloudflare diagnostic trace: GET /cdn-cgi/trace
+6. Stripe-style webhook path (no secret): GET /v1/webhooks/endpoints/we_abc123/received_events
+7. OAuth2 authorize: GET /oauth2/authorize?response_type=code&client_id=spa&redirect_uri=https://app.example/callback&scope=openid%20profile
+8. OData aggregate apply: GET /odata/Products?$apply=filter(Price%20le%20100)/groupby((Category),aggregate(Price%20with%20average%20as%20AvgPrice))
+9. GitHub Actions workflow file: GET /repos/acme/platform/actions/workflows/deploy.yml
+10. Next.js RSC data path: GET /_next/data/build-xyz/en/dashboard.json
+11. Hashed webpack asset: GET /static/js/main.4b2c9f1a.chunk.js
+12. K8s liveness probe: GET /healthz/live
+13. Cursor pagination base64: GET /api/v2/items?cursor=eyJpZCI6MTAwMCwiX2MiOiJxIn0%3D&page_size=25
+14. RFC 6570-ish template literal path only: GET /discovery/keys/kid-primary-2024
