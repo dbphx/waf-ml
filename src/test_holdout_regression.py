@@ -61,7 +61,11 @@ def load_predictor(model_name: str):
     from predict import HTTPAttackPredictor
 
     models_dir = os.path.join(PROJECT_ROOT, "models", model_name)
-    if not os.path.exists(os.path.join(models_dir, "model.joblib")):
+    if model_name == "securebert2":
+        if not os.path.exists(os.path.join(models_dir, "head.joblib")):
+            print(f"Missing SecureBERT2 head.joblib under {models_dir}", file=sys.stderr)
+            return None
+    elif not os.path.exists(os.path.join(models_dir, "model.joblib")):
         print(f"Missing model.joblib under {models_dir}", file=sys.stderr)
         return None
     return HTTPAttackPredictor(models_dir)
@@ -103,16 +107,18 @@ def main():
     parser = argparse.ArgumentParser(description="Held-out tests (not in training merge)")
     parser.add_argument(
         "--model",
-        choices=["random_forest", "logistic_regression", "both"],
+        choices=["random_forest", "logistic_regression", "securebert2", "both", "all"],
         default="both",
+        help="both = RF+LR only; all = RF+LR+SecureBERT2 (requires trained models/securebert2)",
     )
     args = parser.parse_args()
 
-    models = (
-        ["random_forest", "logistic_regression"]
-        if args.model == "both"
-        else [args.model]
-    )
+    if args.model == "both":
+        models = ["random_forest", "logistic_regression"]
+    elif args.model == "all":
+        models = ["random_forest", "logistic_regression", "securebert2"]
+    else:
+        models = [args.model]
     all_ok = True
     for m in models:
         if not run_holdout(m):

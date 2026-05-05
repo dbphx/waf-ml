@@ -24,7 +24,7 @@ def train_model():
     
     # Only attack.txt / normal.txt are injected here; data/holdout_*.txt stays out of training.
     print("Loading test categories to enforce 100% accuracy...")
-    from logistic_regression.test_categories import parse_file
+    from parse_category_files import parse_category_lines as parse_file
     import urllib.parse
     import re
 

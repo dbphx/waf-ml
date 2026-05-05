@@ -1,3 +1,5 @@
+import argparse
+import contextlib
 import os
 import sys
 import re
@@ -30,6 +32,20 @@ def parse_file(filepath):
             pass
     return categories
 
+
+class _Tee:
+    def __init__(self, *streams):
+        self.streams = streams
+
+    def write(self, data):
+        for s in self.streams:
+            s.write(data)
+
+    def flush(self):
+        for s in self.streams:
+            s.flush()
+
+
 def run_categorical_test(use_onnx=False):
     models_dir = f"{PROJECT_ROOT}/models/random_forest"
     data_dir = f"{PROJECT_ROOT}/data"
@@ -45,7 +61,9 @@ def run_categorical_test(use_onnx=False):
             return False
 
     predictor = HTTPAttackPredictor(models_dir, use_onnx=use_onnx)
-    
+    mode = "ONNXRuntime" if use_onnx else "joblib+sklearn"
+    print(f"=== Random forest categorical test | backend={mode} ===\n")
+
     test_files = [
         {"file": "attack.txt", "expected": "ATTACK"},
         {"file": "normal.txt", "expected": "NORMAL"}
@@ -148,8 +166,8 @@ def run_categorical_test(use_onnx=False):
     accuracy = (passed / total) * 100 if total > 0 else 0
     print(f"SUMMARY: {passed}/{total} Passed ({accuracy:.2f}%)")
     
-    # Save detailed report
-    report_path = f"{PROJECT_ROOT}/reports/random_forest/categorical_results.json"
+    sfx = "_onnx" if use_onnx else ""
+    report_path = f"{PROJECT_ROOT}/reports/random_forest/categorical_results{sfx}.json"
     os.makedirs(os.path.dirname(report_path), exist_ok=True)
     import json
     with open(report_path, 'w') as f:
@@ -158,10 +176,16 @@ def run_categorical_test(use_onnx=False):
     return passed == total and total > 0
 
 if __name__ == "__main__":
-    import argparse
     parser = argparse.ArgumentParser(description="Test classification of various payloads")
     parser.add_argument('--onnx', action='store_true', help="Use ONNX model instead of Joblib")
+    parser.add_argument('--log', type=str, default=None, help="Also write stdout to this file")
     args = parser.parse_args()
-    
-    ok = run_categorical_test(use_onnx=args.onnx)
+
+    if args.log:
+        os.makedirs(os.path.dirname(args.log) or ".", exist_ok=True)
+        with open(args.log, "w", encoding="utf-8") as logf:
+            with contextlib.redirect_stdout(_Tee(sys.stdout, logf)):
+                ok = run_categorical_test(use_onnx=args.onnx)
+    else:
+        ok = run_categorical_test(use_onnx=args.onnx)
     sys.exit(0 if ok else 1)

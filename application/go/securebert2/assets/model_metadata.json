@@ -1,0 +1,21 @@
+{
+  "backend": "transformers",
+  "hf_model_id": "cisco-ai/SecureBERT2.0-base",
+  "note": "Inference: Python (src/securebert2/predict.py). Go waf.BaseDetector is not compatible with this ONNX schema.",
+  "threshold": {
+    "attack_threshold": 0.13,
+    "val_accuracy_at_threshold": 0.9962513688821498
+  },
+  "inference": {
+    "max_length": 256,
+    "hf_model_id": "cisco-ai/SecureBERT2.0-base"
+  },
+  "onnx": {
+    "path": "model.onnx",
+    "inputs": [
+      "input_ids",
+      "attention_mask"
+    ],
+    "output": "logit"
+  }
+}

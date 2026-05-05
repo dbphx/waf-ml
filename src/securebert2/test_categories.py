@@ -7,7 +7,7 @@ import urllib.parse
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from logistic_regression.predict import HTTPAttackPredictor
+from securebert2.predict import HTTPAttackPredictor
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
@@ -28,23 +28,26 @@ class _Tee:
 
 
 def run_categorical_test(use_onnx=False):
-    models_dir = f"{PROJECT_ROOT}/models/logistic_regression"
+    models_dir = f"{PROJECT_ROOT}/models/securebert2"
     data_dir = f"{PROJECT_ROOT}/data"
 
-    if use_onnx:
-        onnx_p = os.path.join(PROJECT_ROOT, "application/go/logistic_regression/assets/model.onnx")
-        if not os.path.isfile(onnx_p):
-            onnx_p = os.path.join(models_dir, "model.onnx")
-        if not os.path.isfile(onnx_p):
-            print(f"Error: ONNX not found at application/go/logistic_regression/assets/model.onnx")
-            return False
-    elif not (os.path.exists(os.path.join(models_dir, "model.joblib"))):
-        print("Error: Model files not found. Run train.py first.")
+    if not (
+        os.path.exists(os.path.join(models_dir, "head.joblib"))
+        and os.path.exists(os.path.join(models_dir, "encoder", "config.json"))
+    ):
+        print("Error: SecureBERT2 bundle not found. Run: python src/securebert2/train.py")
         return False
 
+    if use_onnx:
+        onnx_p = os.path.join(models_dir, "model.onnx")
+        if not os.path.isfile(onnx_p):
+            print(f"Error: {onnx_p} missing. Run: python src/securebert2/export_for_go.py")
+            return False
+
     predictor = HTTPAttackPredictor(models_dir, use_onnx=use_onnx)
-    mode = "ONNXRuntime" if use_onnx else "joblib+sklearn"
-    print(f"=== Logistic regression categorical test | backend={mode} ===\n")
+
+    mode = "ONNXRuntime" if use_onnx else "PyTorch+sklearn"
+    print(f"=== SecureBERT2 categorical test | backend={mode} ===\n")
 
     test_files = [
         {"file": "attack.txt", "expected": "ATTACK"},
@@ -77,7 +80,9 @@ def run_categorical_test(use_onnx=False):
                 passed += 1
 
             status = "✅" if is_correct else "❌"
-            print(f"{cat['category'][:50]:<50} | {'RAW':<8} | {tf['expected']:<8} | {pred:<8} | {conf:.4f} | {elapsed:>8.2f} | {status}")
+            print(
+                f"{cat['category'][:50]:<50} | {'RAW':<8} | {tf['expected']:<8} | {pred:<8} | {conf:.4f} | {elapsed:>8.2f} | {status}"
+            )
 
             results.append(
                 {
@@ -125,7 +130,7 @@ def run_categorical_test(use_onnx=False):
     print(f"SUMMARY: {passed}/{total} Passed ({accuracy:.2f}%)")
 
     sfx = "_onnx" if use_onnx else ""
-    report_path = f"{PROJECT_ROOT}/reports/logistic_regression/categorical_results{sfx}.json"
+    report_path = f"{PROJECT_ROOT}/reports/securebert2/categorical_results{sfx}.json"
     os.makedirs(os.path.dirname(report_path), exist_ok=True)
     with open(report_path, "w") as f:
         json.dump(results, f, indent=2)
@@ -135,8 +140,17 @@ def run_categorical_test(use_onnx=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--onnx", action="store_true", help="Use ONNX from application/go/.../assets")
-    parser.add_argument("--log", type=str, default=None, help="Also write stdout to this file")
+    parser.add_argument(
+        "--onnx",
+        action="store_true",
+        help="Use application/go/securebert2/assets/model.onnx or models/securebert2/model.onnx",
+    )
+    parser.add_argument(
+        "--log",
+        type=str,
+        default=None,
+        help="Also write stdout to this log file",
+    )
     args = parser.parse_args()
 
     if args.log:

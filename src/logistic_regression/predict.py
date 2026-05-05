@@ -13,9 +13,21 @@ from preprocessing import parse_http_string
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 class HTTPAttackPredictor:
-    def __init__(self, model_dir=f"{PROJECT_ROOT}/models/logistic_regression"):
-        self.model = joblib.load(os.path.join(model_dir, 'model.joblib'))
-        self.fe = FeatureEngineer(os.path.join(model_dir, 'vectorizer.joblib'))
+    def __init__(self, model_dir=f"{PROJECT_ROOT}/models/logistic_regression", use_onnx=False):
+        self.use_onnx = bool(use_onnx)
+        self.fe = FeatureEngineer(os.path.join(model_dir, "vectorizer.joblib"))
+        if self.use_onnx:
+            import onnxruntime as ort
+
+            onnx_path = f"{PROJECT_ROOT}/application/go/logistic_regression/assets/model.onnx"
+            if not os.path.exists(onnx_path):
+                onnx_path = os.path.join(model_dir, "model.onnx")
+            self.sess = ort.InferenceSession(onnx_path)
+            self.input_name = self.sess.get_inputs()[0].name
+            self.model = None
+        else:
+            self.model = joblib.load(os.path.join(model_dir, "model.joblib"))
+            self.sess = None
 
     def predict(self, http_data):
         if isinstance(http_data, dict):
@@ -42,7 +54,11 @@ class HTTPAttackPredictor:
             df = pd.DataFrame([parsed])
 
         X = self.fe.transform(df)
-        prob = self.model.predict_proba(X)[0][1]
+        if self.use_onnx:
+            X_dense = X.toarray().astype(np.float32)
+            prob = self.sess.run(None, {self.input_name: X_dense})[1][0][1]
+        else:
+            prob = self.model.predict_proba(X)[0][1]
         
         threshold = 0.72 # Optimized based on categorical analysis (0.59 < T < 0.84)
         prediction = "ATTACK" if prob >= threshold else "NORMAL"
