@@ -2,17 +2,16 @@
 
 This project implements a high-performance Web Application Firewall (WAF) detection model. It uses machine learning to identify HTTP attacks (SQLi, XSS, LFI, RCE, etc.) with native support for both Python (training) and Golang (inference) for the **TF-IDF + sklearn** models.
 
-We support three Python model bundles side-by-side:
+We support two Python model bundles side-by-side:
 
 | Bundle | Inference (Python) | Go `pkg/waf` ONNX |
 | ------ | ------------------ | ----------------- |
 | **Random Forest** | joblib or ONNX | Yes — TF-IDF `float_input` |
 | **Logistic Regression** | joblib or ONNX | Yes — TF-IDF `float_input` |
-| **SecureBERT 2.0** | PyTorch + LR head or **end-to-end ONNX** | No — schema differs (transformer inputs); use Python or custom runtime |
 
 ## Key features
 
-- **Multiple models**: Random Forest, Logistic Regression (TF-IDF + stats), and optional [SecureBERT 2.0](https://huggingface.co/cisco-ai/SecureBERT2.0-base) (`src/securebert2/`) with frozen embeddings + logistic head.
+- **Multiple models**: Random Forest and Logistic Regression (TF-IDF + stats).
 - **Hybrid features (TF-IDF models)**: Character n-grams (2–5), TF-IDF, entropy, keyword ratios.
 - **Regression suite**: Payloads from `data/attack.txt` and `data/normal.txt` (RAW + URL-encoded) — target **100%** pass on categorical tests for production parity.
 - **Go runtime**: TF-IDF ONNX models load via `onnxruntime` with shared `model_metadata.json` (vocabulary + IDF + keywords).
@@ -26,7 +25,6 @@ We support three Python model bundles side-by-side:
 │   ├── pkg/waf/                  # BaseDetector (TF-IDF ONNX), reputation
 │   ├── random_forest/assets/     # model.onnx, model_metadata.json
 │   ├── logistic_regression/assets/
-│   ├── securebert2/assets/       # tokenizer + optional model.onnx (large); metadata only in git by default
 │   └── example.go
 ├── data/
 │   ├── processed/              # train.csv, val.csv (from standardize_data.py)
@@ -35,7 +33,6 @@ We support three Python model bundles side-by-side:
 ├── models/
 │   ├── random_forest/
 │   ├── logistic_regression/
-│   └── securebert2/            # encoder/, head.joblib, tokenizer; ONNX optional (~550MB)
 ├── reports/                    # JSON + optional test logs
 └── src/
     ├── feature_engineering.py
@@ -43,7 +40,6 @@ We support three Python model bundles side-by-side:
     ├── parse_category_files.py
     ├── random_forest/
     ├── logistic_regression/
-    ├── securebert2/
     ├── test_samples.py
     └── test_holdout_regression.py
 ```
@@ -108,13 +104,6 @@ python src/random_forest/train.py
 python src/logistic_regression/train.py
 ```
 
-Optional **SecureBERT 2.0** (downloads ~600MB weights on first run; CPU embedding pass can take hours on full data):
-
-```bash
-python src/securebert2/train.py
-# Optional env: SECUREBERT2_EMBED_BATCH, SECUREBERT2_MAX_LEN — see models/securebert2/README.txt
-```
-
 ### 3. Export ONNX for Go (TF-IDF models)
 
 ```bash
@@ -122,11 +111,6 @@ python src/random_forest/export_for_go.py
 python src/logistic_regression/export_for_go.py
 ```
 
-**SecureBERT 2.0** export (copies tokenizer + encoder + builds **end-to-end** `model.onnx`):
-
-```bash
-python src/securebert2/export_for_go.py
-```
 
 ---
 
@@ -149,13 +133,9 @@ python src/random_forest/test_categories.py --onnx --log reports/random_forest/c
 # Logistic Regression — ONNX + log
 python src/logistic_regression/test_categories.py --onnx --log reports/logistic_regression/categorical_test_onnx.log
 
-# SecureBERT 2 — ONNX + log (requires export_for_go first)
-python src/securebert2/test_categories.py --onnx --log reports/securebert2/categorical_test_onnx.log
-
-# Same without ONNX (PyTorch+sklearn for SecureBERT; joblib for RF/LR)
+# Same without ONNX (joblib)
 python src/random_forest/test_categories.py --log reports/random_forest/categorical_test_joblib.log
 python src/logistic_regression/test_categories.py --log reports/logistic_regression/categorical_test_joblib.log
-python src/securebert2/test_categories.py --log reports/securebert2/categorical_test_pytorch.log
 ```
 
 JSON reports are written under `reports/<model>/categorical_results.json` or `categorical_results_onnx.json` when `--onnx` is used.
@@ -165,22 +145,20 @@ JSON reports are written under `reports/<model>/categorical_results.json` or `ca
 ```bash
 python src/test_samples.py --model random_forest
 python src/test_samples.py --model logistic_regression
-python src/test_samples.py --model securebert2
 ```
 
 ### Hold-out set (`data/holdout_*.txt` — not merged into training)
 
 ```bash
 python src/test_holdout_regression.py --model both          # RF + LR only
-python src/test_holdout_regression.py --model all           # + SecureBERT2 (needs trained bundle)
-python src/test_holdout_regression.py --model securebert2
+python src/test_holdout_regression.py --model all
 ```
 
 ---
 
 ## Go application usage
 
-Located in `application/go`. **Only Random Forest and Logistic Regression** use `waf.NewBaseDetector` (TF-IDF ONNX). **Do not** pass `-model securebert2` to `example.go` — use Python inference for SecureBERT.
+Located in `application/go`. Random Forest and Logistic Regression use `waf.NewBaseDetector` (TF-IDF ONNX).
 
 ### Prerequisites
 
@@ -221,7 +199,6 @@ blocked, score, reason := detector.PredictSemantic("192.168.1.10", requestMap)
 | ----- | ---------------------- | ----- |
 | **Random Forest** | 100% target on suite | TF-IDF + RF; thresholds in predict / Go |
 | **Logistic Regression** | 100% target on suite | TF-IDF + LR; threshold ~0.72 (Python) |
-| **SecureBERT 2.0** | 100% target when trained on full merged data | Embedding + sklearn head; ONNX matches logits numerically after export |
 
 Hold-out files (`data/holdout_attack.txt`, `holdout_normal.txt`) are intentionally **excluded** from `train.py` merges — use them to sanity-check generalization beyond the main regression lists.
 

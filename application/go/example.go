@@ -14,15 +14,11 @@ import (
 
 func main() {
 	// Parse command line arguments
-	modelType := flag.String("model", "random_forest", "Model type: random_forest | logistic_regression (ONNX). securebert2 is Python-only.")
+	modelType := flag.String("model", "random_forest", "Model type: random_forest | logistic_regression (ONNX).")
 	sharedLib := flag.String("lib", "", "Path to onnxruntime shared library (e.g., libonnxruntime.dylib or .so)")
 	payloadFile := flag.String("payload-file", "", "Optional path to a .txt file containing a payload to test")
 	payloadContains := flag.String("payload-contains", "", "If set, select the first line containing this substring from payload-file")
 	flag.Parse()
-
-	if *modelType == "securebert2" {
-		log.Fatalf("securebert2 uses Hugging Face checkpoints; use Python (src/securebert2/predict.py). Go BaseDetector only supports TF-IDF + sklearn ONNX models.")
-	}
 
 	if *sharedLib == "" {
 		fmt.Println("Error: Please provide the path to the onnxruntime shared library using -lib")

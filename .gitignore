@@ -21,13 +21,6 @@ env/
 *.onnx.data
 models/*/results/
 
-# SecureBERT2 packaged weights under Go (large); keep only small metadata in git
-application/go/securebert2/assets/**
-!application/go/securebert2/assets/model_metadata.json
-
-# End-to-end ONNX (~550MB+); regenerate via src/securebert2/export_for_go.py
-models/securebert2/model.onnx
-
 # OS
 .DS_Store
 Thumbs.db
@@ -37,3 +30,4 @@ agent.md
 # Dolt database files (added by bd init)
 .dolt/
 *.db
+waf-ml.zip
