@@ -188,3 +188,5 @@ Categories of Normal Traffic (50 Categories)
 186. FP_USER_63: GET http://dyn9c6472638136.dynamic.insky.io.vn/
 187. FP_USER_64: GET /static/imports/container.json
 188. FP_USER_65: /bo/config/units?filter=%7B%22offset%22%3Anull%2C%22where%22%3A%7B%22id%22%3A%7B%22inq%22%3A%5B%22botle%22%5D%7D%7D%7D
+189. FP_USER_66: /bo/config/units?filter=%7B%22offset%22%3Anull%2C%22where%22%3A%7B%22id%22%3A%7B%22inq%22%3A%5B%22combo%22%5D%7D%7D%7D
+190. FP_USER_67: ?id=1
