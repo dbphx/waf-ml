@@ -2,6 +2,8 @@ import os
 import sys
 import joblib
 import json
+import hashlib
+import subprocess
 
 # Allow importing from parent src/ directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -11,6 +13,23 @@ from feature_engineering import FeatureEngineer, SUSPICIOUS_KEYWORDS
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 sys.setrecursionlimit(50000)
+
+def get_git_commit():
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            cwd=PROJECT_ROOT,
+            text=True,
+        ).strip()
+    except Exception:
+        return "unknown"
+
+def file_sha256(path):
+    hasher = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            hasher.update(chunk)
+    return hasher.hexdigest()
 
 def export():
     models_dir = f"{PROJECT_ROOT}/models/random_forest"
@@ -32,17 +51,15 @@ def export():
     idf = vectorizer.idf_.tolist()
     
     metadata = {
+        "model_name": "random_forest",
         "ngram_range": vectorizer.ngram_range,
         "max_features": vectorizer.max_features,
         "vocabulary": terms,
         "idf": idf,
         "keywords": SUSPICIOUS_KEYWORDS,
+        "exported_from_commit": get_git_commit(),
     }
-    
-    with open(os.path.join(go_dir, "model_metadata.json"), "w") as f:
-        json.dump(metadata, f, indent=2)
-    print(f"Exported metadata to {go_dir}/model_metadata.json")
-    
+
     # 3. Export to ONNX
     print("Generating ONNX model...")
     from skl2onnx import convert_sklearn
@@ -72,6 +89,12 @@ def export():
     with open(onnx_python_path, "wb") as f:
         f.write(onnx_model.SerializeToString())
     print(f"Exported ONNX model to {onnx_python_path}")
+
+    metadata["model_sha256"] = file_sha256(onnx_path)
+    metadata_path = os.path.join(go_dir, "model_metadata.json")
+    with open(metadata_path, "w") as f:
+        json.dump(metadata, f, indent=2)
+    print(f"Exported metadata to {metadata_path}")
 
 if __name__ == "__main__":
     export()
