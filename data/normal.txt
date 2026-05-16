@@ -190,3 +190,30 @@ Categories of Normal Traffic (50 Categories)
 188. FP_USER_65: /bo/config/units?filter=%7B%22offset%22%3Anull%2C%22where%22%3A%7B%22id%22%3A%7B%22inq%22%3A%5B%22botle%22%5D%7D%7D%7D
 189. FP_USER_66: /bo/config/units?filter=%7B%22offset%22%3Anull%2C%22where%22%3A%7B%22id%22%3A%7B%22inq%22%3A%5B%22combo%22%5D%7D%7D%7D
 190. FP_USER_67: ?id=1
+191. Benign Alerting Webhook JSON: POST /n8n/webhook/vntaxi-critical-alert1 {"receiver":"telegram_vntaxi","status":"firing","alerts":[{"status":"firing","labels":{"TaxiPlatform":"EMDDI","alertname":"Taxi_EMDDI Healthcheck","result":"timeout","server":"https://service-sup.emddi.xyz/v1/vehicles?regionId=2u0026latitude=21.0227663u0026radius=2000.0u0026serviceId=u0026maxCount=20u0026longitude=105.8472224"}}],"title":"[FIRING:1] VnTaxi (Taxi_EMDDI Healthcheck EMDDI timeout https://service-sup.emddi.xyz/v1/vehicles?regionId=2u0026latitude=21.0227663u0026radius=2000.0u0026serviceId=u0026maxCount=20u0026longitude=105.8472224)"}
+192. Benign Alerting Webhook URL: GET https://dyn65eb01732075.sunny.edgevnpay.vn/n8n/webhook/vntaxi-critical-alert1
+193. Benign Alerting Webhook URL: GET https://dyn65eb01732075.sunny.edgevnpay.vn/n8n/webhook/vnfilm-alerts
+194. Benign Metadata Fetch URL: GET https://dyna70b64037008.sunny.edgevnpay.vn/client-data/1/domains/officevnpay/meta-data.xml?uniqueValue=9S714J112607ZN3000145
+195. Benign Status Update URL: GET https://dyna70b64037008.sunny.edgevnpay.vn/statusUpdate?computerName=linhtm1&domainName=OFFICEVNPAY&domainType=2&actionToCall=1&actions=12&osPlatform=1&uniqueValue=9S716R6121228ZMB000170
+196. Benign Telemetry URL: GET predict/intelligence/telemetry?customerid=1&agentresourceidentifier=16795&resourceid=16795&uniquevalue=83yh9t3
+197. Benign Flash Sale URL: predict /flash-sale?_rsc=k4cpe x-request-id: 20260516.27960cf7-b2c0-4624-84fc-e197611c4e69
+198. Benign Next Static Chunk URL: /_next/static/chunks/app/100_shop/[merchant]/[channel]/[subchannel]/[locale]/(navigation)/[[...slug]]/page-acc48ae32f991806.js x-request-id: 20260516.1587ed04-64e1-47b2-b736-e545ec486c07 predict
+199. Benign Blocks Filter URL: /api/blocks?filter={"where":{"id":{"inq":[37101,37121,37129,37125,37126,37127,37128,37152,37153,37154,37155,37156,37119,37120,37122,37103,37123,37102,37124,37104]},"status":"40act"},"order":["position+asc"]} x-request-id: 5a985193-6221-4eee-8a04-856996e1780b
+200. Benign Category Listing URL: /p/danh-sach-quat-cac-loai?sku-route-history=homepage_promote_category_menu&_rsc=vjxkb x-request-id: 20260516.efd58f1f-d429-4458-9f54-4839c717b1c8
+201. Benign Category Listing URL: /p/danh-sach-quat-cac-loai?_rsc=oaf0w x-request-id: 20260516.878d9e12-6c31-4b48-8bd3-254fd5d11477
+202. Benign Status Update URL: predict /statusupdate?computername=baopg1&domainname=officevnpay&domaintype=2&actiontocall=1&actions=12&osplatform=1&uniquevalue=9s714j112607zn3000145
+203. Benign Category Page URL: /p/catepage-hb-thiet-bi-lam-dep?_rsc=e78op x-request-id: 20260516.c0ae4cf8-6917-4b27-9775-1fa1dd362429
+204. Benign Login Return URL: /login?returnurl=////example.com/ x-request-id: 2026051605161b79433a-3ebf-4377-8f02-2e483fbd8f08
+205. Benign Placeholder Image URL: /img/placeholder/placeholder-image-thumbnail.png x-request-id: 20260516.ab7f6eec-e894-4f9f-878a-1753bf98d000
+206. Benign Status Update URL: /statusupdate?computername=baopg1&domainname=officevnpay&domaintype=2&actiontocall=1&actions=12&osplatform=1&uniquevalue=9s714j112607zn3000145
+207. Benign Metadata Fetch URL: /client-data/1/domains/officevnpay/meta-data.xml?uniquevalue=9s7158571676zr4000150
+208. Benign Status Update URL: /statusupdate?computername=mont&domainname=officevnpay&domaintype=2&actiontocall=1&actions=12&osplatform=1&uniquevalue=m6n0lp00k74522a
+209. Benign Auth Login URL: /auth/vnpay/login?data=oltzje7zapslmxqj5/pwgcmm/kvon8bo9fiak4dd6hgzj+1z6ipdto2faxfqjyu0uzbnau5xkrvr1o8ayhk17emctglfs68umh68sxuqrrg0y9eru2fsyox63gezfmrys6muyuolmcwzobikslln4gvxylq6vzz0nmygjpy770hduspzeovrpevn0ckdwn/wjeulvhlt+ngxp6xhtnwqvakjsv0docfjwq9uxefoac/ymplylclli49d/6gl3tr8b50/zjuzwde7stvmuv+ztdbtxzc/ldezwolzpelf8nxrmqzia1fkuv0=&signature=6f6343a7153639e5bd934a662b376428 x-request-id: 20260516.6ee1d97e-70cf-4c7c-84a8-64cc6db1b074
+210. Benign EA Agent Logging URL: /intelligence/eaagentlogging?agentresourceidentifier=22037&resourceid=22037&uniquevalue=9s717l112446zm3000052
+211. Benign Next Static Font URL: /_next/static/media/inter_italic_variablefont_opsz_wght-s.p.ff920778.woff2 x-request-id: 202605160516779376c7-f55e-4356-8d34-7e8b8bd3ae8a
+212. Benign Next Static Font URL: /_next/static/media/3787d9a87cc64466-s.p.ttf x-request-id: 20260516.f59e75f7-8174-46a6-8c13-387271dd7c0e
+213. Benign Voucher Subchannels URL: /bo/merchants/vouchersystem/subchannels x-forwarded-for: 103.220.86.4 x-real-ip: 103.220.86.4 x-request-id: 20260516.9ff369a8-74ad-4077-b065-1cfaf3fc0cb7
+214. Benign Metadata Fetch URL: /client-data/1/domains/officevnpay/meta-data.xml?uniquevalue=rcn0cx02h060502
+215. Benign Next Static Font URL: /_next/static/media/3787d9a87cc64466-s.p.ttf x-request-id: 20260516.4e74e0e7-4875-4e27-a649-e61ce31115a0
+216. Benign Next Static Font URL: /_next/static/media/3787d9a87cc64466-s.p.ttf x-request-id: 20260516.7e35b332-516a-4fa8-952c-9feeec9ecfe8
+217. Benign Placeholder Image URL: /img/placeholder/placeholder-image-thumbnail.png x-request-id: 20260516.e8385f13-0d7b-4a73-84ab-7f122d68304b
