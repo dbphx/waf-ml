@@ -60,7 +60,7 @@ class HTTPAttackPredictor:
         else:
             prob = self.model.predict_proba(X)[0][1]
         
-        threshold = 0.72 # Optimized based on categorical analysis (0.59 < T < 0.84)
+        threshold = 0.77 # Keeps a margin above current benign FP max (0.7621) while below attack min (0.9475)
         prediction = "ATTACK" if prob >= threshold else "NORMAL"
         confidence = round(float(prob if prob >= threshold else 1 - prob), 4)
         
