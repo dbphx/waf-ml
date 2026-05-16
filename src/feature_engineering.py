@@ -6,6 +6,13 @@ import joblib
 import os
 import re
 
+SUSPICIOUS_KEYWORDS = [
+    'select', 'union', 'insert', 'update', 'delete', 'drop', 'from', 'where',
+    'script', 'alert(', 'onerror', 'eval', '../', './',
+    '${', '{{', '}}', '() {', ';', '|', '&',
+    '$gt', '$ne', '$in', 'cat ', 'whoami'
+]
+
 class FeatureEngineer:
     def __init__(self, vectorizer_path=None):
         if vectorizer_path and os.path.exists(vectorizer_path):
@@ -30,13 +37,7 @@ class FeatureEngineer:
         features['entropy'] = text_series.apply(calc_entropy)
         
         # Keyword frequencies
-        keywords = [
-            'select', 'union', 'insert', 'update', 'delete', 'drop', 'from', 'where',
-            'script', 'alert', 'onerror', 'eval', '../', './',
-            '${', '{{', '}}', '() {', ';', '|', '&',
-            '$gt', '$ne', '$in', 'cat ', 'whoami'
-        ]
-        for kw in keywords:
+        for kw in SUSPICIOUS_KEYWORDS:
             features[f'kw_{kw}'] = text_series.apply(lambda x: x.count(kw) / (len(x) + 1))
             
         return features

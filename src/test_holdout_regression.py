@@ -3,6 +3,7 @@ Held-out regression: payloads in data/holdout_*.txt are never merged in train.py
 (train only injects data/attack.txt + data/normal.txt). Same request parsing as categorical tests.
 """
 import argparse
+import importlib.util
 import os
 import re
 import sys
@@ -55,17 +56,25 @@ def payload_to_request_dict(payload: str) -> dict:
 
 
 def load_predictor(model_name: str):
-    sub = os.path.join(os.path.dirname(__file__), model_name)
-    if sub not in sys.path:
-        sys.path.insert(0, sub)
-    from predict import HTTPAttackPredictor
+    # Load each src/<model>/predict.py as its own module — `from predict import ...` would
+    # reuse the first cached `predict` (e.g. random_forest) when --model all.
+    predict_path = os.path.join(os.path.dirname(__file__), model_name, "predict.py")
+    if not os.path.isfile(predict_path):
+        print(f"No predict.py at {predict_path}", file=sys.stderr)
+        return None
+    spec = importlib.util.spec_from_file_location(
+        f"waf_holdout_{model_name}_predict",
+        predict_path,
+    )
+    if spec is None or spec.loader is None:
+        print(f"Could not load {predict_path}", file=sys.stderr)
+        return None
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    HTTPAttackPredictor = mod.HTTPAttackPredictor
 
     models_dir = os.path.join(PROJECT_ROOT, "models", model_name)
-    if model_name == "securebert2":
-        if not os.path.exists(os.path.join(models_dir, "head.joblib")):
-            print(f"Missing SecureBERT2 head.joblib under {models_dir}", file=sys.stderr)
-            return None
-    elif not os.path.exists(os.path.join(models_dir, "model.joblib")):
+    if not os.path.exists(os.path.join(models_dir, "model.joblib")):
         print(f"Missing model.joblib under {models_dir}", file=sys.stderr)
         return None
     return HTTPAttackPredictor(models_dir)
@@ -107,16 +116,16 @@ def main():
     parser = argparse.ArgumentParser(description="Held-out tests (not in training merge)")
     parser.add_argument(
         "--model",
-        choices=["random_forest", "logistic_regression", "securebert2", "both", "all"],
+        choices=["random_forest", "logistic_regression", "both", "all"],
         default="both",
-        help="both = RF+LR only; all = RF+LR+SecureBERT2 (requires trained models/securebert2)",
+        help="both/all = RF+LR",
     )
     args = parser.parse_args()
 
     if args.model == "both":
         models = ["random_forest", "logistic_regression"]
     elif args.model == "all":
-        models = ["random_forest", "logistic_regression", "securebert2"]
+        models = ["random_forest", "logistic_regression"]
     else:
         models = [args.model]
     all_ok = True

@@ -6,7 +6,7 @@ import json
 # Allow importing from parent src/ directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from feature_engineering import FeatureEngineer
+from feature_engineering import FeatureEngineer, SUSPICIOUS_KEYWORDS
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
@@ -36,12 +36,7 @@ def export():
         "max_features": vectorizer.max_features,
         "vocabulary": terms,
         "idf": idf,
-        "keywords": [
-            'select', 'union', 'insert', 'update', 'delete', 'drop', 'from', 'where',
-            'script', 'alert', 'onerror', 'eval', '../', './',
-            '${', '{{', '}}', '() {', ';', '|', '&',
-            '$gt', '$ne', '$in', 'cat ', 'whoami'
-        ]
+        "keywords": SUSPICIOUS_KEYWORDS,
     }
     
     with open(os.path.join(go_dir, "model_metadata.json"), "w") as f:
