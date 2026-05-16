@@ -15,3 +15,4 @@ Different product surfaces than data/normal.txt (k8s paths, Next.js, CDN, OAuth,
 12. K8s liveness probe: GET /healthz/live
 13. Cursor pagination base64: GET /api/v2/items?cursor=eyJpZCI6MTAwMCwiX2MiOiJxIn0%3D&page_size=25
 14. RFC 6570-ish template literal path only: GET /discovery/keys/kid-primary-2024
+15. Alertmanager-style webhook JSON: POST /n8n/webhook/vntaxi-critical-alert1 {"receiver":"telegram_vntaxi","status":"firing","alerts":[{"status":"firing","labels":{"alertname":"Taxi_EMDDI Healthcheck","result":"timeout","server":"https://service-sup.emddi.xyz/v1/vehicles?regionId=2u0026latitude=21.0227663u0026radius=2000.0u0026serviceId=u0026maxCount=20u0026longitude=105.8472224"}}],"title":"[FIRING:1] Taxi_EMDDI Healthcheck timeout"}
