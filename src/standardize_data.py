@@ -1,10 +1,9 @@
-import pandas as pd
-import numpy as np
-import os
 import glob
-import re
-import urllib.parse
+import os
 import random
+import re
+
+import pandas as pd
 from sklearn.model_selection import train_test_split
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -12,6 +11,28 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 def clean_val(v):
     if pd.isna(v) or str(v).lower() == 'nan': return ""
     return str(v).strip()
+
+
+def load_csv_with_detected_delimiter(path):
+    with open(path, "r", encoding="utf-8", newline="") as file_obj:
+        header_line = file_obj.readline()
+
+    delimiter = ";" if header_line.count(";") > header_line.count(",") else ","
+    return pd.read_csv(path, sep=delimiter, on_bad_lines='skip', low_memory=False)
+
+
+def extract_http_rows(df):
+    return pd.DataFrame([
+        {
+            'method': clean_val(r.get('http_method', r.get('Method', 'GET'))),
+            'path': clean_val(r.get('http_path', r.get('Path', '/'))),
+            'query': clean_val(r.get('http_query', r.get('Query', ''))),
+            'headers': clean_val(r.get('http_headers', r.get('Headers', ''))),
+            'body': clean_val(r.get('body', r.get('Body', ''))),
+            'ua': clean_val(r.get('http_user_agent', r.get('User-Agent', ''))),
+        }
+        for _, r in df.iterrows()
+    ])
 
 def load_txt_categories(filename, label, data_dir):
     from preprocessing import parse_http_string
@@ -53,11 +74,14 @@ def process_all_data():
         return row
 
     # 1. Load Data
-    attack_waf = pd.read_csv(os.path.join(data_dir, "attack.csv"), on_bad_lines='skip', low_memory=False)
-    all_attacks_logs = pd.DataFrame([{'method': clean_val(r.get('http_method', 'GET')), 'path': clean_val(r.get('http_path', '/')), 'query': clean_val(r.get('http_query', '')), 'headers': clean_val(r.get('http_headers', '')), 'body': "", 'ua': ""} for idx, r in attack_waf.iterrows()])
-    
-    nm2 = pd.read_csv(os.path.join(data_dir, "nm2.xlsx.csv"), on_bad_lines='skip', low_memory=False)
-    all_normals_logs = pd.DataFrame([{'method': clean_val(r.get('Method', 'GET')), 'path': clean_val(r.get('Path', '/')), 'query': clean_val(r.get('Query', '')), 'headers': clean_val(r.get('Headers', '')), 'body': clean_val(r.get('Body', '')), 'ua': ""} for idx, r in nm2.iterrows()])
+    attack_paths = sorted(glob.glob(os.path.join(data_dir, "attack*.csv")))
+    attack_frames = [extract_http_rows(load_csv_with_detected_delimiter(path)) for path in attack_paths]
+    all_attacks_logs = pd.concat(attack_frames, ignore_index=True).drop_duplicates().reset_index(drop=True)
+    print(f"Loaded {len(all_attacks_logs)} unique attack rows from {len(attack_paths)} file(s).")
+
+    nm2 = load_csv_with_detected_delimiter(os.path.join(data_dir, "nm2.xlsx.csv"))
+    all_normals_logs = extract_http_rows(nm2).drop_duplicates().reset_index(drop=True)
+    print(f"Loaded {len(all_normals_logs)} unique normal rows.")
 
     # 2. Golden Regression Injection
     print("Injecting golden regression samples...")
@@ -112,34 +136,35 @@ def process_all_data():
     for r in norm_reg_rows: r['label'] = 0
 
     # 4. Mirror Construction
-    print("Constructing 500k-sample Production Pool...")
+    print("Constructing reduced production mirror pool...")
     
     # Normals: Mix of headers and no-headers
-    normal_pool_logs = all_normals_logs.sample(min(len(all_normals_logs), 500000), random_state=42)
+    # Keep the mirror mix, but cap the pool so retraining stays practical.
+    normal_pool_logs = all_normals_logs.sample(min(len(all_normals_logs), 100000), random_state=42)
     # 50% keep headers, 50% empty headers (to be robust)
     half = len(normal_pool_logs) // 2
     normal_pool_logs.iloc[half:, normal_pool_logs.columns.get_loc('headers')] = ""
     
     # Diverse Root/Short Path Padding (Mix of headers/no-headers)
     short_paths = ["/", "/favicon.ico", "/index.html", "/robots.txt", "/api/health"]
-    diverse_short = pd.DataFrame([{"path": random.choice(short_paths), "headers": ""} for _ in range(100000)])
+    diverse_short = pd.DataFrame([{"path": random.choice(short_paths), "headers": ""} for _ in range(20000)])
     # half of short paths get headers
     h_short = len(diverse_short) // 2
     diverse_short.iloc[:h_short] = diverse_short.iloc[:h_short].apply(inject_metadata, axis=1)
 
     normal_pool = pd.concat([
         normal_pool_logs, 
-        pd.concat([normal_cats] * 500), # Increased normal cat weighting
-        pd.concat([pd.DataFrame(norm_reg_rows)] * 10000), # Extremely high frequency for regression
+        pd.concat([normal_cats] * 100), # Keep regression normals prominent without dominating the pool
+        pd.concat([pd.DataFrame(norm_reg_rows)] * 1000), # Preserve false-positive protection at a smaller scale
         diverse_short
     ], ignore_index=True)
     normal_pool['label'] = 0
     
     # Attacks: Inject metadata to some attacks so they don't look purely "headerless"
     attack_pool = pd.concat([
-        pd.concat([all_attacks_logs] * 20), # Increased base pool
-        pd.concat([attack_cats] * 200),
-        pd.concat([pd.DataFrame(regression_attacks)] * 1000)
+        pd.concat([all_attacks_logs] * 2), # Keep broad attack coverage with a manageable retrain size
+        pd.concat([attack_cats] * 50),
+        pd.concat([pd.DataFrame(regression_attacks)] * 200)
     ], ignore_index=True)
     h_att = len(attack_pool) // 2
     attack_pool.iloc[:h_att] = attack_pool.iloc[:h_att].apply(inject_metadata, axis=1)
