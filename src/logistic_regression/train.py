@@ -74,7 +74,7 @@ def train_model():
     
     # Attack payload = label 1
     attack_cats = parse_file(os.path.join(PROJECT_ROOT, "data", "attack.txt"))
-    hard_attack_categories = {"Attack_PDF_33", "Attack_PDF_50", "Attack_FP_137", "Attack_usr_138", "Attack_usr_139", "Attack_usr_140", "Attack_usr_141", "PADDED_XSS", "Path Traversal (Double URL Enc)"}
+    hard_attack_categories = {"Attack_PDF_33", "Attack_PDF_50", "Attack_FP_137", "Attack_usr_133", "Attack_usr_138", "Attack_usr_139", "Attack_usr_140", "Attack_usr_141", "PADDED_XSS", "Path Traversal (Double URL Enc)"}
     for cat in attack_cats:
         for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
             row = parse_like_runtime(p)
