@@ -144,11 +144,26 @@ func (d *BaseDetector) Destroy() {
 // PredictScore calculates the raw probability of an attack (Stateless)
 // Thread-safe due to internal mutex
 func (d *BaseDetector) PredictScore(args map[string]string) (float64, error) {
-	combined := d.ExtractText(args)
-	vector := d.GenerateFeatureVector(combined)
-
 	d.mu.Lock()
 	defer d.mu.Unlock()
+
+	texts := d.extractTextsForScoring(args)
+	maxScore := 0.0
+	for _, text := range texts {
+		score, err := d.predictTextScoreLocked(text)
+		if err != nil {
+			return 0, err
+		}
+		if score > maxScore {
+			maxScore = score
+		}
+	}
+
+	return maxScore, nil
+}
+
+func (d *BaseDetector) predictTextScoreLocked(text string) (float64, error) {
+	vector := d.GenerateFeatureVector(text)
 
 	// Update the input buffer in-place
 	// Since d.inputBuffer is the backing slice for d.inputTensor, updating this updates the tensor data
@@ -211,6 +226,18 @@ func (d *BaseDetector) ExtractText(row map[string]string) string {
 		}
 	}
 	return strings.Join(vals, " ")
+}
+
+func (d *BaseDetector) extractTextsForScoring(row map[string]string) []string {
+	combined := d.ExtractText(row)
+	texts := []string{combined}
+	for _, field := range []string{"path", "query", "headers", "body"} {
+		value := strings.TrimSpace(row[field])
+		if value != "" && strings.ToLower(value) != "nan" {
+			texts = append(texts, value)
+		}
+	}
+	return texts
 }
 
 func (d *BaseDetector) CleanText(text string) string {
