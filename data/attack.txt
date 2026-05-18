@@ -319,3 +319,4 @@ Categories of Web Attacks (50 Categories)
 191. Attack_AWS_Credentials_File_Probe: /.aws/credentials
 192. Attack_Config_JSON_File_Probe: /config.json
 193. Attack_Env_File_Probe_Local: /.env.local
+194. Attack_Analyzer_Combined_XSS_SQLi_HTML: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/? {"description_html":"<p class=\"editor-paragraph-block\" data-id=\"a271033a-c405-4c50-abd2-ab36980e3282\"><span>%</span>3CxssBypass<span>/</span>onpointermove<span>=(</span>confirm<span>)(1)%</span>3EMoveMouseHere</p><p class=\"editor-paragraph-block\" data-id=\"3bae5a84-6d60-44a9-8f2e-026f2235eed0\">admin 'Or '1'='1';— </p><p class=\"editor-paragraph-block\" data-id=\"49eee5cc-eb0a-41d1-8513-3ba6818826b6\">&lt;script&gt;&lt;/script&gt;</p>"}
