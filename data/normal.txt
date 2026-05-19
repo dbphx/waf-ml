@@ -236,3 +236,7 @@ Categories of Normal Traffic (50 Categories)
 230. FP_USER_71: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/28c8873e-2b96-4e9b-8c9d-1cfd8a4e4439/history/?activity_type=issue-property
 231. Benign Workspace Modules API: GET /api/workspaces/insky/modules/
 232. Benign Sidebar Preferences API: GET /api/workspaces/insky/sidebar-preferences/
+233. Benign Insky Issues Path (short): GET /insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/
+234. Benign S3 Upload Signed URL: /uploads/628668cae9db4d51b4edf55214b73fca-Facebook Image.jpg?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%2733142930e4224ef6814154916d206959&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=9wnmzzHYVGwlnTscRdzx%2F20260519%2F%2Fs3%2Faws4_request&X-Amz-Date=20260519T112406Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fbc7afa4810e4a5d53f29ba10d6d22c1e7f3227e288f975fa8d1b45c423940f4
+235. Benign S3 Upload Path Only: /uploads/628668cae9db4d51b4edf55214b73fca-Facebook Image.jpg
+236. Benign S3 Upload Path Only (duplicate): /uploads/628668cae9db4d51b4edf55214b73fca-Facebook Image.jpg

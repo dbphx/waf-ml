@@ -51,6 +51,10 @@ def train_model():
         "FP_USER_55",
         "Benign Issue Collection Path",
         "Benign Issue Detail Path",
+        "Benign Insky Issues Path (short)",
+        "Benign S3 Upload Signed URL",
+        "Benign S3 Upload Path Only",
+        "Benign S3 Upload Path Only (duplicate)",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories)
 
