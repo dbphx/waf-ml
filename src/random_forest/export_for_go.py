@@ -8,7 +8,7 @@ import subprocess
 # Allow importing from parent src/ directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from feature_engineering import FeatureEngineer, SUSPICIOUS_KEYWORDS
+from feature_engineering import FeatureEngineer, REQUEST_FIELDS, SUSPICIOUS_KEYWORDS
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
@@ -41,21 +41,25 @@ def export():
     fe = FeatureEngineer(os.path.join(models_dir, 'vectorizer.joblib'))
     
     # 2. Export TF-IDF Parameters
-    vectorizer = fe.vectorizer
-    vocab = vectorizer.vocabulary_
-    # Sort vocab by index to match feature vector
-    sorted_vocab = sorted(vocab.items(), key=lambda x: x[1])
-    # Extract just the terms
-    terms = [item[0] for item in sorted_vocab]
-    
-    idf = vectorizer.idf_.tolist()
-    
+    field_vectorizers = {}
+    total_tfidf_features = 0
+    for field in REQUEST_FIELDS:
+        vectorizer = fe.vectorizers[field]
+        vocab = vectorizer.vocabulary_
+        sorted_vocab = sorted(vocab.items(), key=lambda x: x[1])
+        terms = [item[0] for item in sorted_vocab]
+        field_vectorizers[field] = {
+            "ngram_range": vectorizer.ngram_range,
+            "max_features": vectorizer.max_features,
+            "vocabulary": terms,
+            "idf": vectorizer.idf_.tolist(),
+        }
+        total_tfidf_features += len(terms)
+
     metadata = {
         "model_name": "random_forest",
-        "ngram_range": vectorizer.ngram_range,
-        "max_features": vectorizer.max_features,
-        "vocabulary": terms,
-        "idf": idf,
+        "field_order": list(REQUEST_FIELDS),
+        "field_vectorizers": field_vectorizers,
         "keywords": SUSPICIOUS_KEYWORDS,
         "exported_from_commit": get_git_commit(),
     }
@@ -65,7 +69,8 @@ def export():
     from skl2onnx import convert_sklearn
     from skl2onnx.common.data_types import FloatTensorType
     # Define input type: dynamic batch size, fixed feature size
-    n_features = len(vocab) + 2 + len(metadata["keywords"])
+    stats_per_field = 2 + len(metadata["keywords"])
+    n_features = total_tfidf_features + (len(REQUEST_FIELDS) * stats_per_field)
     initial_type = [('float_input', FloatTensorType([None, n_features]))]
     
     # Convert Scikit-Learn Random Forest to ONNX

@@ -13,6 +13,32 @@ from feature_engineering import FeatureEngineer
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
+
+def expand_field_level_rows(row):
+    rows = [row]
+    for field in ("path", "query", "headers", "body"):
+        value = str(row.get(field, "")).strip()
+        if not value or value.lower() == "nan":
+            continue
+        field_row = {
+            "method": row.get("method", "GET"),
+            "path": "",
+            "query": "",
+            "headers": "",
+            "body": "",
+            "ua": row.get("ua", ""),
+        }
+        field_row[field] = value
+        rows.append(field_row)
+    return rows
+
+
+def expand_dataframe_to_field_rows(df):
+    rows = []
+    for row in df.to_dict(orient='records'):
+        rows.extend(expand_field_level_rows(row))
+    return pd.DataFrame(rows)
+
 def train_model():
     processed_dir = f"{PROJECT_ROOT}/data/processed"
     models_dir = f"{PROJECT_ROOT}/models/random_forest"
@@ -78,12 +104,15 @@ def train_model():
     for cat in attack_cats:
         for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
             row = parse_like_runtime(p)
-            row['label'] = 1
-            test_cases.append(row)
+            for expanded in expand_field_level_rows(row):
+                expanded['label'] = 1
+                test_cases.append(expanded)
 
             if cat['category'] in hard_attack_categories and p == cat['payload']:
                 for _ in range(500):
-                    test_cases.append(dict(row))
+                    boosted = dict(row)
+                    boosted['label'] = 1
+                    test_cases.append(boosted)
             
     # Normal payload = label 0
     normal_cats = parse_file(os.path.join(PROJECT_ROOT, "data", "normal.txt"))
@@ -91,12 +120,15 @@ def train_model():
     for cat in normal_cats:
         for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
             row = parse_like_runtime(p)
-            row['label'] = 0
-            test_cases.append(row)
+            for expanded in expand_field_level_rows(row):
+                expanded['label'] = 0
+                test_cases.append(expanded)
 
             if cat['category'] in hard_normal_categories and p == cat['payload']:
                 for _ in range(500):
-                    test_cases.append(dict(row))
+                    boosted = dict(row)
+                    boosted['label'] = 0
+                    test_cases.append(boosted)
             
     test_df = pd.DataFrame(test_cases)
     
