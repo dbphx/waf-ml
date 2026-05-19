@@ -219,7 +219,7 @@ Categories of Normal Traffic (50 Categories)
 217. Benign Placeholder Image URL: /img/placeholder/placeholder-image-thumbnail.png x-request-id: 20260516.e8385f13-0d7b-4a73-84ab-7f122d68304b
 218. Benign Product Page URL: /p/be-khoe-me-vui?_rsc=awqyc
 219. Benign Issue Collection Path: GET /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/
-220. Benign Issue Detail Path: PATCH /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/
+220. Benign Issue Detail Path: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/
 219. FP_USER_68: /api/workspaces/insky/user-favorites/?all=true
 220. FP_USER_69: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/0863bb11-7116-4bc9-9b24-97bfb6eea434/history/?activity_type=issue-property
 219. Benign Auth Login URL: /auth/vnpay/login?data=oltzje7zapslmxqj5/pwgcmm/kvilslm81mzjizd6hgzj+1z6ipdto2faxfqjyu0uzbnau5xkrvr1o8ayhk17emctglfs68umh68sxuqrrg0c/spumf4zo9e/egzfmrys6muyuolmcwzobu1skh7qav2auw4vr3hnnesjouw9bjdqtfpeov/ppjz4mee+e6omvu+5nlh+ngxp6xhtnwqvakjsmmpo8ymcswr1e9pt9jamzj6oqf9fothxb2v0nxtgog32dol6/k/cawwswcrbnfstysklqoy7vlrgelf8nxrmqzia1fkuv0=&signature=8a58664def809475c607449214ea057c
@@ -240,3 +240,6 @@ Categories of Normal Traffic (50 Categories)
 234. Benign S3 Upload Signed URL: /uploads/628668cae9db4d51b4edf55214b73fca-Facebook Image.jpg?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%2733142930e4224ef6814154916d206959&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=9wnmzzHYVGwlnTscRdzx%2F20260519%2F%2Fs3%2Faws4_request&X-Amz-Date=20260519T112406Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fbc7afa4810e4a5d53f29ba10d6d22c1e7f3227e288f975fa8d1b45c423940f4
 235. Benign S3 Upload Path Only: /uploads/628668cae9db4d51b4edf55214b73fca-Facebook Image.jpg
 236. Benign S3 Upload Path Only (duplicate): /uploads/628668cae9db4d51b4edf55214b73fca-Facebook Image.jpg
+237. Benign Issue Detail GET expand: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/?expand=issue_reactions,issue_attachments,issue_link,parent
+238. Benign Issue Detail PATCH path: PATCH /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/
+239. Benign S3 Upload Signed URL v2: /uploads/628668cae9db4d51b4edf55214b73fca-Facebook Image.jpg?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%279a0505e796d842fdb7a4980ead8c4bf3&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=9wnmzzHYVGwlnTscRdzx%2F20260519%2F%2Fs3%2Faws4_request&X-Amz-Date=20260519T112548Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=cdf2aeefc1bf8bd6d456ede48d0a809d4f051e52eece84bacb322945a8c50a1b

@@ -27,8 +27,18 @@ def test_path_only():
     assert row["query"] == ""
 
 
+def test_patch_method_splits_path():
+    row = parse_http_string(
+        "PATCH /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/"
+    )
+    assert row["method"] == "PATCH"
+    assert row["path"] == "/api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/"
+    assert "PATCH" not in row["path"]
+
+
 if __name__ == "__main__":
     test_path_with_query_splits()
     test_bare_query_stays_query()
     test_path_only()
+    test_patch_method_splits_path()
     print("ok")

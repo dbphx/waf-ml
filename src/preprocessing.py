@@ -201,7 +201,7 @@ def parse_http_string(payload):
             return request_row_from_components(data)
     
     # 1. Handle Method/Path pattern (e.g., 'GET /path?q=v {"body": 1}')
-    if payload.startswith(('GET ', 'POST ', 'PUT ', 'DELETE ')):
+    if payload.startswith(('GET ', 'POST ', 'PUT ', 'DELETE ', 'PATCH ', 'HEAD ', 'OPTIONS ')):
         parts = payload.split(' ', 2)
         row['method'] = parts[0]
         if len(parts) > 1:
