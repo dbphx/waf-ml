@@ -13,6 +13,35 @@ from feature_engineering import FeatureEngineer
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
+
+def expand_field_level_rows(row):
+    rows = [row]
+    for field in ("path", "query", "headers", "body"):
+        value = str(row.get(field, "")).strip()
+        if not value or value.lower() == "nan":
+            continue
+        field_row = {
+            "method": row.get("method", "GET"),
+            "path": "",
+            "query": "",
+            "headers": "",
+            "body": "",
+            "ua": row.get("ua", ""),
+            "label": row.get("label"),
+        }
+        if "weight" in row:
+            field_row["weight"] = row.get("weight")
+        field_row[field] = value
+        rows.append(field_row)
+    return rows
+
+
+def expand_dataframe_to_field_rows(df):
+    rows = []
+    for row in df.to_dict(orient='records'):
+        rows.extend(expand_field_level_rows(row))
+    return pd.DataFrame(rows)
+
 def train_model():
     processed_dir = f"{PROJECT_ROOT}/data/processed"
     models_dir = f"{PROJECT_ROOT}/models/logistic_regression"
@@ -79,11 +108,11 @@ def train_model():
         for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
             row = parse_like_runtime(p)
             row['label'] = 1
-            test_cases.append(row)
+            test_cases.extend(expand_field_level_rows(row))
 
             if cat['category'] in hard_attack_categories and p == cat['payload']:
                 for _ in range(500):
-                    test_cases.append(dict(row))
+                    test_cases.extend(expand_field_level_rows(dict(row)))
             
     # Normal payload = label 0
     normal_cats = parse_file(os.path.join(PROJECT_ROOT, "data", "normal.txt"))
@@ -92,18 +121,18 @@ def train_model():
         for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
             row = parse_like_runtime(p)
             row['label'] = 0
-            test_cases.append(row)
+            test_cases.extend(expand_field_level_rows(row))
 
             if cat['category'] in hard_normal_categories and p == cat['payload']:
                 for _ in range(500):
-                    test_cases.append(dict(row))
+                    test_cases.extend(expand_field_level_rows(dict(row)))
             
     test_df = pd.DataFrame(test_cases)
     
-    # We will use sample_weight to give high importance instead of repeating rows
+    # Keep regression samples important without letting a linear model overfit them.
     train_df['weight'] = 1.0
     val_df['weight'] = 1.0
-    test_df['weight'] = 50.0
+    test_df['weight'] = 15.0
     
     train_df = pd.concat([train_df, test_df], ignore_index=True)
     val_df = pd.concat([val_df, test_df], ignore_index=True)
@@ -122,8 +151,9 @@ def train_model():
     print("Training Logistic Regression model (Stable Sparse)...")
     from sklearn.linear_model import LogisticRegression
     model = LogisticRegression(
+        C=0.5,
         max_iter=1000,
-        class_weight='balanced',
+        solver='liblinear',
         random_state=42
     )
     

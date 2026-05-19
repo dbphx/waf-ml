@@ -14,13 +14,20 @@ import (
 	ort "github.com/yalue/onnxruntime_go"
 )
 
-// Metadata structure for the model
-type Metadata struct {
+// FieldVectorizer stores the per-request-part TF-IDF parameters exported by Python.
+type FieldVectorizer struct {
 	NgramRange  []int     `json:"ngram_range"`
 	MaxFeatures int       `json:"max_features"`
 	Vocabulary  []string  `json:"vocabulary"`
 	IDF         []float64 `json:"idf"`
-	Keywords    []string  `json:"keywords"`
+}
+
+// Metadata describes the multipart feature layout consumed by the ONNX model.
+type Metadata struct {
+	ModelName        string                     `json:"model_name"`
+	FieldOrder       []string                   `json:"field_order"`
+	FieldVectorizers map[string]FieldVectorizer `json:"field_vectorizers"`
+	Keywords         []string                   `json:"keywords"`
 }
 
 // BaseDetector holds the session and resources for ONNX inference
@@ -53,7 +60,7 @@ type BaseDetector struct {
 func NewBaseDetector(modelPath, metaPath, sharedLibPath string) (*BaseDetector, error) {
 	d := &BaseDetector{
 		modelPath:        modelPath,
-		predictThreshold: 0.55, // Default to RF optimal threshold
+		predictThreshold: 0.55,
 	}
 
 	ort.SetSharedLibraryPath(sharedLibPath)
@@ -70,6 +77,20 @@ func NewBaseDetector(modelPath, metaPath, sharedLibPath string) (*BaseDetector, 
 	if err := json.NewDecoder(metaFile).Decode(&d.meta); err != nil {
 		return nil, fmt.Errorf("failed to decode metadata: %v", err)
 	}
+	switch d.meta.ModelName {
+	case "logistic_regression":
+		d.predictThreshold = 0.77
+	case "random_forest":
+		d.predictThreshold = 0.55
+	}
+	if len(d.meta.FieldOrder) == 0 {
+		return nil, fmt.Errorf("invalid model metadata: missing field_order")
+	}
+	for _, field := range d.meta.FieldOrder {
+		if _, ok := d.meta.FieldVectorizers[field]; !ok {
+			return nil, fmt.Errorf("invalid model metadata: missing field_vectorizer for %q", field)
+		}
+	}
 
 	d.sessionOptions, err = ort.NewSessionOptions()
 	if err != nil {
@@ -79,8 +100,10 @@ func NewBaseDetector(modelPath, metaPath, sharedLibPath string) (*BaseDetector, 
 	d.inputName = "float_input"
 	d.outputNames = []string{"label", "probabilities"}
 
-	// Initialize buffer based on vocabulary + stats features
-	featureSize := len(d.meta.Vocabulary) + 2 + len(d.meta.Keywords)
+	featureSize := d.featureVectorSize()
+	if featureSize == 0 {
+		return nil, fmt.Errorf("invalid model metadata: empty multipart feature layout")
+	}
 	d.inputBuffer = make([]float32, featureSize)
 
 	// Create Tensors ONCE
@@ -147,10 +170,10 @@ func (d *BaseDetector) PredictScore(args map[string]string) (float64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	texts := d.extractTextsForScoring(args)
+	rows := d.extractRowsForScoring(args)
 	maxScore := 0.0
-	for _, text := range texts {
-		score, err := d.predictTextScoreLocked(text)
+	for _, row := range rows {
+		score, err := d.predictRowScoreLocked(row)
 		if err != nil {
 			return 0, err
 		}
@@ -162,8 +185,8 @@ func (d *BaseDetector) PredictScore(args map[string]string) (float64, error) {
 	return maxScore, nil
 }
 
-func (d *BaseDetector) predictTextScoreLocked(text string) (float64, error) {
-	vector := d.GenerateFeatureVector(text)
+func (d *BaseDetector) predictRowScoreLocked(row map[string]string) (float64, error) {
+	vector := d.GenerateFeatureVector(row)
 
 	// Update the input buffer in-place
 	// Since d.inputBuffer is the backing slice for d.inputTensor, updating this updates the tensor data
@@ -217,7 +240,10 @@ func (d *BaseDetector) PredictSemantic(clientIP string, args map[string]string) 
 // --- Helpers ---
 
 func (d *BaseDetector) ExtractText(row map[string]string) string {
-	fields := []string{"path", "query", "headers", "body"}
+	fields := d.meta.FieldOrder
+	if len(fields) == 0 {
+		fields = []string{"path", "query", "headers", "body"}
+	}
 	var vals []string
 	for _, f := range fields {
 		v := strings.TrimSpace(row[f])
@@ -228,16 +254,35 @@ func (d *BaseDetector) ExtractText(row map[string]string) string {
 	return strings.Join(vals, " ")
 }
 
-func (d *BaseDetector) extractTextsForScoring(row map[string]string) []string {
-	combined := d.ExtractText(row)
-	texts := []string{combined}
-	for _, field := range []string{"path", "query", "headers", "body"} {
+func (d *BaseDetector) extractRowsForScoring(row map[string]string) []map[string]string {
+	fields := d.meta.FieldOrder
+	if len(fields) == 0 {
+		fields = []string{"path", "query", "headers", "body"}
+	}
+
+	rows := make([]map[string]string, 0, len(fields))
+	for _, field := range fields {
 		value := strings.TrimSpace(row[field])
 		if value != "" && strings.ToLower(value) != "nan" {
-			texts = append(texts, value)
+			fieldRow := make(map[string]string, len(fields))
+			for _, fieldName := range fields {
+				fieldRow[fieldName] = ""
+			}
+			fieldRow[field] = value
+			rows = append(rows, fieldRow)
 		}
 	}
-	return texts
+
+	if len(rows) == 0 {
+		fallback := make(map[string]string, len(fields))
+		for _, field := range fields {
+			fallback[field] = ""
+		}
+		fallback["path"] = "/"
+		rows = append(rows, fallback)
+	}
+
+	return rows
 }
 
 func (d *BaseDetector) CleanText(text string) string {
@@ -255,37 +300,62 @@ func (d *BaseDetector) CleanText(text string) string {
 	return strings.TrimSpace(text)
 }
 
-func (d *BaseDetector) GenerateFeatureVector(text string) []float64 {
-	cleaned := d.CleanText(text)
-
-	// N-grams
-	ngrams := make(map[string]int)
-	chars := []rune(cleaned)
-	n := len(chars)
-
-	// Safety check for empty range
-	if len(d.meta.NgramRange) < 2 {
-		return make([]float64, len(d.meta.Vocabulary))
+func (d *BaseDetector) GenerateFeatureVector(row map[string]string) []float64 {
+	fields := d.meta.FieldOrder
+	if len(fields) == 0 {
+		fields = []string{"path", "query", "headers", "body"}
 	}
 
-	minN, maxN := d.meta.NgramRange[0], d.meta.NgramRange[1]
-	for i := 0; i < n; i++ {
+	vector := make([]float64, 0, d.featureVectorSize())
+
+	for _, field := range fields {
+		vectorizer := d.meta.FieldVectorizers[field]
+		vector = append(vector, d.generateFieldTFIDF(vectorizer, row[field])...)
+	}
+
+	for _, field := range fields {
+		vector = append(vector, d.generateFieldStats(row[field])...)
+	}
+
+	return vector
+}
+
+func (d *BaseDetector) featureVectorSize() int {
+	total := 0
+	for _, field := range d.meta.FieldOrder {
+		total += len(d.meta.FieldVectorizers[field].Vocabulary)
+	}
+	total += len(d.meta.FieldOrder) * (2 + len(d.meta.Keywords))
+	return total
+}
+
+func (d *BaseDetector) generateFieldTFIDF(vectorizer FieldVectorizer, text string) []float64 {
+	vector := make([]float64, len(vectorizer.Vocabulary))
+	if len(vectorizer.NgramRange) < 2 || len(vectorizer.Vocabulary) == 0 {
+		return vector
+	}
+
+	cleaned := d.CleanText(text)
+	ngrams := make(map[string]int)
+	chars := []rune(cleaned)
+	minN, maxN := vectorizer.NgramRange[0], vectorizer.NgramRange[1]
+	for i := 0; i < len(chars); i++ {
 		for length := minN; length <= maxN; length++ {
-			if i+length <= n {
+			if i+length <= len(chars) {
 				ngrams[string(chars[i:i+length])]++
 			}
 		}
 	}
 
-	// TF-IDF
-	vector := make([]float64, len(d.meta.Vocabulary))
-	for i, term := range d.meta.Vocabulary {
+	for i, term := range vectorizer.Vocabulary {
+		if i >= len(vectorizer.IDF) {
+			break
+		}
 		if count, ok := ngrams[term]; ok {
-			vector[i] = float64(count) * d.meta.IDF[i]
+			vector[i] = float64(count) * vectorizer.IDF[i]
 		}
 	}
 
-	// L2 Norm
 	var sumSq float64
 	for _, v := range vector {
 		sumSq += v * v
@@ -297,21 +367,22 @@ func (d *BaseDetector) GenerateFeatureVector(text string) []float64 {
 		}
 	}
 
-	// Stats
-	vector = append(vector, float64(len(text))/1000.0)
-	vector = append(vector, d.CalcEntropy(text)/10.0)
+	return vector
+}
 
-	// Keywords
+func (d *BaseDetector) generateFieldStats(text string) []float64 {
+	stats := make([]float64, 0, 2+len(d.meta.Keywords))
+	stats = append(stats, float64(len(text))/1000.0)
+	stats = append(stats, d.CalcEntropy(text)/10.0)
 	for _, kw := range d.meta.Keywords {
 		count := strings.Count(text, kw)
 		val := 0.0
 		if len(text) > 0 {
 			val = float64(count) / float64(len(text)+1)
 		}
-		vector = append(vector, val)
+		stats = append(stats, val)
 	}
-
-	return vector
+	return stats
 }
 
 func (d *BaseDetector) CalcEntropy(text string) float64 {
