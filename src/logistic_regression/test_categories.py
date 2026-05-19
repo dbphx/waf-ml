@@ -3,15 +3,13 @@ import contextlib
 import json
 import os
 import sys
-import urllib.parse
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from preprocessing import encode_request_components, parse_category_lines
 from logistic_regression.predict import HTTPAttackPredictor
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-
-from parse_category_files import parse_category_lines as parse_file
 
 
 class _Tee:
@@ -25,7 +23,6 @@ class _Tee:
     def flush(self):
         for s in self.streams:
             s.flush()
-
 
 def run_categorical_test(use_onnx=False):
     models_dir = f"{PROJECT_ROOT}/models/logistic_regression"
@@ -47,8 +44,8 @@ def run_categorical_test(use_onnx=False):
     print(f"=== Logistic regression categorical test | backend={mode} ===\n")
 
     test_files = [
-        {"file": "attack.txt", "expected": "ATTACK"},
-        {"file": "normal.txt", "expected": "NORMAL"},
+        {"file": "attack_fields.txt", "expected": "ATTACK"},
+        {"file": "normal_fields.txt", "expected": "NORMAL"},
     ]
 
     results = []
@@ -65,11 +62,11 @@ def run_categorical_test(use_onnx=False):
             print(f"Warning: {tf['file']} not found.")
             continue
 
-        categories = parse_file(path)
+        categories = parse_category_lines(path)
         for cat in categories:
             total += 1
             t0 = time.time()
-            pred, conf = predictor.predict(cat["payload"])
+            pred, conf = predictor.predict(cat["request"])
             elapsed = (time.time() - t0) * 1000
 
             is_correct = pred == tf["expected"]
@@ -92,10 +89,10 @@ def run_categorical_test(use_onnx=False):
                 }
             )
 
-            encoded_payload = urllib.parse.quote(cat["payload"])
+            encoded_request = encode_request_components(cat["request"])
             total += 1
             t0 = time.time()
-            pred_enc, conf_enc = predictor.predict(encoded_payload)
+            pred_enc, conf_enc = predictor.predict(encoded_request)
             elapsed_enc = (time.time() - t0) * 1000
 
             is_correct_enc = pred_enc == tf["expected"]
@@ -110,7 +107,7 @@ def run_categorical_test(use_onnx=False):
             results.append(
                 {
                     "category": cat["category"],
-                    "payload": encoded_payload,
+                    "payload": encoded_request,
                     "type": "ENCODED",
                     "expected": tf["expected"],
                     "predicted": pred_enc,

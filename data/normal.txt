@@ -218,6 +218,8 @@ Categories of Normal Traffic (50 Categories)
 216. Benign Next Static Font URL: /_next/static/media/3787d9a87cc64466-s.p.ttf x-request-id: 20260516.7e35b332-516a-4fa8-952c-9feeec9ecfe8
 217. Benign Placeholder Image URL: /img/placeholder/placeholder-image-thumbnail.png x-request-id: 20260516.e8385f13-0d7b-4a73-84ab-7f122d68304b
 218. Benign Product Page URL: /p/be-khoe-me-vui?_rsc=awqyc
+219. Benign Issue Collection Path: GET /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/
+220. Benign Issue Detail Path: PATCH /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/
 219. FP_USER_68: /api/workspaces/insky/user-favorites/?all=true
 220. FP_USER_69: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/0863bb11-7116-4bc9-9b24-97bfb6eea434/history/?activity_type=issue-property
 219. Benign Auth Login URL: /auth/vnpay/login?data=oltzje7zapslmxqj5/pwgcmm/kvilslm81mzjizd6hgzj+1z6ipdto2faxfqjyu0uzbnau5xkrvr1o8ayhk17emctglfs68umh68sxuqrrg0c/spumf4zo9e/egzfmrys6muyuolmcwzobu1skh7qav2auw4vr3hnnesjouw9bjdqtfpeov/ppjz4mee+e6omvu+5nlh+ngxp6xhtnwqvakjsmmpo8ymcswr1e9pt9jamzj6oqf9fothxb2v0nxtgog32dol6/k/cawwswcrbnfstysklqoy7vlrgelf8nxrmqzia1fkuv0=&signature=8a58664def809475c607449214ea057c

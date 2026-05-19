@@ -13,8 +13,8 @@ We support two Python model bundles side-by-side:
 
 - **Multiple models**: Random Forest and Logistic Regression (TF-IDF + stats).
 - **Hybrid features (TF-IDF models)**: Character n-grams (2–5), TF-IDF, entropy, keyword ratios.
-- **Field-aware inference**: Requests are split into `path`, `query`, `headers`, and `body`; each field is scored independently and the highest-risk field becomes the final decision.
-- **Regression suite**: Payloads from `data/attack.txt` and `data/normal.txt` (RAW + URL-encoded) are used for categorical regression tracking and production parity checks.
+- **Field-aware inference**: Requests are split into `path`, `query`, `headers`, and `body`; each field is scored independently and the highest-risk field becomes the final decision (Python `predict_components()`; Go `PredictScore()` uses the same multipart layout internally).
+- **Regression suite**: Field-level categories in `data/attack_fields.txt` and `data/normal_fields.txt` (generated from `data/attack.txt` / `data/normal.txt`), tested as RAW + URL-encoded (ENC) pairs.
 - **Go runtime**: TF-IDF ONNX models load via `onnxruntime` with shared `model_metadata.json` (`field_order`, per-field vocabularies + IDF, keywords).
 - **Stateful reputation** (Go): `ReputationManager` scores clients over time.
 
@@ -29,19 +29,23 @@ We support two Python model bundles side-by-side:
 │   └── example.go
 ├── data/
 │   ├── processed/              # train.csv, val.csv (from standardize_data.py)
-│   ├── attack.txt              # Labeled attack lines for regression tests + train merge
-│   └── normal.txt
+│   ├── attack.txt              # Category list (attacks) — source for training + field expansion
+│   ├── normal.txt              # Category list (benign)
+│   ├── attack_fields.txt       # Field-level attack cases (generated; used by test_categories.py)
+│   └── normal_fields.txt       # Field-level benign cases (generated)
 ├── models/
 │   ├── random_forest/
-│   ├── logistic_regression/
+│   └── logistic_regression/
 ├── reports/                    # JSON + optional test logs
 └── src/
     ├── feature_engineering.py
     ├── standardize_data.py
     ├── parse_category_files.py
+    ├── preprocessing.py
     ├── random_forest/
     ├── logistic_regression/
     ├── test_samples.py
+    ├── test_specific_payload.py
     └── test_holdout_regression.py
 ```
 
@@ -57,21 +61,21 @@ Luôn làm việc **trong venv** để dependencies không lẫn với Python h�
 
 ```bash
 cd /path/to/ml
-python3 -m venv .venv
+python3 -m venv venv
 ```
 
 **Kích hoạt venv** — chọn đúng shell của bạn:
 
 | Môi trường | Lệnh |
 | ---------- | ---- |
-| **macOS / Linux** (bash, zsh) | `source .venv/bin/activate` |
-| **Windows CMD** | `.venv\Scripts\activate.bat` |
-| **Windows PowerShell** | `.venv\Scripts\Activate.ps1` |
+| **macOS / Linux** (bash, zsh) | `source venv/bin/activate` |
+| **Windows CMD** | `venv\Scripts\activate.bat` |
+| **Windows PowerShell** | `venv\Scripts\Activate.ps1` |
 
-Sau khi activate, prompt thường có tiền tố `(.venv)`. Kiểm tra:
+Sau khi activate, prompt thường có tiền tố `(venv)`. Kiểm tra:
 
 ```bash
-which python    # macOS/Linux — phải trỏ vào .../ml/.venv/bin/python
+which python    # macOS/Linux — phải trỏ vào .../ml/venv/bin/python
 python -V
 pip -V
 ```
@@ -83,7 +87,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-**Chạy script trong venv** — dùng `python` (đã trỏ vào `.venv`), ví dụ:
+**Chạy script trong venv** — dùng `python` (đã trỏ vào `venv`), ví dụ:
 
 ```bash
 python src/random_forest/test_categories.py --onnx
@@ -95,14 +99,22 @@ python src/random_forest/test_categories.py --onnx
 deactivate
 ```
 
-**Lưu ý:** không commit thư mục `.venv`; mỗi máy tự tạo và `pip install -r requirements.txt`. Dùng **Python 3.9+** (repo ghim `scikit-learn>=1.6.1,<1.8` cho joblib).
+**Lưu ý:** không commit thư mục `venv/`; mỗi máy tự tạo và `pip install -r requirements.txt`. Dùng **Python 3.9+** (repo ghim `scikit-learn>=1.6.1,<1.8` cho joblib).
 
 ### 2. Train data pipeline (when you change `attack.txt` / `normal.txt`)
+
+`standardize_data.py` regenerates field-level regression files and processed CSVs:
 
 ```bash
 python src/standardize_data.py
 python src/random_forest/train.py
 python src/logistic_regression/train.py
+```
+
+To regenerate only the field-level category files:
+
+```bash
+python src/parse_category_files.py
 ```
 
 ### 3. Export ONNX for Go (TF-IDF models)
@@ -125,14 +137,15 @@ Current ONNX layout for both TF-IDF bundles:
 - per-field stats = `length + entropy + 26 keyword ratios`
 - total input width = `20112` features (`20000` TF-IDF + `112` stats)
 
-
 ---
 
 ## Running tests (modes)
 
-All commands assume repository root and **`source .venv/bin/activate`** (venv đang bật).
+All commands assume repository root and **`source venv/bin/activate`** (venv đang bật).
 
 ### Categorical regression (`test_categories.py`)
+
+Tests read **`data/attack_fields.txt`** and **`data/normal_fields.txt`** (not the legacy whole-request lines in `attack.txt` / `normal.txt` directly). Each category is exercised as **RAW** and **ENC** (URL-encoded components), for **1292** cases total.
 
 | Mode | Flags | What it uses |
 | ---- | ----- | ------------- |
@@ -156,7 +169,13 @@ JSON reports are written under `reports/<model>/categorical_results.json` or `ca
 
 ### Python prediction behavior
 
-`src/*/predict.py` first normalizes input with `split_request_components()` and then predicts `path`, `query`, `headers`, and `body` separately. The component with the highest attack probability is used as the final request verdict and is returned as `decisive_component` by `predict_components()`.
+`src/*/predict.py` normalizes input with `split_request_components()`, then scores `path`, `query`, `headers`, and `body` separately via `predict_components()`. The component with the highest attack probability is the final verdict (`decisive_component`).
+
+Debug a single payload:
+
+```bash
+python src/test_specific_payload.py
+```
 
 ### Quick interactive samples
 
@@ -192,6 +211,13 @@ go run example.go -model random_forest -lib /path/to/libonnxruntime.dylib
 go run example.go -model logistic_regression -lib /path/to/libonnxruntime.dylib
 ```
 
+Optional payload from a line in a `.txt` file:
+
+```bash
+go run example.go -model random_forest -lib /path/to/libonnxruntime.dylib \
+  -payload-file ../../data/attack.txt -payload-contains "SQL Injection"
+```
+
 ### Integration (TF-IDF ONNX)
 
 ```go
@@ -205,11 +231,12 @@ if err != nil {
 }
 defer detector.Destroy()
 
+score, _ := detector.PredictScore(requestMap) // max over per-field scores
 isAttack := detector.Predict(requestMap)
 blocked, score, reason := detector.PredictSemantic("192.168.1.10", requestMap)
 ```
 
-`pkg/waf` follows the same multipart layout as Python inference: it scores `path`, `query`, `headers`, and `body` independently, builds the ONNX input using the shared `field_order`, and uses the highest-risk component score as the final request score.
+`pkg/waf` matches Python multipart inference: for each non-empty field in `field_order`, it builds a feature row with only that field set, runs ONNX, and uses the **maximum** attack probability as `PredictScore`. There is no exported `PredictComponents` API yet—only the aggregated score/threshold helpers above.
 
 Current decision thresholds:
 
@@ -221,12 +248,19 @@ Current decision thresholds:
 
 ## Model performance (reference)
 
-Current ONNX categorical regression results against `data/attack.txt` + `data/normal.txt` (RAW + ENC), using the exported multipart layout assets:
+Latest **ONNX** categorical regression (`attack_fields.txt` + `normal_fields.txt`, RAW + ENC, **1292** cases):
 
-| Model | Categorical regression | Notes |
-| ----- | ---------------------- | ----- |
-| **Random Forest** | `1099 / 1104` passed (`99.55%`) | TF-IDF + RF; 5 current misses (`Local File Inclusion (Input Wrapper)` RAW, `Server-Side Request Forgery (Localhost)` RAW, `LFI via PHP Expect Wrapper` RAW, `FP_USER_55` RAW, `Benign Asset` RAW) |
-| **Logistic Regression** | `1055 / 1104` passed (`95.56%`) | TF-IDF + LR; current ONNX asset still has broader benign false positives and misses around `Attack_FP_137`, `Attack_usr_138`, `Attack_usr_139`, `Homepage Access`, `WebSocket Heartbeat (Ping)`, and multiple `FP_*` / benign URL cases |
+| Model | Categorical regression | Known misses (ONNX) |
+| ----- | ---------------------- | ------------------- |
+| **Random Forest** | `1288 / 1292` (`99.69%`) | `Slowloris Header Pattern [path]` (RAW/ENC), `PADDED_XSS [path]` (RAW/ENC) |
+| **Logistic Regression** | `1283 / 1292` (`99.30%`) | Same Slowloris misses; `Attack_PDF_34 [path]` (ENC); false positives on `FP_USER_57 [query]`, `FP_USER_60 [path]`, `Benign Issue Collection Path [path]` (RAW/ENC) |
+
+Re-run after export to refresh numbers:
+
+```bash
+python src/random_forest/test_categories.py --onnx
+python src/logistic_regression/test_categories.py --onnx
+```
 
 Hold-out files (`data/holdout_attack.txt`, `holdout_normal.txt`) are intentionally **excluded** from `train.py` merges — use them to sanity-check generalization beyond the main regression lists.
 

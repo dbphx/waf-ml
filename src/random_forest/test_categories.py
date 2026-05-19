@@ -2,36 +2,14 @@ import argparse
 import contextlib
 import os
 import sys
-import re
-import urllib.parse
 
 # Allow importing from parent src/ directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from preprocessing import encode_request_components, parse_category_lines
 from random_forest.predict import HTTPAttackPredictor
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-
-def parse_file(filepath):
-    """Parses categories and samples from the generated txt files."""
-    categories = []
-    with open(filepath, 'r') as f:
-        lines = f.readlines()
-        
-    for line in lines:
-        try:
-            parts = line.split(":", 1)
-            if len(parts) == 2:
-                cat_match = re.match(r'^\d+\.\s+(.*)$', parts[0].strip())
-                if cat_match:
-                    categories.append({
-                        "category": cat_match.group(1).strip(),
-                        "payload": parts[1].strip()
-                    })
-        except:
-            pass
-    return categories
-
 
 class _Tee:
     def __init__(self, *streams):
@@ -44,7 +22,6 @@ class _Tee:
     def flush(self):
         for s in self.streams:
             s.flush()
-
 
 def run_categorical_test(use_onnx=False):
     models_dir = f"{PROJECT_ROOT}/models/random_forest"
@@ -65,8 +42,8 @@ def run_categorical_test(use_onnx=False):
     print(f"=== Random forest categorical test | backend={mode} ===\n")
 
     test_files = [
-        {"file": "attack.txt", "expected": "ATTACK"},
-        {"file": "normal.txt", "expected": "NORMAL"}
+        {"file": "attack_fields.txt", "expected": "ATTACK"},
+        {"file": "normal_fields.txt", "expected": "NORMAL"}
     ]
     
     results = []
@@ -78,47 +55,18 @@ def run_categorical_test(use_onnx=False):
     
     import time
 
-    def predict_as_runtime_request(payload):
-        method = "GET"
-        url = str(payload)
-        headers = ""
-        body = ""
-        user_agent = ""
-
-        first_line = url.strip().splitlines()[0] if url.strip() else ""
-        m = re.match(r'^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)\s+(\S+)', first_line, re.IGNORECASE)
-        if m:
-            method = m.group(1).upper()
-            url = m.group(2)
-            remainder = str(payload)[m.end():].lstrip()
-            if remainder:
-                parts = re.split(r'\r\n\r\n|\n\n', remainder, maxsplit=1)
-                headers = parts[0].strip()
-                body = parts[1].strip() if len(parts) > 1 else ""
-                ua_match = re.search(r'(?im)^User-Agent:\s*(.+)$', headers)
-                if ua_match:
-                    user_agent = ua_match.group(1).strip()
-
-        return predictor.predict({
-            "method": method,
-            "url": url,
-            "headers": headers,
-            "body": body,
-            "user_agent": user_agent
-        })
-    
     for tf in test_files:
         path = os.path.join(data_dir, tf['file'])
         if not os.path.exists(path):
             print(f"Warning: {tf['file']} not found.")
             continue
             
-        categories = parse_file(path)
+        categories = parse_category_lines(path)
         for cat in categories:
             # 1. Test Original
             total += 1
             t0 = time.time()
-            pred, conf = predict_as_runtime_request(cat['payload'])
+            pred, conf = predictor.predict(cat['request'])
             elapsed = (time.time() - t0) * 1000
             
             is_correct = pred == tf['expected']
@@ -139,10 +87,10 @@ def run_categorical_test(use_onnx=False):
             })
 
             # 2. Test Encoded
-            encoded_payload = urllib.parse.quote(cat['payload'])
+            encoded_request = encode_request_components(cat['request'])
             total += 1
             t0 = time.time()
-            pred_enc, conf_enc = predict_as_runtime_request(encoded_payload)
+            pred_enc, conf_enc = predictor.predict(encoded_request)
             elapsed_enc = (time.time() - t0) * 1000
             
             is_correct_enc = pred_enc == tf['expected']
@@ -153,7 +101,7 @@ def run_categorical_test(use_onnx=False):
             
             results.append({
                 "category": cat['category'],
-                "payload": encoded_payload,
+                "payload": encoded_request,
                 "type": "ENCODED",
                 "expected": tf['expected'],
                 "predicted": pred_enc,

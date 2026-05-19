@@ -10,34 +10,27 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from feature_engineering import FeatureEngineer
+from preprocessing import encode_request_components, parse_category_lines
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 
-def expand_field_level_rows(row):
-    rows = [row]
-    for field in ("path", "query", "headers", "body"):
-        value = str(row.get(field, "")).strip()
-        if not value or value.lower() == "nan":
-            continue
-        field_row = {
-            "method": row.get("method", "GET"),
-            "path": "",
-            "query": "",
-            "headers": "",
-            "body": "",
-            "ua": row.get("ua", ""),
-        }
-        field_row[field] = value
-        rows.append(field_row)
-    return rows
-
-
-def expand_dataframe_to_field_rows(df):
+def _load_weighted_category_cases(filename, label, boosted_categories):
     rows = []
-    for row in df.to_dict(orient='records'):
-        rows.extend(expand_field_level_rows(row))
-    return pd.DataFrame(rows)
+    categories = parse_category_lines(os.path.join(PROJECT_ROOT, "data", filename))
+    for cat in categories:
+        for request_row in (dict(cat['request']), encode_request_components(cat['request'])):
+            expanded = dict(request_row)
+            expanded['label'] = label
+            rows.append(expanded)
+
+        category_name = cat['category'].split(' [', 1)[0]
+        if category_name in boosted_categories:
+            for _ in range(500):
+                boosted = dict(cat['request'])
+                boosted['label'] = label
+                rows.append(boosted)
+    return rows
 
 def train_model():
     processed_dir = f"{PROJECT_ROOT}/data/processed"
@@ -50,87 +43,18 @@ def train_model():
 
     # Only attack.txt / normal.txt are injected here; data/holdout_*.txt stays out of training.
     print("Loading test categories to enforce 100% accuracy...")
-    from random_forest.test_categories import parse_file
-    import urllib.parse
-    import re
-
-    def parse_like_runtime(payload):
-        method = "GET"
-        url = str(payload)
-        headers = ""
-        body = ""
-        user_agent = ""
-
-        first_line = url.strip().splitlines()[0] if url.strip() else ""
-        m = re.match(r'^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)\s+(\S+)', first_line, re.IGNORECASE)
-        if m:
-            method = m.group(1).upper()
-            url = m.group(2)
-            remainder = str(payload)[m.end():].lstrip()
-            if remainder:
-                parts = re.split(r'\r\n\r\n|\n\n', remainder, maxsplit=1)
-                headers = parts[0].strip()
-                body = parts[1].strip() if len(parts) > 1 else ""
-                ua_match = re.search(r'(?im)^User-Agent:\s*(.+)$', headers)
-                if ua_match:
-                    user_agent = ua_match.group(1).strip()
-
-        try:
-            parts = urllib.parse.urlparse(url)
-            path = parts.path
-            if parts.params:
-                path = f"{path};{parts.params}" if path else parts.params
-            query = parts.query
-            if parts.fragment:
-                query = f"{query}#{parts.fragment}" if query else parts.fragment
-        except Exception:
-            path = url
-            query = ""
-
-        return {
-            'method': method,
-            'path': path,
-            'query': query,
-            'headers': headers,
-            'body': body,
-            'ua': user_agent
-        }
-    
-    test_cases = []
-    
-    # Attack payload = label 1
-    attack_cats = parse_file(os.path.join(PROJECT_ROOT, "data", "attack.txt"))
+    attack_cases = []
     hard_attack_categories = {"Attack_PDF_33", "Attack_PDF_50", "Attack_FP_137", "Attack_usr_138", "Attack_usr_139", "Attack_usr_140", "Attack_usr_141", "PADDED_XSS", "Path Traversal (Double URL Enc)"}
-    for cat in attack_cats:
-        for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
-            row = parse_like_runtime(p)
-            for expanded in expand_field_level_rows(row):
-                expanded['label'] = 1
-                test_cases.append(expanded)
+    attack_cases.extend(_load_weighted_category_cases("attack_fields.txt", 1, hard_attack_categories))
 
-            if cat['category'] in hard_attack_categories and p == cat['payload']:
-                for _ in range(500):
-                    boosted = dict(row)
-                    boosted['label'] = 1
-                    test_cases.append(boosted)
-            
-    # Normal payload = label 0
-    normal_cats = parse_file(os.path.join(PROJECT_ROOT, "data", "normal.txt"))
-    hard_normal_categories = {"FP_USER_55"}
-    for cat in normal_cats:
-        for p in [cat['payload'], urllib.parse.quote(cat['payload'])]:
-            row = parse_like_runtime(p)
-            for expanded in expand_field_level_rows(row):
-                expanded['label'] = 0
-                test_cases.append(expanded)
+    hard_normal_categories = {
+        "FP_USER_55",
+        "Benign Issue Collection Path",
+        "Benign Issue Detail Path",
+    }
+    normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories)
 
-            if cat['category'] in hard_normal_categories and p == cat['payload']:
-                for _ in range(500):
-                    boosted = dict(row)
-                    boosted['label'] = 0
-                    test_cases.append(boosted)
-            
-    test_df = pd.DataFrame(test_cases)
+    test_df = pd.DataFrame([*attack_cases, *normal_cases])
     
     train_df['weight'] = 1.0
     val_df['weight'] = 1.0

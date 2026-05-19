@@ -6,6 +6,9 @@ import re
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+from parse_category_files import generate_field_level_category_files
+from preprocessing import expand_request_to_field_rows, parse_category_lines, parse_http_string
+
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 def clean_val(v):
@@ -35,28 +38,28 @@ def extract_http_rows(df):
     ])
 
 def load_txt_categories(filename, label, data_dir):
-    from preprocessing import parse_http_string
     path = os.path.join(data_dir, filename)
     cats = []
     if os.path.exists(path):
-        with open(path, 'r') as f:
-            for line in f:
-                match = re.match(r'^\d+\.\s+(.*?):\s+(.*)$', line.strip())
-                if match:
-                    row = parse_http_string(match.group(2))
-                    row['label'] = label
-                    cats.append(row)
-                else:
-                    # Handle raw lines without category prefix
-                    line = line.strip()
-                    if line and not line.startswith('#'):
-                        row = parse_http_string(line)
-                        row['label'] = label
-                        cats.append(row)
+        for sample in parse_category_lines(path):
+            row = dict(sample['request'])
+            row['label'] = label
+            row['category'] = sample['category']
+            cats.append(row)
     return pd.DataFrame(cats)
+
+
+def expand_dataset_to_field_rows(df):
+    rows = []
+    for row in df.to_dict(orient='records'):
+        rows.extend(expand_request_to_field_rows(row, include_combined=False))
+    return pd.DataFrame(rows)
 
 def process_all_data():
     data_dir = f"{PROJECT_ROOT}/data"
+    generated = generate_field_level_category_files(data_dir)
+    for dest_name, count in generated.items():
+        print(f"Generated {count} field-level samples in {dest_name}.")
     
     # Metadata pools for realistic normalcy
     ua_pool = [
@@ -75,18 +78,16 @@ def process_all_data():
 
     # 1. Load Data
     attack_paths = sorted(glob.glob(os.path.join(data_dir, "attack*.csv")))
-    attack_frames = [extract_http_rows(load_csv_with_detected_delimiter(path)) for path in attack_paths]
+    attack_frames = [expand_dataset_to_field_rows(extract_http_rows(load_csv_with_detected_delimiter(path))) for path in attack_paths]
     all_attacks_logs = pd.concat(attack_frames, ignore_index=True).drop_duplicates().reset_index(drop=True)
     print(f"Loaded {len(all_attacks_logs)} unique attack rows from {len(attack_paths)} file(s).")
 
     nm2 = load_csv_with_detected_delimiter(os.path.join(data_dir, "nm2.xlsx.csv"))
-    all_normals_logs = extract_http_rows(nm2).drop_duplicates().reset_index(drop=True)
+    all_normals_logs = expand_dataset_to_field_rows(extract_http_rows(nm2)).drop_duplicates().reset_index(drop=True)
     print(f"Loaded {len(all_normals_logs)} unique normal rows.")
 
     # 2. Golden Regression Injection
     print("Injecting golden regression samples...")
-    from preprocessing import parse_http_string
-    
     regression_attacks = []
     failed_patterns = [
         "id=1' OR '1'='1",
@@ -104,10 +105,10 @@ def process_all_data():
     ]
     for p in failed_patterns:
         row = parse_http_string(p)
-        regression_attacks.append(row)
+        regression_attacks.extend(expand_request_to_field_rows(row, include_combined=False))
     
-    attack_cats = load_txt_categories("attack.txt", 1, data_dir)
-    normal_cats = load_txt_categories("normal.txt", 0, data_dir)
+    attack_cats = load_txt_categories("attack_fields.txt", 1, data_dir)
+    normal_cats = load_txt_categories("normal_fields.txt", 0, data_dir)
 
     # 3. Normal Regression Injection (Fixing JWT False Positives)
     print("Injecting normal regression samples...")
@@ -130,10 +131,16 @@ def process_all_data():
         "GET /api/chat?message=can%20you%20select%20the%20best%20union%20for%20me HTTP/1.1",
         "GET /forum/post?title=why%20I%20drop%20out%20of%20the%20student%20union HTTP/1.1",
         "GET /query?text=please%20insert%20the%20coin%20and%20select%20your%20drink HTTP/1.1",
-        "GET /help?q=how%20to%20update%20my%20profile%20and%20delete%20old%20photos HTTP/1.1"
+        "GET /help?q=how%20to%20update%20my%20profile%20and%20delete%20old%20photos HTTP/1.1",
+        "GET /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/ HTTP/1.1",
+        "PATCH /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/ HTTP/1.1",
+        "PATCH /api/workspaces/demo/projects/11111111-2222-3333-4444-555555555555/issues/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/ HTTP/1.1"
     ]
-    norm_reg_rows = [parse_http_string(p) for p in normal_regression]
-    for r in norm_reg_rows: r['label'] = 0
+    norm_reg_rows = []
+    for payload in normal_regression:
+        row = parse_http_string(payload)
+        row['label'] = 0
+        norm_reg_rows.extend(expand_request_to_field_rows(row, include_combined=False))
 
     # 4. Mirror Construction
     print("Constructing reduced production mirror pool...")
