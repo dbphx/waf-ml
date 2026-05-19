@@ -36,7 +36,7 @@ func main() {
 		suspicionThreshold = 0.35
 	case "logistic_regression":
 		assetDir = "logistic_regression/assets"
-		blockThreshold = 0.72
+		blockThreshold = 0.77
 		suspicionThreshold = 0.50
 	default:
 		log.Fatalf("Unknown model type: %s", *modelType)

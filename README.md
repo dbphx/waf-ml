@@ -13,8 +13,9 @@ We support two Python model bundles side-by-side:
 
 - **Multiple models**: Random Forest and Logistic Regression (TF-IDF + stats).
 - **Hybrid features (TF-IDF models)**: Character n-grams (2–5), TF-IDF, entropy, keyword ratios.
-- **Regression suite**: Payloads from `data/attack.txt` and `data/normal.txt` (RAW + URL-encoded) — target **100%** pass on categorical tests for production parity.
-- **Go runtime**: TF-IDF ONNX models load via `onnxruntime` with shared `model_metadata.json` (vocabulary + IDF + keywords).
+- **Field-aware inference**: Requests are split into `path`, `query`, `headers`, and `body`; each field is scored independently and the highest-risk field becomes the final decision.
+- **Regression suite**: Payloads from `data/attack.txt` and `data/normal.txt` (RAW + URL-encoded) are used for categorical regression tracking and production parity checks.
+- **Go runtime**: TF-IDF ONNX models load via `onnxruntime` with shared `model_metadata.json` (`field_order`, per-field vocabularies + IDF, keywords).
 - **Stateful reputation** (Go): `ReputationManager` scores clients over time.
 
 ## Project structure
@@ -111,12 +112,25 @@ python src/random_forest/export_for_go.py
 python src/logistic_regression/export_for_go.py
 ```
 
+Each export refreshes:
+
+- `application/go/<model>/assets/model.onnx`
+- `application/go/<model>/assets/model_metadata.json`
+- `models/<model>/model.onnx`
+
+Current ONNX layout for both TF-IDF bundles:
+
+- `field_order = ["path", "query", "headers", "body"]`
+- one TF-IDF vectorizer per field (`max_features = 5000` each)
+- per-field stats = `length + entropy + 26 keyword ratios`
+- total input width = `20112` features (`20000` TF-IDF + `112` stats)
+
 
 ---
 
 ## Running tests (modes)
 
-All commands assume repository root and **`source .venv/bin/activate`** (venv đang bật). Targets are typically **882/882** lines (category × RAW + ENC) when models are trained and thresholds aligned.
+All commands assume repository root and **`source .venv/bin/activate`** (venv đang bật).
 
 ### Categorical regression (`test_categories.py`)
 
@@ -139,6 +153,10 @@ python src/logistic_regression/test_categories.py --log reports/logistic_regress
 ```
 
 JSON reports are written under `reports/<model>/categorical_results.json` or `categorical_results_onnx.json` when `--onnx` is used.
+
+### Python prediction behavior
+
+`src/*/predict.py` first normalizes input with `split_request_components()` and then predicts `path`, `query`, `headers`, and `body` separately. The component with the highest attack probability is used as the final request verdict and is returned as `decisive_component` by `predict_components()`.
 
 ### Quick interactive samples
 
@@ -191,14 +209,24 @@ isAttack := detector.Predict(requestMap)
 blocked, score, reason := detector.PredictSemantic("192.168.1.10", requestMap)
 ```
 
+`pkg/waf` follows the same multipart layout as Python inference: it scores `path`, `query`, `headers`, and `body` independently, builds the ONNX input using the shared `field_order`, and uses the highest-risk component score as the final request score.
+
+Current decision thresholds:
+
+- `random_forest`: stateless attack threshold `0.55`
+- `logistic_regression`: stateless attack threshold `0.77`
+- Go `PredictSemantic()` example defaults: RF block/suspicion = `0.55 / 0.35`, LR block/suspicion = `0.77 / 0.50`
+
 ---
 
 ## Model performance (reference)
 
+Current ONNX categorical regression results against `data/attack.txt` + `data/normal.txt` (RAW + ENC), using the exported multipart layout assets:
+
 | Model | Categorical regression | Notes |
 | ----- | ---------------------- | ----- |
-| **Random Forest** | 100% target on suite | TF-IDF + RF; thresholds in predict / Go |
-| **Logistic Regression** | 100% target on suite | TF-IDF + LR; threshold ~0.72 (Python) |
+| **Random Forest** | `1099 / 1104` passed (`99.55%`) | TF-IDF + RF; 5 current misses (`Local File Inclusion (Input Wrapper)` RAW, `Server-Side Request Forgery (Localhost)` RAW, `LFI via PHP Expect Wrapper` RAW, `FP_USER_55` RAW, `Benign Asset` RAW) |
+| **Logistic Regression** | `1055 / 1104` passed (`95.56%`) | TF-IDF + LR; current ONNX asset still has broader benign false positives and misses around `Attack_FP_137`, `Attack_usr_138`, `Attack_usr_139`, `Homepage Access`, `WebSocket Heartbeat (Ping)`, and multiple `FP_*` / benign URL cases |
 
 Hold-out files (`data/holdout_attack.txt`, `holdout_normal.txt`) are intentionally **excluded** from `train.py` merges — use them to sanity-check generalization beyond the main regression lists.
 
