@@ -234,3 +234,5 @@ Categories of Normal Traffic (50 Categories)
 228. Benign Auth Login URL: /auth/vnpay/login?data=oltzje7zapslmxqj5/pwgcmm/kvilsdm81ifiofd6hgzj+1z6ipdto2faxfqjyu0uzbnau5xkrvr1o8ayhk17emctglfs68umh68sxuqrrg0c/9tuxfsj+x60kgzfmrys6muyuolmcwzobigs6h/qxjyflq62jd3npgwjp6v70ldui1ueqbzpovk/ise6tykj+y+5wxt+ngxp6xhtnwqvakjsmotopmiq/jawehqv97vp6squp/+uidx85slq9bublyk4winyvkjft+xv0ovrs1bc7w9p9cj6+pkwklf8nxrmqzia1fkuv0=&signature=e8788144f500ad2c1cd2c818eebb5fc8
 229. FP_USER_70: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/2e92bcde-e7f9-46e1-bcb7-30ee93e0fff1/history/?activity_type=issue-property
 230. FP_USER_71: /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/28c8873e-2b96-4e9b-8c9d-1cfd8a4e4439/history/?activity_type=issue-property
+231. Benign Workspace Modules API: GET /api/workspaces/insky/modules/
+232. Benign Sidebar Preferences API: GET /api/workspaces/insky/sidebar-preferences/

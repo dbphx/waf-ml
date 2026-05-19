@@ -233,12 +233,18 @@ def parse_http_string(payload):
         ua_match = re.search(r'(?im)^User-Agent:\s*(.+)$', row['headers'])
         if ua_match:
             row['ua'] = ua_match.group(1).strip()
-        
-    # 4. Handle Query pattern (e.g., 'id=1&name=test')
+
+    # 4. Path (+ optional query), e.g. '/api/foo/?all=true' — must run before bare query heuristic
+    elif payload.startswith('/'):
+        parsed = urllib.parse.urlparse(payload)
+        row['path'] = parsed.path or '/'
+        row['query'] = parsed.query
+
+    # 5. Bare query string (e.g., 'id=1&name=test') — no leading slash
     elif any(sep in payload for sep in ['=', '&']) and ' ' not in payload:
         row['query'] = payload
-    
-    # 5. Fallback: Entire string as payload-carrying path/body
+
+    # 6. Fallback: Entire string as payload-carrying path/body
     else:
         if payload.startswith(('<', '(', ';', '|', '$', '`')) or '://' in payload:
             row['method'] = 'POST'
