@@ -5,9 +5,8 @@ import (
 	"time"
 )
 
-// Detector is an interface that both Random Forest and Logistic Regression detectors must implement.
-// This allows the ReputationManager to work with either model interchangeably.
-type Detector interface {
+// Scorer is implemented by onnxEngine so ReputationManager can call back for stateless scores.
+type Scorer interface {
 	// PredictScore returns the raw probability score (0.0 to 1.0) of a request being an attack.
 	PredictScore(args map[string]string) (float64, error)
 	// Predict returns a boolean decision based on internal threshold (legacy support).
@@ -23,7 +22,7 @@ type ClientState struct {
 // ReputationManager handles stateful tracking of client IP addresses.
 // It wraps a stateless ML Detector to add memory and behavior analysis.
 type ReputationManager struct {
-	detector Detector
+	detector Scorer
 
 	// State Storage
 	reputation map[string]*ClientState
@@ -37,7 +36,7 @@ type ReputationManager struct {
 }
 
 // NewReputationManager creates a new stateful WAF manager.
-func NewReputationManager(d Detector, blockThreshold, suspicionThreshold float64, ttl time.Duration) *ReputationManager {
+func NewReputationManager(d Scorer, blockThreshold, suspicionThreshold float64, ttl time.Duration) *ReputationManager {
 	return &ReputationManager{
 		detector:           d,
 		reputation:         make(map[string]*ClientState),

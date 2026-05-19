@@ -7,14 +7,12 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 
 	"waf-detector-lib/pkg/waf"
 )
 
 func main() {
-	// Parse command line arguments
-	modelType := flag.String("model", "random_forest", "Model type: random_forest | logistic_regression (ONNX).")
+	modelType := flag.String("model", "random_forest", "Model type: random_forest | logistic_regression | xgboost")
 	sharedLib := flag.String("lib", "", "Path to onnxruntime shared library (e.g., libonnxruntime.dylib or .so)")
 	payloadFile := flag.String("payload-file", "", "Optional path to a .txt file containing a payload to test")
 	payloadContains := flag.String("payload-contains", "", "If set, select the first line containing this substring from payload-file")
@@ -25,42 +23,19 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Determine paths
-	var assetDir string
-	var blockThreshold, suspicionThreshold float64
-
-	switch *modelType {
-	case "random_forest":
-		assetDir = "random_forest/assets"
-		blockThreshold = 0.55
-		suspicionThreshold = 0.35
-	case "logistic_regression":
-		assetDir = "logistic_regression/assets"
-		blockThreshold = 0.77
-		suspicionThreshold = 0.50
-	default:
+	cfg, err := waf.DefaultConfig(waf.ModelType(*modelType))
+	if err != nil {
 		log.Fatalf("Unknown model type: %s", *modelType)
 	}
 
-	modelPath := fmt.Sprintf("%s/model.onnx", assetDir)
-	metaPath := fmt.Sprintf("%s/model_metadata.json", assetDir)
+	fmt.Printf("Initializing WAF with model: %s\n", cfg.Type)
 
-	fmt.Printf("Initializing WAF with model: %s\n", *modelType)
-
-	// 1. Initialize the Base Detector
-	// This now internally manages the single ONNX session and default Reputation Manager
-	detector, err := waf.NewBaseDetector(modelPath, metaPath, *sharedLib)
+	detector, err := waf.NewModelWithConfig(cfg, *sharedLib)
 	if err != nil {
-		log.Fatalf("Failed to initialize detector: %v", err)
+		log.Fatalf("Failed to initialize model: %v", err)
 	}
 	defer detector.Destroy()
 
-	// Apply correct thresholds based on the model chosen
-	detector.SetPredictThreshold(blockThreshold)
-	// We re-initialize the internal reputation manager to use the correct model-specific thresholds
-	detector.InitReputationManager(blockThreshold, suspicionThreshold, 24*time.Hour)
-
-	// 2. Optional: Use payload from file
 	if *payloadFile != "" {
 		payload, err := readPayloadFromFile(*payloadFile, *payloadContains)
 		if err != nil {
@@ -83,21 +58,17 @@ func main() {
 		fmt.Println("--- Single Payload Test ---")
 		fmt.Printf("Payload: %s\n", payload)
 		fmt.Printf("Raw Score: %.4f\n", score)
-		fmt.Printf("Predict (Threshold %.2f): %v\n", blockThreshold, isAttack)
+		fmt.Printf("Predict (Threshold %.2f): %v\n", cfg.PredictThreshold, isAttack)
 		fmt.Printf("PredictSemantic: Blocked=%v | Score=%.4f | Reason=%s\n", blocked, semScore, reason)
 		return
 	}
 
-	// 3. Simulate Traffic using the two methods requested
-
-	// Case A: Normal User
 	normalRequest := map[string]string{
 		"method": "GET",
 		"path":   "/api/v1/user",
 		"query":  "id=123",
 	}
 
-	// Case B: Attacker
 	attackRequest := map[string]string{
 		"method": "GET",
 		"path":   "/search",
@@ -106,20 +77,15 @@ func main() {
 
 	fmt.Println("--- Simulation Start ---")
 
-	// METHOD 1: Predict (Stateless, Boolean)
 	isAttack := detector.Predict(normalRequest)
 	fmt.Printf("[Stateless] Normal Request -> IsAttack: %v\n", isAttack)
 
-	// METHOD 2: PredictSemantic (Stateful, Score + Reputation)
-	// Normal IP
 	blocked, score, reason := detector.PredictSemantic("192.168.1.10", normalRequest)
 	fmt.Printf("[Semantic]  Normal IP -> Blocked: %v | Score: %.2f | Reason: %s\n", blocked, score, reason)
 
-	// Attacker IP - Hit 1
 	blocked, score, reason = detector.PredictSemantic("10.0.0.66", attackRequest)
 	fmt.Printf("[Semantic]  Bad IP (Hit 1) -> Blocked: %v | Score: %.2f | Reason: %s\n", blocked, score, reason)
 
-	// Attacker IP - Hit 2 (Reputation kicking in)
 	blocked, score, reason = detector.PredictSemantic("10.0.0.66", attackRequest)
 	fmt.Printf("[Semantic]  Bad IP (Hit 2) -> Blocked: %v | Score: %.2f | Reason: %s\n", blocked, score, reason)
 }

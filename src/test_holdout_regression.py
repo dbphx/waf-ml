@@ -116,16 +116,16 @@ def main():
     parser = argparse.ArgumentParser(description="Held-out tests (not in training merge)")
     parser.add_argument(
         "--model",
-        choices=["random_forest", "logistic_regression", "both", "all"],
+        choices=["random_forest", "logistic_regression", "xgboost", "both", "all"],
         default="both",
-        help="both/all = RF+LR",
+        help="both = RF+LR; all = RF+LR+XGBoost",
     )
     args = parser.parse_args()
 
     if args.model == "both":
         models = ["random_forest", "logistic_regression"]
     elif args.model == "all":
-        models = ["random_forest", "logistic_regression"]
+        models = ["random_forest", "logistic_regression", "xgboost"]
     else:
         models = [args.model]
     all_ok = True
