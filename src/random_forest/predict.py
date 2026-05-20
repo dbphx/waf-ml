@@ -13,8 +13,9 @@ from preprocessing import split_request_components
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 class HTTPAttackPredictor:
-    def __init__(self, model_dir=f"{PROJECT_ROOT}/models/random_forest", use_onnx=False):
+    def __init__(self, model_dir=f"{PROJECT_ROOT}/models/random_forest", use_onnx=False, threshold=0.55):
         self.use_onnx = use_onnx
+        self.threshold = float(threshold)
         if self.use_onnx:
             import onnxruntime as ort
             onnx_path = f"{PROJECT_ROOT}/application/go/random_forest/assets/model.onnx"
@@ -49,7 +50,7 @@ class HTTPAttackPredictor:
         return float(self.model.predict_proba(X)[0][1])
 
     def _classify_probability(self, prob):
-        threshold = 0.55 # Optimized based on categorical analysis (0.41 < T < 0.64)
+        threshold = self.threshold
         prediction = "ATTACK" if prob >= threshold else "NORMAL"
         confidence = round(float(prob if prob >= threshold else 1 - prob), 4)
         return prediction, confidence

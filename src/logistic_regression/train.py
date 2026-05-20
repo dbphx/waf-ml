@@ -68,6 +68,10 @@ def train_model():
         "Benign Insky Edge Proxy Headers Firefox 130 Accept Html",
         "Benign Insky Edge Proxy Headers macOS Chrome 126",
         "Benign Insky Edge Proxy Headers Generic Hop Loop",
+        "Benign Static Root Script JS",
+        "Benign Static Root Script JS Versioned",
+        "Benign Dynamic Host Script JS URL",
+        "Benign Dynamic Host Script JS URL Versioned",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories, boost_repeat=boost_repeat)
 
