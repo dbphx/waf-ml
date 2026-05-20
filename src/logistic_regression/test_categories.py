@@ -24,7 +24,7 @@ class _Tee:
         for s in self.streams:
             s.flush()
 
-def run_categorical_test(use_onnx=False):
+def run_categorical_test(use_onnx=False, threshold=0.55):
     models_dir = f"{PROJECT_ROOT}/models/logistic_regression"
     data_dir = f"{PROJECT_ROOT}/data"
 
@@ -39,9 +39,9 @@ def run_categorical_test(use_onnx=False):
         print("Error: Model files not found. Run train.py first.")
         return False
 
-    predictor = HTTPAttackPredictor(models_dir, use_onnx=use_onnx)
+    predictor = HTTPAttackPredictor(models_dir, use_onnx=use_onnx, threshold=threshold)
     mode = "ONNXRuntime" if use_onnx else "joblib+sklearn"
-    print(f"=== Logistic regression categorical test | backend={mode} ===\n")
+    print(f"=== Logistic regression categorical test | backend={mode} | threshold={threshold:.2f} ===\n")
 
     test_files = [
         {"file": "attack_fields.txt", "expected": "ATTACK"},
@@ -134,13 +134,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--onnx", action="store_true", help="Use ONNX from application/go/.../assets")
     parser.add_argument("--log", type=str, default=None, help="Also write stdout to this file")
+    parser.add_argument("--threshold", type=float, default=0.55, help="Decision threshold for ATTACK classification")
     args = parser.parse_args()
 
     if args.log:
         os.makedirs(os.path.dirname(args.log) or ".", exist_ok=True)
         with open(args.log, "w", encoding="utf-8") as logf:
             with contextlib.redirect_stdout(_Tee(sys.stdout, logf)):
-                ok = run_categorical_test(use_onnx=args.onnx)
+                ok = run_categorical_test(use_onnx=args.onnx, threshold=args.threshold)
     else:
-        ok = run_categorical_test(use_onnx=args.onnx)
+        ok = run_categorical_test(use_onnx=args.onnx, threshold=args.threshold)
     sys.exit(0 if ok else 1)

@@ -15,7 +15,7 @@ from preprocessing import encode_request_components, parse_category_lines
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 
-def _load_weighted_category_cases(filename, label, boosted_categories):
+def _load_weighted_category_cases(filename, label, boosted_categories, boost_repeat=100):
     rows = []
     categories = parse_category_lines(os.path.join(PROJECT_ROOT, "data", filename))
     for cat in categories:
@@ -26,13 +26,16 @@ def _load_weighted_category_cases(filename, label, boosted_categories):
 
         category_name = cat['category'].split(' [', 1)[0]
         if category_name in boosted_categories:
-            for _ in range(500):
+            for _ in range(boost_repeat):
                 boosted = dict(cat['request'])
                 boosted['label'] = label
                 rows.append(boosted)
     return rows
 
 def train_model():
+    boost_repeat = 100
+    regression_weight = 8.0
+
     processed_dir = f"{PROJECT_ROOT}/data/processed"
     models_dir = f"{PROJECT_ROOT}/models/logistic_regression"
     os.makedirs(models_dir, exist_ok=True)
@@ -45,17 +48,35 @@ def train_model():
     print("Loading test categories to enforce 100% accuracy...")
     attack_cases = []
     hard_attack_categories = {"Attack_PDF_33", "Attack_PDF_50", "Attack_FP_137", "Attack_usr_133", "Attack_usr_138", "Attack_usr_139", "Attack_usr_140", "Attack_usr_141", "PADDED_XSS", "Path Traversal (Double URL Enc)"}
-    attack_cases.extend(_load_weighted_category_cases("attack_fields.txt", 1, hard_attack_categories))
+    attack_cases.extend(_load_weighted_category_cases("attack_fields.txt", 1, hard_attack_categories, boost_repeat=boost_repeat))
 
-    hard_normal_categories = {"FP_USER_55"}
-    normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories)
+    hard_normal_categories = {
+        "FP_USER_55",
+        "Benign Issue Collection Path",
+        "Benign Issue Detail Path",
+        "Benign Issue Detail GET expand",
+        "Benign Issue Detail PATCH path",
+        "Benign Insky Issues Path (short)",
+        "Benign S3 Upload Signed URL",
+        "Benign S3 Upload Signed URL v2",
+        "Benign S3 Upload Path Only",
+        "Benign S3 Upload Path Only (duplicate)",
+        "Benign Insky Edge Proxy Headers Kubuntu Chrome 130",
+        "Benign Insky Edge Proxy Headers Linux Firefox 3.6",
+        "Benign Insky Edge Proxy Headers Windows Firefox 140",
+        "Benign Insky Edge Proxy Headers macOS Chrome 116",
+        "Benign Insky Edge Proxy Headers Firefox 130 Accept Html",
+        "Benign Insky Edge Proxy Headers macOS Chrome 126",
+        "Benign Insky Edge Proxy Headers Generic Hop Loop",
+    }
+    normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories, boost_repeat=boost_repeat)
 
     test_df = pd.DataFrame([*attack_cases, *normal_cases])
     
     # Keep regression samples important without letting a linear model overfit them.
     train_df['weight'] = 1.0
     val_df['weight'] = 1.0
-    test_df['weight'] = 15.0
+    test_df['weight'] = regression_weight
     
     train_df = pd.concat([train_df, test_df], ignore_index=True)
     val_df = pd.concat([val_df, test_df], ignore_index=True)

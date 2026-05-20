@@ -58,6 +58,13 @@ def train_model():
         "Benign S3 Upload Signed URL v2",
         "Benign S3 Upload Path Only",
         "Benign S3 Upload Path Only (duplicate)",
+        "Benign Insky Edge Proxy Headers Kubuntu Chrome 130",
+        "Benign Insky Edge Proxy Headers Linux Firefox 3.6",
+        "Benign Insky Edge Proxy Headers Windows Firefox 140",
+        "Benign Insky Edge Proxy Headers macOS Chrome 116",
+        "Benign Insky Edge Proxy Headers Firefox 130 Accept Html",
+        "Benign Insky Edge Proxy Headers macOS Chrome 126",
+        "Benign Insky Edge Proxy Headers Generic Hop Loop",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories)
 

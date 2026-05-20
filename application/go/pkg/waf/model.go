@@ -49,8 +49,8 @@ func DefaultConfig(modelType ModelType) (ModelConfig, error) {
 		return ModelConfig{
 			Type:               ModelLogisticRegression,
 			AssetDir:           "logistic_regression/assets",
-			PredictThreshold:   0.77,
-			BlockThreshold:     0.77,
+			PredictThreshold:   0.58,
+			BlockThreshold:     0.58,
 			SuspicionThreshold: 0.50,
 		}, nil
 	case ModelXGBoost:
