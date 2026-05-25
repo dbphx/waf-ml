@@ -254,3 +254,4 @@ Categories of Normal Traffic (50 Categories)
 248. Benign Static Root Script JS Versioned: GET /script.js?v=141.0.0.0
 249. Benign Dynamic Host Script JS URL: GET https://dyn45bc44357333.dynamic.insky.io.vn/script.js
 250. Benign Dynamic Host Script JS URL Versioned: GET https://dyn45bc44357333.dynamic.insky.io.vn/script.js?v=20260408
+251. Benign Fluent Bit Splunk Headers: Content-Length: 7090 Host: splunk-heavy-forwarder-cloudfarm2.vnpay.vn User-Agent: Fluent-Bit
