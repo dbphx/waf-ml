@@ -61,55 +61,18 @@ We support three Python model bundles side-by-side:
 
 ---
 
-## Quick start (new contributors)
+## Quick start
 
-### 1. Virtual environment (venv)
-
-Luôn làm việc **trong venv** để dependencies không lẫn với Python hệ thống.
-
-**Tạo venv** (một lần, tại thư mục gốc repo):
+Work inside a local virtual environment:
 
 ```bash
-cd /path/to/ml
 python3 -m venv venv
-```
-
-**Kích hoạt venv** — chọn đúng shell của bạn:
-
-| Môi trường | Lệnh |
-| ---------- | ---- |
-| **macOS / Linux** (bash, zsh) | `source venv/bin/activate` |
-| **Windows CMD** | `venv\Scripts\activate.bat` |
-| **Windows PowerShell** | `venv\Scripts\Activate.ps1` |
-
-Sau khi activate, prompt thường có tiền tố `(venv)`. Kiểm tra:
-
-```bash
-which python    # macOS/Linux — phải trỏ vào .../ml/venv/bin/python
-python -V
-pip -V
-```
-
-**Cài dependency** (chỉ khi venv đang bật):
-
-```bash
+source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-**Chạy script trong venv** — dùng `python` (đã trỏ vào `venv`), ví dụ:
-
-```bash
-python src/random_forest/test_categories.py --onnx
-```
-
-**Thoát venv** khi xong:
-
-```bash
-deactivate
-```
-
-**Lưu ý:** không commit thư mục `venv/`; mỗi máy tự tạo và `pip install -r requirements.txt`. Dùng **Python 3.9+** (repo ghim `scikit-learn>=1.6.1,<1.8` cho joblib).
+Use Python 3.9+. Do not commit `venv/`.
 
 ### 2. Train data pipeline (when you change `attack.txt` / `normal.txt`)
 
@@ -153,29 +116,27 @@ Current ONNX layout for both TF-IDF bundles:
 
 ---
 
-## Running tests (modes)
+## Running tests
 
-All commands assume repository root and **`source venv/bin/activate`** (venv đang bật).
+All commands assume repository root with `venv` activated.
 
 ### Categorical regression (`test_categories.py`)
 
-Tests read **`data/attack_fields.txt`** and **`data/normal_fields.txt`** (not the legacy whole-request lines in `attack.txt` / `normal.txt` directly). Each category is exercised as **RAW** and **ENC** (URL-encoded components), for **1292** cases total.
+Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1468` cases total.
 
-| Mode | Flags | What it uses |
-| ---- | ----- | ------------- |
-| **joblib (default)** | *(none)* | `models/<name>/model.joblib` + vectorizer |
-| **ONNX** | `--onnx` | `application/go/<name>/assets/model.onnx` (fallback: `models/<name>/model.onnx`) |
-| **Save log** | `--log PATH` | Mirror stdout to a file (table + SUMMARY) |
+| Mode | Flags | Uses |
+| ---- | ----- | ---- |
+| `joblib` | none | `models/<name>/model.joblib` + vectorizer |
+| `onnx` | `--onnx` | `application/go/<name>/assets/model.onnx` (fallback: `models/<name>/model.onnx`) |
+| `log` | `--log PATH` | mirrors stdout to a file |
 
 ```bash
-# Random Forest — ONNX + log
+# ONNX
 python src/random_forest/test_categories.py --onnx --log reports/random_forest/categorical_test_onnx.log
-
-# Logistic Regression — ONNX + log
 python src/logistic_regression/test_categories.py --onnx --log reports/logistic_regression/categorical_test_onnx.log
 python src/xgboost/test_categories.py --onnx --log reports/xgboost/categorical_test_onnx.log
 
-# Same without ONNX (joblib)
+# joblib
 python src/random_forest/test_categories.py --log reports/random_forest/categorical_test_joblib.log
 python src/logistic_regression/test_categories.py --log reports/logistic_regression/categorical_test_joblib.log
 python src/xgboost/test_categories.py --log reports/xgboost/categorical_test_joblib.log
@@ -287,15 +248,15 @@ detector, err := waf.NewModel(waf.ModelXGBoost, "xgboost/assets", sharedLibPath)
 
 ---
 
-## Model performance (reference)
+## Model performance
 
-Latest **ONNX** categorical regression (`attack_fields.txt` + `normal_fields.txt`, RAW + ENC, **1292** cases):
+Latest **ONNX** categorical regression, run on **May 26, 2026** against `data/attack_fields.txt` + `data/normal_fields.txt` (`734` field cases, `1468` RAW + ENC evaluations):
 
-| Model | Categorical regression | Known misses (ONNX) |
-| ----- | ---------------------- | ------------------- |
-| **Random Forest** | `1288 / 1292` (`99.69%`) | `Slowloris Header Pattern [path]` (RAW/ENC), `PADDED_XSS [path]` (RAW/ENC) |
-| **Logistic Regression** | `1283 / 1292` (`99.30%`) | Same Slowloris misses; `Attack_PDF_34 [path]` (ENC); false positives on `FP_USER_57 [query]`, `FP_USER_60 [path]`, `Benign Issue Collection Path [path]` (RAW/ENC) |
-| **XGBoost** | `1398 / 1426` (`98.04%`) | Re-run `test_categories.py --onnx` after retrain/export for current list |
+| Model | Categorical regression | Current miss pattern |
+| ----- | ---------------------- | -------------------- |
+| **Random Forest** | `1441 / 1468` (`98.16%`) | Mostly `Slowloris Header Pattern`, `TestReal1/2`, `Attack_PDF_105`, `Attack_usr_135-139`, `PADDED_XSS`, several asset/analyzer attack paths, plus one FP on `Benign Asset [path]` (ENC) |
+| **Logistic Regression** | `1426 / 1468` (`97.14%`) | Same core attack misses as RF, plus `Attack_PDF_106`, all `Attack_Asset_1-4` RAW/ENC misses, and FPs on `FP_PDF_48/49`, `FP_USER_55/57`, `Benign Workspace Modules API`, `Benign Sidebar Preferences API` |
+| **XGBoost** | `1437 / 1468` (`97.89%`) | Same core attack misses as RF, partial misses on `Attack_Asset_1-4`, one FP on `FP_PDF_34 [path]` (ENC), and FPs on `Benign Fluent Bit Splunk Headers [headers]` (RAW/ENC) |
 
 Re-run after export to refresh numbers:
 
