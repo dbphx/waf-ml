@@ -1,7 +1,5 @@
 import pandas as pd
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report
 import joblib
 import os
 import sys
@@ -72,6 +70,9 @@ def train_model():
         "Benign Static Root Script JS Versioned",
         "Benign Dynamic Host Script JS URL",
         "Benign Dynamic Host Script JS URL Versioned",
+        "Benign Evaluation Combo Path",
+        "Benign Placeholder Image PNG Path",
+        "Benign Messages Beta API Path",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories, boost_repeat=boost_repeat)
 
@@ -87,13 +88,15 @@ def train_model():
 
     print("Extracting features...")
     fe = FeatureEngineer()
-    # FeatureEngineer now handles extraction internally for consistency
-    fe.fit(train_df)
-    X_train = fe.transform(train_df)
+    prepared_train = fe.prepare(train_df)
+    prepared_val = fe.prepare(val_df)
+
+    fe.fit(prepared_train)
+    X_train = fe.transform(prepared_train)
     y_train = train_df['label']
     w_train = train_df['weight']
     
-    X_val = fe.transform(val_df)
+    X_val = fe.transform(prepared_val)
     y_val = val_df['label']
     
     print("Training Logistic Regression model (Stable Sparse)...")

@@ -24,10 +24,11 @@ type FieldVectorizer struct {
 
 // Metadata describes the multipart feature layout consumed by the ONNX model.
 type Metadata struct {
-	ModelName        string                     `json:"model_name"`
-	FieldOrder       []string                   `json:"field_order"`
-	FieldVectorizers map[string]FieldVectorizer `json:"field_vectorizers"`
-	Keywords         []string                   `json:"keywords"`
+	ModelName         string                     `json:"model_name"`
+	FieldOrder        []string                   `json:"field_order"`
+	FieldVectorizers  map[string]FieldVectorizer `json:"field_vectorizers"`
+	Keywords          []string                   `json:"keywords"`
+	KeywordMatchModes map[string]string          `json:"keyword_match_modes"`
 }
 
 // featureEncoder maps a feature value into the ONNX input tensor.
@@ -338,7 +339,7 @@ func (e *onnxEngine) generateFieldStats(text string) []float64 {
 	stats = append(stats, float64(len(text))/1000.0)
 	stats = append(stats, e.calcEntropy(text)/10.0)
 	for _, kw := range e.meta.Keywords {
-		count := strings.Count(text, kw)
+		count := e.countKeywordOccurrences(text, kw)
 		val := 0.0
 		if len(text) > 0 {
 			val = float64(count) / float64(len(text)+1)
@@ -346,6 +347,14 @@ func (e *onnxEngine) generateFieldStats(text string) []float64 {
 		stats = append(stats, val)
 	}
 	return stats
+}
+
+func (e *onnxEngine) countKeywordOccurrences(text, keyword string) int {
+	if e.meta.KeywordMatchModes[keyword] == "token" {
+		pattern := regexp.MustCompile(fmt.Sprintf(`(?i)(?<![a-z])%s(?![a-z])`, regexp.QuoteMeta(keyword)))
+		return len(pattern.FindAllStringIndex(text, -1))
+	}
+	return strings.Count(text, keyword)
 }
 
 func (e *onnxEngine) calcEntropy(text string) float64 {

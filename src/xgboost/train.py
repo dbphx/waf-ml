@@ -73,6 +73,9 @@ def train_model():
         "Benign Insky Edge Proxy Headers Firefox 130 Accept Html",
         "Benign Insky Edge Proxy Headers macOS Chrome 126",
         "Benign Insky Edge Proxy Headers Generic Hop Loop",
+        "Benign Evaluation Combo Path",
+        "Benign Placeholder Image PNG Path",
+        "Benign Messages Beta API Path",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories)
 
@@ -87,12 +90,15 @@ def train_model():
 
     print("Extracting features...")
     fe = FeatureEngineer()
-    fe.fit(train_df)
-    X_train = fe.transform(train_df)
+    prepared_train = fe.prepare(train_df)
+    prepared_val = fe.prepare(val_df)
+
+    fe.fit(prepared_train)
+    X_train = fe.transform(prepared_train)
     y_train = train_df["label"]
     w_train = train_df["weight"]
 
-    X_val = fe.transform(val_df)
+    X_val = fe.transform(prepared_val)
     y_val = val_df["label"]
 
     print("Training XGBoost model...")

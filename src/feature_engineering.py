@@ -1,8 +1,11 @@
 import os
+import re
+from collections import Counter
+from math import log
 
 import joblib
+import numpy as np
 import pandas as pd
-from scipy.stats import entropy
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 SUSPICIOUS_KEYWORDS = [
@@ -11,6 +14,9 @@ SUSPICIOUS_KEYWORDS = [
     '${', '{{', '}}', '() {', ';', '|', '&',
     '$gt', '$ne', '$in', 'cat ', 'whoami'
 ]
+DEFAULT_KEYWORD_MATCH_MODES = {
+    'eval': 'token',
+}
 
 REQUEST_FIELDS = ('path', 'query', 'headers', 'body')
 FIELD_MAX_FEATURES = {
@@ -24,10 +30,12 @@ FIELD_MAX_FEATURES = {
 class FeatureEngineer:
     def __init__(self, vectorizer_path=None):
         self.legacy_shared_vectorizer = None
+        self.keyword_match_modes = {}
         if vectorizer_path and os.path.exists(vectorizer_path):
             stored = joblib.load(vectorizer_path)
             if isinstance(stored, dict) and 'vectorizers' in stored:
                 self.vectorizers = stored['vectorizers']
+                self.keyword_match_modes = dict(stored.get('keyword_match_modes', {}))
             elif isinstance(stored, TfidfVectorizer):
                 self.legacy_shared_vectorizer = stored
                 self.vectorizers = {field: stored for field in REQUEST_FIELDS}
@@ -40,9 +48,24 @@ class FeatureEngineer:
                     ngram_range=(2, 5),
                     max_features=FIELD_MAX_FEATURES[field],
                     lowercase=True,
+                    dtype=np.float32,
                 )
                 for field in REQUEST_FIELDS
             }
+            self.keyword_match_modes = dict(DEFAULT_KEYWORD_MATCH_MODES)
+
+    def _count_keyword_occurrences(self, text, keyword):
+        mode = self.keyword_match_modes.get(keyword, 'substring')
+        if mode == 'token':
+            pattern = rf'(?<![a-z]){re.escape(keyword)}(?![a-z])'
+            return len(re.findall(pattern, text))
+        return text.count(keyword)
+
+    def _keyword_pattern(self, keyword):
+        mode = self.keyword_match_modes.get(keyword, 'substring')
+        if mode == 'token':
+            return rf'(?<![a-z]){re.escape(keyword)}(?![a-z])'
+        return re.escape(keyword)
 
     def _extract_field_texts(self, df):
         if isinstance(df, pd.Series):
@@ -57,20 +80,73 @@ class FeatureEngineer:
                 field_texts[field] = pd.Series('', index=df.index, dtype=str)
         return field_texts
 
+    def _normalize_series(self, text_series):
+        return text_series.fillna('').astype(str)
+
+    def _clean_text_series(self, text_series):
+        from preprocessing import clean_text
+
+        normalized = self._normalize_series(text_series)
+        codes, uniques = pd.factorize(normalized, sort=False)
+        cleaned_uniques = pd.Index([clean_text(text) for text in uniques], dtype=object)
+        return pd.Series(cleaned_uniques.take(codes), index=normalized.index, dtype=str)
+
+    def _transform_unique_texts(self, vectorizer, cleaned_text_series):
+        normalized = self._normalize_series(cleaned_text_series)
+        codes, uniques = pd.factorize(normalized, sort=False)
+        unique_matrix = vectorizer.transform(uniques.tolist())
+        return unique_matrix[codes]
+
+    def _calc_entropy(self, text):
+        if not text:
+            return 0.0
+
+        total = len(text)
+        ent = 0.0
+        for count in Counter(text).values():
+            p = count / total
+            ent -= p * log(p)
+        return ent / 10.0
+
+    def prepare(self, df):
+        field_texts = self._extract_field_texts(df)
+        cleaned_field_texts = {}
+        stat_blocks = {}
+
+        for field, texts in field_texts.items():
+            normalized = self._normalize_series(texts)
+            cleaned_field_texts[field] = self._clean_text_series(normalized)
+            stat_blocks[field] = self.get_statistical_features(normalized).values.astype(np.float32, copy=False)
+
+        return {
+            'field_texts': field_texts,
+            'cleaned_field_texts': cleaned_field_texts,
+            'stat_blocks': stat_blocks,
+        }
+
+    def _coerce_prepared(self, df_or_prepared):
+        if isinstance(df_or_prepared, dict) and 'cleaned_field_texts' in df_or_prepared:
+            return df_or_prepared
+        return self.prepare(df_or_prepared)
+
     def get_statistical_features(self, text_series):
+        text_series = self._normalize_series(text_series)
         features = pd.DataFrame(index=text_series.index)
-        features['length'] = text_series.apply(len) / 1000.0
+        codes, uniques = pd.factorize(text_series, sort=False)
+        lengths = np.fromiter((len(text) for text in uniques), dtype=np.float64, count=len(uniques))
 
-        def calc_entropy(text):
-            if not text:
-                return 0
-            counts = pd.Series(list(text)).value_counts()
-            return entropy(counts) / 10.0
-
-        features['entropy'] = text_series.apply(calc_entropy)
+        features['length'] = lengths.take(codes) / 1000.0
+        entropies = np.fromiter((self._calc_entropy(text) for text in uniques), dtype=np.float64, count=len(uniques))
+        features['entropy'] = entropies.take(codes)
 
         for kw in SUSPICIOUS_KEYWORDS:
-            features[f'kw_{kw}'] = text_series.apply(lambda x: x.count(kw) / (len(x) + 1))
+            pattern = self._keyword_pattern(kw)
+            keyword_counts = np.fromiter(
+                (len(re.findall(pattern, text)) for text in uniques),
+                dtype=np.float64,
+                count=len(uniques),
+            )
+            features[f'kw_{kw}'] = keyword_counts.take(codes) / (lengths.take(codes) + 1.0)
 
         return features
 
@@ -80,39 +156,49 @@ class FeatureEngineer:
             combined = combined + ' ' + field_texts[field]
         return combined.str.strip()
 
-    def fit(self, df):
+    def fit(self, df_or_prepared):
         print("Standardizing text for training...")
-        from preprocessing import clean_text
+        prepared = self._coerce_prepared(df_or_prepared)
 
-        for field, texts in self._extract_field_texts(df).items():
-            self.vectorizers[field].fit(texts.apply(clean_text))
+        for field, texts in prepared['cleaned_field_texts'].items():
+            self.vectorizers[field].fit(texts)
         return self
 
-    def transform(self, df):
-        from preprocessing import clean_text
+    def transform(self, df_or_prepared):
         from scipy.sparse import hstack
 
-        field_texts = self._extract_field_texts(df)
+        prepared = self._coerce_prepared(df_or_prepared)
+        field_texts = prepared['field_texts']
+        cleaned_field_texts = prepared['cleaned_field_texts']
+        stat_blocks = prepared['stat_blocks']
 
         if self.legacy_shared_vectorizer is not None:
             combined_texts = self._combine_field_texts(field_texts)
+            cleaned_combined = self._clean_text_series(combined_texts)
             return hstack([
-                self.legacy_shared_vectorizer.transform(combined_texts.apply(clean_text)),
+                self.legacy_shared_vectorizer.transform(cleaned_combined),
                 self.get_statistical_features(combined_texts).values,
-            ])
+            ], format='csr', dtype=np.float32)
 
         tfidf_blocks = []
-        stat_blocks = []
 
         for field in REQUEST_FIELDS:
-            texts = field_texts[field]
-            tfidf_blocks.append(self.vectorizers[field].transform(texts.apply(clean_text)))
-            stat_blocks.append(self.get_statistical_features(texts).values)
+            tfidf_blocks.append(self._transform_unique_texts(self.vectorizers[field], cleaned_field_texts[field]))
 
-        return hstack([*tfidf_blocks, *stat_blocks])
+        return hstack(
+            [*tfidf_blocks, *(stat_blocks[field] for field in REQUEST_FIELDS)],
+            format='csr',
+            dtype=np.float32,
+        )
 
     def save(self, path):
-        joblib.dump({'vectorizers': self.vectorizers}, path)
+        joblib.dump(
+            {
+                'vectorizers': self.vectorizers,
+                'keyword_match_modes': self.keyword_match_modes,
+            },
+            path,
+        )
 
 
 if __name__ == "__main__":

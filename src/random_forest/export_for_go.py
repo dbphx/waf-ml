@@ -61,6 +61,7 @@ def export():
         "field_order": list(REQUEST_FIELDS),
         "field_vectorizers": field_vectorizers,
         "keywords": SUSPICIOUS_KEYWORDS,
+        "keyword_match_modes": fe.keyword_match_modes,
         "exported_from_commit": get_git_commit(),
     }
 

@@ -255,3 +255,6 @@ Categories of Normal Traffic (50 Categories)
 249. Benign Dynamic Host Script JS URL: GET https://dyn45bc44357333.dynamic.insky.io.vn/script.js
 250. Benign Dynamic Host Script JS URL Versioned: GET https://dyn45bc44357333.dynamic.insky.io.vn/script.js?v=20260408
 251. Benign Fluent Bit Splunk Headers: Content-Length: 7090 Host: splunk-heavy-forwarder-cloudfarm2.vnpay.vn User-Agent: Fluent-Bit
+252. Benign Evaluation Combo Path: GET /evaluation_combo
+253. Benign Placeholder Image PNG Path: GET /images/placeholder-image.png
+254. Benign Messages Beta API Path: POST /v1/messages?beta=true

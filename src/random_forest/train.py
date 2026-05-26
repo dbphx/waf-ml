@@ -36,6 +36,9 @@ def train_model():
     processed_dir = f"{PROJECT_ROOT}/data/processed"
     models_dir = f"{PROJECT_ROOT}/models/random_forest"
     os.makedirs(models_dir, exist_ok=True)
+    skip_validation = os.environ.get("RF_SKIP_VALIDATION", "").strip().lower() in {"1", "true", "yes"}
+    n_estimators = int(os.environ.get("RF_N_ESTIMATORS", "500"))
+    n_jobs = int(os.environ.get("RF_N_JOBS", "-1"))
     
     print("Loading data...")
     train_df = pd.read_csv(os.path.join(processed_dir, 'train.csv'))
@@ -69,6 +72,9 @@ def train_model():
         "Benign Static Root Script JS Versioned",
         "Benign Dynamic Host Script JS URL",
         "Benign Dynamic Host Script JS URL Versioned",
+        "Benign Evaluation Combo Path",
+        "Benign Placeholder Image PNG Path",
+        "Benign Messages Beta API Path",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories)
 
@@ -84,33 +90,41 @@ def train_model():
     
     print("Extracting features...")
     fe = FeatureEngineer()
-    fe.fit(train_df)
-    X_train = fe.transform(train_df)
+    prepared_train = fe.prepare(train_df)
+    prepared_val = fe.prepare(val_df)
+
+    fe.fit(prepared_train)
+    X_train = fe.transform(prepared_train)
     y_train = train_df['label']
     w_train = train_df['weight']
-    
-    X_val = fe.transform(val_df)
-    y_val = val_df['label']
-    
+
     print("Training Random Forest model...")
     model = RandomForestClassifier(
-        n_estimators=500,
+        n_estimators=n_estimators,
         class_weight=None,
         bootstrap=False,
-        n_jobs=-1,
-        random_state=42
+        n_jobs=n_jobs,
+        random_state=42,
+        verbose=1,
     )
     
     model.fit(X_train, y_train, sample_weight=w_train)
-    
-    print("Evaluating on validation set...")
-    y_pred = model.predict(X_val)
-    print(classification_report(y_val, y_pred))
-    
+
     # Save model and vectorizer
     joblib.dump(model, os.path.join(models_dir, 'model.joblib'))
     fe.save(os.path.join(models_dir, 'vectorizer.joblib'))
     print(f"Model and vectorizer saved to {models_dir}")
+
+    if skip_validation:
+        print("Skipping validation transform/evaluation (RF_SKIP_VALIDATION enabled).")
+        return
+
+    X_val = fe.transform(prepared_val)
+    y_val = val_df['label']
+
+    print("Evaluating on validation set...")
+    y_pred = model.predict(X_val)
+    print(classification_report(y_val, y_pred))
 
 if __name__ == "__main__":
     train_model()
