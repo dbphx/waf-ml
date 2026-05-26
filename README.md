@@ -122,7 +122,7 @@ All commands assume repository root with `venv` activated.
 
 ### Categorical regression (`test_categories.py`)
 
-Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1468` cases total.
+Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1484` cases total.
 
 | Mode | Flags | Uses |
 | ---- | ----- | ---- |
@@ -250,11 +250,11 @@ detector, err := waf.NewModel(waf.ModelXGBoost, "xgboost/assets", sharedLibPath)
 
 ## Model performance
 
-Latest **ONNX** categorical regression, run on **May 26, 2026** against `data/attack_fields.txt` + `data/normal_fields.txt` (`734` field cases, `1468` RAW + ENC evaluations):
+Latest **ONNX** categorical regression, run on **May 26, 2026** against `data/attack_fields.txt` + `data/normal_fields.txt` (`742` field cases, `1484` RAW + ENC evaluations):
 
 | Model | Categorical regression | Current miss pattern |
 | ----- | ---------------------- | -------------------- |
-| **Random Forest** | `1441 / 1468` (`98.16%`) | Mostly `Slowloris Header Pattern`, `TestReal1/2`, `Attack_PDF_105`, `Attack_usr_135-139`, `PADDED_XSS`, several asset/analyzer attack paths, plus one FP on `Benign Asset [path]` (ENC) |
+| **Random Forest** | `1457 / 1484` (`98.18%`) | Remaining misses are mostly `Slowloris Header Pattern`, `TestReal1/2`, `Attack_PDF_105`, `Attack_usr_135-139`, `PADDED_XSS`, several asset/analyzer attack paths, plus one FP on `Benign Asset [path]` (ENC) |
 | **Logistic Regression** | `1426 / 1468` (`97.14%`) | Same core attack misses as RF, plus `Attack_PDF_106`, all `Attack_Asset_1-4` RAW/ENC misses, and FPs on `FP_PDF_48/49`, `FP_USER_55/57`, `Benign Workspace Modules API`, `Benign Sidebar Preferences API` |
 | **XGBoost** | `1437 / 1468` (`97.89%`) | Same core attack misses as RF, partial misses on `Attack_Asset_1-4`, one FP on `FP_PDF_34 [path]` (ENC), and FPs on `Benign Fluent Bit Splunk Headers [headers]` (RAW/ENC) |
 

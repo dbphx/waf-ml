@@ -150,14 +150,15 @@ def process_all_data():
     normal_pool_logs = all_normals_logs.sample(min(len(all_normals_logs), 100000), random_state=42)
     # 50% keep headers, 50% empty headers (to be robust)
     half = len(normal_pool_logs) // 2
-    normal_pool_logs.iloc[half:, normal_pool_logs.columns.get_loc('headers')] = ""
+    normal_pool_logs.loc[normal_pool_logs.index[half:], 'headers'] = ""
     
     # Diverse Root/Short Path Padding (Mix of headers/no-headers)
     short_paths = ["/", "/favicon.ico", "/index.html", "/robots.txt", "/api/health"]
     diverse_short = pd.DataFrame([{"path": random.choice(short_paths), "headers": ""} for _ in range(20000)])
     # half of short paths get headers
     h_short = len(diverse_short) // 2
-    diverse_short.iloc[:h_short] = diverse_short.iloc[:h_short].apply(inject_metadata, axis=1)
+    diverse_short_with_headers = diverse_short.iloc[:h_short].apply(inject_metadata, axis=1)
+    diverse_short.loc[diverse_short.index[:h_short], 'headers'] = diverse_short_with_headers['headers'].astype(str).to_list()
 
     normal_pool = pd.concat([
         normal_pool_logs, 
@@ -174,7 +175,8 @@ def process_all_data():
         pd.concat([pd.DataFrame(regression_attacks)] * 200)
     ], ignore_index=True)
     h_att = len(attack_pool) // 2
-    attack_pool.iloc[:h_att] = attack_pool.iloc[:h_att].apply(inject_metadata, axis=1)
+    attack_pool_with_headers = attack_pool.iloc[:h_att].apply(inject_metadata, axis=1)
+    attack_pool.loc[attack_pool.index[:h_att], 'headers'] = attack_pool_with_headers['headers'].astype(str).to_list()
     attack_pool['label'] = 1
     
     n_samples = len(attack_pool) 
