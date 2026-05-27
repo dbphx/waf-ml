@@ -263,3 +263,4 @@ Categories of Normal Traffic (50 Categories)
 257. Benign DesktopCentral CSR Signing Path: POST /ClientCSRSigningServlet
 258. Benign DesktopCentral CSR Signing Full Request: POST /ClientCSRSigningServlet?agentResourceIdentifier=22030 Authorization: bearer Cache-Control: no-cache Connection: Keep-Alive Content-Length: 1312 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent
 259. Benign QA Platform Root Path: GET /qa-platform/
+260. Benign Collector Event Path: GET /services/collector/event

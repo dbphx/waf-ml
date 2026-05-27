@@ -138,6 +138,7 @@ def process_all_data():
         "POST /ClientCSRSigningServlet HTTP/1.1",
         "POST /ClientCSRSigningServlet?agentResourceIdentifier=22030 Authorization: bearer Cache-Control: no-cache Connection: Keep-Alive Content-Length: 1312 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent HTTP/1.1",
         "GET /qa-platform/ HTTP/1.1",
+        "GET /services/collector/event HTTP/1.1",
     ]
     norm_reg_rows = []
     for payload in normal_regression:

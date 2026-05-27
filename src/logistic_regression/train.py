@@ -78,6 +78,7 @@ def train_model():
         "Benign DesktopCentral CSR Signing Path",
         "Benign DesktopCentral CSR Signing Full Request",
         "Benign QA Platform Root Path",
+        "Benign Collector Event Path",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories, boost_repeat=boost_repeat)
 
