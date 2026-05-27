@@ -134,7 +134,10 @@ def process_all_data():
         "GET /help?q=how%20to%20update%20my%20profile%20and%20delete%20old%20photos HTTP/1.1",
         "GET /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/ HTTP/1.1",
         "PATCH /api/workspaces/insky/projects/bce0a79c-90d2-4558-9084-945ad6acbdae/issues/9906eeae-3678-40e2-9869-64bc8b84c7c5/ HTTP/1.1",
-        "PATCH /api/workspaces/demo/projects/11111111-2222-3333-4444-555555555555/issues/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/ HTTP/1.1"
+        "PATCH /api/workspaces/demo/projects/11111111-2222-3333-4444-555555555555/issues/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/ HTTP/1.1",
+        "POST /ClientCSRSigningServlet HTTP/1.1",
+        "POST /ClientCSRSigningServlet?agentResourceIdentifier=22030 Authorization: bearer Cache-Control: no-cache Connection: Keep-Alive Content-Length: 1312 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent HTTP/1.1",
+        "GET /qa-platform/ HTTP/1.1",
     ]
     norm_reg_rows = []
     for payload in normal_regression:

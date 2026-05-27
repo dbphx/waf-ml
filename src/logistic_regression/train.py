@@ -73,6 +73,11 @@ def train_model():
         "Benign Evaluation Combo Path",
         "Benign Placeholder Image PNG Path",
         "Benign Messages Beta API Path",
+        "Benign Servlet Agent Auth Path",
+        "Benign Servlet Agent Auth Full Request",
+        "Benign DesktopCentral CSR Signing Path",
+        "Benign DesktopCentral CSR Signing Full Request",
+        "Benign QA Platform Root Path",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories, boost_repeat=boost_repeat)
 

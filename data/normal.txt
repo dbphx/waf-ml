@@ -260,3 +260,6 @@ Categories of Normal Traffic (50 Categories)
 254. Benign Messages Beta API Path: POST /v1/messages?beta=true
 255. Benign Servlet Agent Auth Path: POST /servlets/agentAuthPropsRequest
 256. Benign Servlet Agent Auth Full Request: POST /servlets/agentAuthPropsRequest?ComputerName=quandt&DomainName=OFFICEVNPAY&Branchid=1&BranchName=Local%20Office&MSPName=DC_MSP&CustomerId=1&Did=1201&useJsonForRequestBuffer=true&DomainType=2&reason=1&agentResourceIdentifier=1813&osPlatform=1&ResourceID=1813&uniqueValue=NHQFHSV0032381051B Authorization: bearer Cache-Control: no-cache Connection: Keep-Alive Content-Length: 644 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent
+257. Benign DesktopCentral CSR Signing Path: POST /ClientCSRSigningServlet
+258. Benign DesktopCentral CSR Signing Full Request: POST /ClientCSRSigningServlet?agentResourceIdentifier=22030 Authorization: bearer Cache-Control: no-cache Connection: Keep-Alive Content-Length: 1312 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent
+259. Benign QA Platform Root Path: GET /qa-platform/
