@@ -76,6 +76,9 @@ def train_model():
         "Benign Evaluation Combo Path",
         "Benign Placeholder Image PNG Path",
         "Benign Messages Beta API Path",
+        "Benign DesktopCentral Patchscan Path",
+        "Benign DesktopCentral Patchscan Headers",
+        "Benign DesktopCentral Patchscan Full Request",
     }
     normal_cases = _load_weighted_category_cases("normal_fields.txt", 0, hard_normal_categories)
 

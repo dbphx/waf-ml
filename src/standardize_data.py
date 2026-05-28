@@ -137,6 +137,8 @@ def process_all_data():
         "PATCH /api/workspaces/demo/projects/11111111-2222-3333-4444-555555555555/issues/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/ HTTP/1.1",
         "POST /ClientCSRSigningServlet HTTP/1.1",
         "POST /ClientCSRSigningServlet?agentResourceIdentifier=22030 Authorization: bearer Cache-Control: no-cache Connection: Keep-Alive Content-Length: 1312 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent HTTP/1.1",
+        "POST /patchscan HTTP/1.1",
+        "POST /patchscan Authorization: bearer Cache-Control: no-cache Connection: Close Content-Length: 84 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent HTTP/1.1",
         "GET /qa-platform/ HTTP/1.1",
         "GET /services/collector/event HTTP/1.1",
     ]

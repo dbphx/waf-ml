@@ -79,6 +79,9 @@ def train_model():
         "Benign Servlet Agent Auth Full Request",
         "Benign DesktopCentral CSR Signing Path",
         "Benign DesktopCentral CSR Signing Full Request",
+        "Benign DesktopCentral Patchscan Path",
+        "Benign DesktopCentral Patchscan Headers",
+        "Benign DesktopCentral Patchscan Full Request",
         "Benign QA Platform Root Path",
         "Benign Collector Event Path",
     }
