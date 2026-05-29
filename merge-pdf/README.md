@@ -15,6 +15,7 @@ Authenticated PDF merge app with:
 - Merge uploaded local PDFs with editable order
 - Store merged outputs in MinIO
 - View, download, and delete merge history per user
+- Show progress percent while a merge job is still running
 
 ## Local setup
 
@@ -26,6 +27,11 @@ docker compose up -d --build
 ```
 
 Postgres auto-runs the schema and seed scripts on first boot.
+If your database volume already exists from an older version, apply the progress migration manually:
+
+```bash
+psql postgres://mergepdf:mergepdf@localhost:5432/mergepdf -f migrations/002_add_job_progress.sql
+```
 
 Services:
 

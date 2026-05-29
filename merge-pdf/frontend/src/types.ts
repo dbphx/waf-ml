@@ -34,9 +34,10 @@ export type Job = {
   id: number;
   userId: number;
   sourceType: "drive" | "upload";
-  status: "completed" | "failed";
+  status: "pending" | "running" | "completed" | "failed";
   outputFilename: string;
+  progressPercent: number;
+  errorMessage?: string;
   createdAt: string;
   files?: JobFile[];
 };
-

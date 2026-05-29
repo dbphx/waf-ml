@@ -10,9 +10,11 @@ CREATE TABLE IF NOT EXISTS jobs (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     source_type TEXT NOT NULL CHECK (source_type IN ('drive', 'upload')),
-    status TEXT NOT NULL CHECK (status IN ('completed', 'failed')),
+    status TEXT NOT NULL CHECK (status IN ('pending', 'running', 'completed', 'failed')),
+    progress_percent INTEGER NOT NULL DEFAULT 0 CHECK (progress_percent >= 0 AND progress_percent <= 100),
     output_filename TEXT NOT NULL,
-    output_object_key TEXT NOT NULL,
+    output_object_key TEXT NULL,
+    error_message TEXT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -29,4 +31,3 @@ CREATE TABLE IF NOT EXISTS job_files (
 
 CREATE INDEX IF NOT EXISTS idx_jobs_user_id_created_at ON jobs(user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_job_files_job_id_order ON job_files(job_id, source_order, source_name);
-

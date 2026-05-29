@@ -22,6 +22,7 @@ function App() {
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [activeJob, setActiveJob] = useState<Job | null>(null);
 
   useEffect(() => {
     if (!token) {
@@ -34,6 +35,18 @@ function App() {
     void bootstrap();
   }, [token]);
 
+  useEffect(() => {
+    if (!token || !activeJob || (activeJob.status !== "pending" && activeJob.status !== "running")) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      void pollJob(activeJob.id);
+    }, 1200);
+
+    return () => window.clearInterval(interval);
+  }, [token, activeJob]);
+
   const sortedUploadFiles = useMemo(
     () => [...uploadFiles].sort((a, b) => a.order - b.order || a.file.name.localeCompare(b.file.name)),
     [uploadFiles]
@@ -45,6 +58,10 @@ function App() {
       setUser(currentUser);
       const payload = await api<{ jobs: Job[] }>("/jobs", { token });
       setJobs(payload.jobs);
+      const runningJob = payload.jobs.find((job) => job.status === "pending" || job.status === "running");
+      if (runningJob) {
+        setActiveJob(runningJob);
+      }
     } catch (err) {
       localStorage.removeItem(tokenStorageKey);
       setToken("");
@@ -101,21 +118,15 @@ function App() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(`${apiBaseURL}/merge/drive`, {
+      const job = await api<Job>("/merge/drive", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
+        token,
         body: JSON.stringify({ url: driveURL })
       });
-      if (!response.ok) {
-        throw new Error(await readError(response));
-      }
-      await downloadResponse(response, "drive-merged.pdf");
-      setNotice("Drive merge completed.");
-      await refreshJobs();
+      setActiveJob(job);
+      setSelectedJob(job);
       setActiveTab("history");
+      setNotice("Drive merge job started. Waiting for progress updates.");
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -145,10 +156,11 @@ function App() {
       if (!response.ok) {
         throw new Error(await readError(response));
       }
-      await downloadResponse(response, "upload-merged.pdf");
-      setNotice("Upload merge completed.");
+      const job = (await response.json()) as Job;
+      setActiveJob(job);
+      setSelectedJob(job);
+      setNotice("Upload merge job started. Waiting for progress updates.");
       setUploadFiles([]);
-      await refreshJobs();
       setActiveTab("history");
     } catch (err) {
       setError(getErrorMessage(err));
@@ -166,8 +178,36 @@ function App() {
     try {
       const payload = await api<Job>(`/jobs/${jobId}`, { token });
       setSelectedJob(payload);
+      if (payload.status === "pending" || payload.status === "running") {
+        setActiveJob(payload);
+      }
     } catch (err) {
       setError(getErrorMessage(err));
+    }
+  }
+
+  async function pollJob(jobId: number) {
+    try {
+      const payload = await api<Job>(`/jobs/${jobId}`, { token });
+      setActiveJob(payload);
+      setSelectedJob((current) => (current?.id === jobId ? payload : current));
+      setJobs((current) => {
+        const next = current.some((job) => job.id === payload.id)
+          ? current.map((job) => (job.id === payload.id ? payload : job))
+          : [payload, ...current];
+        return next.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      });
+
+      if (payload.status === "completed") {
+        setNotice(`Job ${payload.id} completed.`);
+        setActiveJob(null);
+      } else if (payload.status === "failed") {
+        setError(payload.errorMessage ?? "Merge job failed.");
+        setActiveJob(null);
+      }
+    } catch (err) {
+      setError(getErrorMessage(err));
+      setActiveJob(null);
     }
   }
 
@@ -275,6 +315,21 @@ function App() {
 
       {error ? <p className="feedback error">{error}</p> : null}
       {notice ? <p className="feedback success">{notice}</p> : null}
+      {activeJob ? (
+        <section className="progress-banner">
+          <div className="progress-banner-copy">
+            <strong>{activeJob.outputFilename}</strong>
+            <span>
+              {activeJob.status === "failed"
+                ? activeJob.errorMessage ?? "Merge failed."
+                : `Processing ${activeJob.sourceType} job: ${activeJob.progressPercent}%`}
+            </span>
+          </div>
+          <div className="progress-track" aria-hidden="true">
+            <div className="progress-fill" style={{ width: `${activeJob.progressPercent}%` }} />
+          </div>
+        </section>
+      ) : null}
 
       {activeTab === "drive" ? (
         <section className="panel grid">
@@ -396,7 +451,7 @@ function App() {
                   <li key={job.id}>
                     <button className="history-card" onClick={() => viewJob(job.id)}>
                       <strong>{job.outputFilename}</strong>
-                      <span>{job.sourceType}</span>
+                      <span>{job.sourceType} • {job.progressPercent}%</span>
                       <span>{new Date(job.createdAt).toLocaleString()}</span>
                     </button>
                   </li>
@@ -412,8 +467,18 @@ function App() {
             {selectedJob ? (
               <div className="stack">
                 <div className="actions">
-                  <button onClick={() => downloadJob(selectedJob.id, selectedJob.outputFilename)}>Download merged PDF</button>
+                  <button
+                    onClick={() => downloadJob(selectedJob.id, selectedJob.outputFilename)}
+                    disabled={selectedJob.status !== "completed"}
+                  >
+                    Download merged PDF
+                  </button>
                   <button className="ghost" onClick={() => deleteJob(selectedJob.id)}>Delete job</button>
+                </div>
+                <div className="detail-meta">
+                  <span>Status: {selectedJob.status}</span>
+                  <span>Progress: {selectedJob.progressPercent}%</span>
+                  {selectedJob.errorMessage ? <span>Error: {selectedJob.errorMessage}</span> : null}
                 </div>
                 <table>
                   <thead>

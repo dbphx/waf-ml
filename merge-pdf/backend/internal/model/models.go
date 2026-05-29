@@ -27,6 +27,8 @@ const (
 type JobStatus string
 
 const (
+	JobStatusPending   JobStatus = "pending"
+	JobStatusRunning   JobStatus = "running"
 	JobStatusCompleted JobStatus = "completed"
 	JobStatusFailed    JobStatus = "failed"
 )
@@ -38,6 +40,8 @@ type Job struct {
 	Status          JobStatus  `json:"status"`
 	OutputObjectKey string     `json:"-"`
 	OutputFilename  string     `json:"outputFilename"`
+	ProgressPercent int        `json:"progressPercent"`
+	ErrorMessage    *string    `json:"errorMessage,omitempty"`
 	CreatedAt       time.Time  `json:"createdAt"`
 	Files           []JobFile  `json:"files,omitempty"`
 }

@@ -247,40 +247,9 @@ func (s *Server) handleDriveMerge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	workDir, err := os.MkdirTemp("", "mergepdf-drive-*")
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to create work dir")
-		return
-	}
-	defer os.RemoveAll(workDir)
-
-	inputs := make([]model.MergeFileInput, 0, len(files))
 	jobFiles := make([]model.JobFile, 0, len(files))
 	for _, file := range files {
-		reader, err := s.drive.DownloadFile(r.Context(), file.SourceID)
-		if err != nil {
-			writeError(w, http.StatusBadGateway, err.Error())
-			return
-		}
-
-		localPath := filepath.Join(workDir, file.Name)
-		size, err := saveUploadedReader(localPath, reader)
-		reader.Close()
-		if err != nil {
-			writeError(w, http.StatusInternalServerError, "failed to save drive file")
-			return
-		}
-
-		inputs = append(inputs, model.MergeFileInput{
-			Name:      file.Name,
-			LocalPath: localPath,
-			Order:     file.ExtractedOrder,
-			Size:      size,
-			SourceID:  file.SourceID,
-			DriveLink: file.WebViewLink,
-		})
-
-		sizeCopy := size
+		sizeCopy := file.Size
 		sourceID := file.SourceID
 		driveLink := file.WebViewLink
 		jobFiles = append(jobFiles, model.JobFile{
@@ -293,7 +262,53 @@ func (s *Server) handleDriveMerge(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	s.finishMergeJob(w, r.Context(), currentUser(r.Context()), model.SourceTypeDrive, workDir, "drive-merged.pdf", inputs, jobFiles)
+	job, err := s.repo.CreateJob(r.Context(), currentUser(r.Context()).ID, model.SourceTypeDrive, model.JobStatusPending, 5, "drive-merged.pdf", jobFiles)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to create job")
+		return
+	}
+
+	go s.processDriveMerge(job.ID, files)
+	writeJSON(w, http.StatusAccepted, job)
+}
+
+func (s *Server) processDriveMerge(jobID int64, files []model.DrivePreviewFile) {
+	workDir, err := os.MkdirTemp("", "mergepdf-drive-*")
+	if err != nil {
+		s.failJob(jobID, 5, "failed to create work dir")
+		return
+	}
+	defer os.RemoveAll(workDir)
+	inputs := make([]model.MergeFileInput, 0, len(files))
+	ctx := context.Background()
+	_ = s.repo.UpdateJobProgress(ctx, jobID, model.JobStatusRunning, 10)
+	for index, file := range files {
+		reader, err := s.drive.DownloadFile(ctx, file.SourceID)
+		if err != nil {
+			s.failJob(jobID, progressStep(index, len(files), 10, 70), err.Error())
+			return
+		}
+
+		localPath := filepath.Join(workDir, file.Name)
+		size, err := saveUploadedReader(localPath, reader)
+		reader.Close()
+		if err != nil {
+			s.failJob(jobID, progressStep(index, len(files), 10, 70), "failed to save drive file")
+			return
+		}
+
+		inputs = append(inputs, model.MergeFileInput{
+			Name:      file.Name,
+			LocalPath: localPath,
+			Order:     file.ExtractedOrder,
+			Size:      size,
+			SourceID:  file.SourceID,
+			DriveLink: file.WebViewLink,
+		})
+		_ = s.repo.UpdateJobProgress(ctx, jobID, model.JobStatusRunning, progressStep(index+1, len(files), 10, 70))
+	}
+
+	s.finishMergeJob(ctx, jobID, workDir, "drive-merged.pdf", inputs)
 }
 
 func (s *Server) handleUploadMerge(w http.ResponseWriter, r *http.Request) {
@@ -320,7 +335,12 @@ func (s *Server) handleUploadMerge(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, "failed to create work dir")
 		return
 	}
-	defer os.RemoveAll(workDir)
+	shouldCleanupWorkDir := true
+	defer func() {
+		if shouldCleanupWorkDir {
+			os.RemoveAll(workDir)
+		}
+	}()
 
 	multipartFiles := r.MultipartForm.File["files"]
 	inputs := make([]model.MergeFileInput, 0, len(multipartFiles))
@@ -358,54 +378,64 @@ func (s *Server) handleUploadMerge(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	s.finishMergeJob(w, r.Context(), currentUser(r.Context()), model.SourceTypeUpload, workDir, "upload-merged.pdf", inputs, jobFiles)
+	job, err := s.repo.CreateJob(r.Context(), currentUser(r.Context()).ID, model.SourceTypeUpload, model.JobStatusPending, 25, "upload-merged.pdf", jobFiles)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to create job")
+		return
+	}
+
+	shouldCleanupWorkDir = false
+	go s.processUploadMerge(job.ID, workDir, inputs)
+	writeJSON(w, http.StatusAccepted, job)
 }
 
-func (s *Server) finishMergeJob(w http.ResponseWriter, ctx context.Context, user model.User, sourceType model.SourceType, workDir, outputName string, inputs []model.MergeFileInput, jobFiles []model.JobFile) {
+func (s *Server) processUploadMerge(jobID int64, workDir string, inputs []model.MergeFileInput) {
+	defer os.RemoveAll(workDir)
+	ctx := context.Background()
+	_ = s.repo.UpdateJobProgress(ctx, jobID, model.JobStatusRunning, 40)
+	s.finishMergeJob(ctx, jobID, workDir, "upload-merged.pdf", inputs)
+}
+
+func (s *Server) finishMergeJob(ctx context.Context, jobID int64, workDir, outputName string, inputs []model.MergeFileInput) {
+	_ = s.repo.UpdateJobProgress(ctx, jobID, model.JobStatusRunning, 75)
 	outputPath, err := merge.MergeFiles(workDir, outputName, inputs)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, err.Error())
+		s.failJob(jobID, 75, err.Error())
 		return
 	}
 
 	file, err := os.Open(outputPath)
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to open merged output")
+		s.failJob(jobID, 80, "failed to open merged output")
 		return
 	}
 	defer file.Close()
 
 	info, err := file.Stat()
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to stat merged output")
+		s.failJob(jobID, 80, "failed to stat merged output")
 		return
 	}
 
-	objectKey := fmt.Sprintf("jobs/%d/%d-%s", user.ID, time.Now().UnixNano(), outputName)
-	if _, err := file.Seek(0, io.SeekStart); err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to rewind merged output")
-		return
-	}
-	if err := s.storage.Upload(ctx, objectKey, file, info.Size()); err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to upload merged output")
-		return
-	}
-
-	job, err := s.repo.CreateJob(ctx, user.ID, sourceType, outputName, objectKey, jobFiles)
+	job, err := s.repo.GetJob(ctx, jobID)
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to save job history")
+		s.failJob(jobID, 80, "failed to reload job")
 		return
 	}
 
+	objectKey := fmt.Sprintf("jobs/%d/%d-%s", job.UserID, time.Now().UnixNano(), outputName)
 	if _, err := file.Seek(0, io.SeekStart); err != nil {
-		writeError(w, http.StatusInternalServerError, "failed to rewind merged output")
+		s.failJob(jobID, 85, "failed to rewind merged output")
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/pdf")
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%q", outputName))
-	w.Header().Set("X-Job-ID", strconv.FormatInt(job.ID, 10))
-	http.ServeContent(w, &http.Request{Method: http.MethodGet}, outputName, info.ModTime(), file)
+	_ = s.repo.UpdateJobProgress(ctx, jobID, model.JobStatusRunning, 90)
+	if err := s.storage.Upload(ctx, objectKey, file, info.Size()); err != nil {
+		s.failJob(jobID, 90, "failed to upload merged output")
+		return
+	}
+	if err := s.repo.CompleteJob(ctx, jobID, objectKey); err != nil {
+		s.failJob(jobID, 95, "failed to finalize job history")
+	}
 }
 
 func (s *Server) handleJobs(w http.ResponseWriter, r *http.Request) {
@@ -488,6 +518,10 @@ func (s *Server) handleJobDownload(w http.ResponseWriter, r *http.Request, jobID
 		writeError(w, http.StatusForbidden, "forbidden")
 		return
 	}
+	if job.Status != model.JobStatusCompleted || job.OutputObjectKey == "" {
+		writeError(w, http.StatusConflict, "job is not ready for download")
+		return
+	}
 
 	object, err := s.storage.Download(r.Context(), job.OutputObjectKey)
 	if err != nil {
@@ -548,6 +582,25 @@ func saveMultipartFile(workDir string, header *multipart.FileHeader) (string, in
 		return "", 0, err
 	}
 	return dstPath, size, nil
+}
+
+func (s *Server) failJob(jobID int64, progressPercent int, message string) {
+	if err := s.repo.FailJob(context.Background(), jobID, progressPercent, message); err != nil {
+		log.Printf("failed to mark job %d as failed: %v", jobID, err)
+	}
+}
+
+func progressStep(current, total, min, max int) int {
+	if total <= 0 {
+		return max
+	}
+	if current < 0 {
+		current = 0
+	}
+	if current > total {
+		current = total
+	}
+	return min + ((max - min) * current / total)
 }
 
 func saveUploadedReader(dstPath string, src io.Reader) (int64, error) {
