@@ -19,36 +19,27 @@ Authenticated PDF merge app with:
 ## Local setup
 
 1. Copy `.env.example` values into your shell or a local env file.
-2. Start infra:
+2. Start the full stack:
 
 ```bash
-docker compose up -d postgres minio
+docker compose up -d --build
 ```
 
-3. Create database schema:
+Postgres auto-runs the schema and seed scripts on first boot.
+
+Services:
+
+- Frontend: `http://localhost:4173`
+- Backend API: `http://localhost:8080`
+- MinIO console: `http://localhost:9001`
+- Postgres: `localhost:5432`
+
+If you need to rebuild from a clean database state, remove the persisted volumes first:
 
 ```bash
-psql postgres://mergepdf:mergepdf@localhost:5432/mergepdf -f migrations/001_init.sql
-psql postgres://mergepdf:mergepdf@localhost:5432/mergepdf -f scripts/seed_users.sql
+docker compose down -v
+docker compose up -d --build
 ```
-
-4. Start backend:
-
-```bash
-cd backend
-go mod tidy
-go run ./cmd/server
-```
-
-5. Start frontend:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend defaults to `http://localhost:5173`, backend to `http://localhost:8080`.
 
 ## Required environment
 
