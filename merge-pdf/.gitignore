@@ -1,7 +1,0 @@
-backend/.env
-backend/bin/
-backend/tmp/
-frontend/dist/
-frontend/node_modules/
-frontend/*.tsbuildinfo
-tmp/
