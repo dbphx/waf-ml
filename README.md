@@ -122,7 +122,7 @@ All commands assume repository root with `venv` activated.
 
 ### Categorical regression (`test_categories.py`)
 
-Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1484` cases total.
+Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1506` cases total in the current suite.
 
 | Mode | Flags | Uses |
 | ---- | ----- | ---- |
@@ -250,7 +250,12 @@ detector, err := waf.NewModel(waf.ModelXGBoost, "xgboost/assets", sharedLibPath)
 
 ## Model performance
 
-Latest **ONNX** categorical regression, run on **May 26, 2026** against `data/attack_fields.txt` + `data/normal_fields.txt` (`742` field cases, `1484` RAW + ENC evaluations):
+Latest logistic regression refresh, run on **June 4, 2026** after retraining and ONNX export:
+
+- **Logistic Regression**: `1474 / 1506` (`97.88%`) on `python src/logistic_regression/test_categories.py`
+- Current misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-136 [path]`, `Attack_FP_137 [path]`, `Attack_usr_138-139 [path]`, `PADDED_XSS [path]`, `Attack_Asset_1-4 [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, plus false positives on `FP_USER_55 [query]` and `FP_USER_57 [query]`
+
+Historical ONNX baselines from **May 26, 2026** against `data/attack_fields.txt` + `data/normal_fields.txt` (`742` field cases, `1484` RAW + ENC evaluations):
 
 | Model | Categorical regression | Current miss pattern |
 | ----- | ---------------------- | -------------------- |
