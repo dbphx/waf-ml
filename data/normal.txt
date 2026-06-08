@@ -268,3 +268,4 @@ Categories of Normal Traffic (50 Categories)
 261. Benign DesktopCentral Patchscan Path: POST /patchscan
 262. Benign DesktopCentral Patchscan Headers: Authorization: bearer Cache-Control: no-cache Connection: Close Content-Length: 84 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent
 263. Benign DesktopCentral Patchscan Full Request: POST /patchscan Authorization: bearer Cache-Control: no-cache Connection: Close Content-Length: 84 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent
+264. Benign Fluent Bit Short Headers: Content-Length: 2963 User-Agent: Fluent-Bit

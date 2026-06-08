@@ -122,7 +122,7 @@ All commands assume repository root with `venv` activated.
 
 ### Categorical regression (`test_categories.py`)
 
-Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1506` cases total in the current suite.
+Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1508` cases total in the current suite. The current benign header regressions include both `Benign Fluent Bit Splunk Headers` and `Benign Fluent Bit Short Headers`.
 
 | Mode | Flags | Uses |
 | ---- | ----- | ---- |
@@ -249,6 +249,12 @@ detector, err := waf.NewModel(waf.ModelXGBoost, "xgboost/assets", sharedLibPath)
 ---
 
 ## Model performance
+
+Latest random forest refresh, run on **June 8, 2026** after retraining and ONNX export:
+
+- **Random Forest**: `1481 / 1508` (`98.21%`) on `python src/random_forest/test_categories.py`
+- Added benign regression: `Benign Fluent Bit Short Headers [headers]` (`Content-Length: 2963 User-Agent: Fluent-Bit`), now passing as `NORMAL` in both RAW and ENC variants.
+- Current misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-139 [path]`, `Attack_FP_137 [path]`, `PADDED_XSS [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, one-sided misses on `Attack_Asset_1-4 [path]`, and one false positive on `Benign Asset [path]` (ENC).
 
 Latest logistic regression refresh, run on **June 4, 2026** after retraining and ONNX export:
 
