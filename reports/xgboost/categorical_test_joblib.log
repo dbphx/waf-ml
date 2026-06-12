@@ -1,0 +1,1515 @@
+=== XGBoost categorical test | backend=joblib+xgboost ===
+
+Category                                           | Type     | Expected | Pred     | Conf   | Time (ms) | Status
+-------------------------------------------------------------------------------------------------------------------
+SQL Injection (Basic) [path]                       | RAW      | ATTACK   | ATTACK   | 0.9654 |    26.51 | ✅
+SQL Injection (Basic) [path]                       | ENC      | ATTACK   | ATTACK   | 0.9939 |    14.41 | ✅
+SQL Injection (UNION-based) [path]                 | RAW      | ATTACK   | ATTACK   | 0.9897 |    12.12 | ✅
+SQL Injection (UNION-based) [path]                 | ENC      | ATTACK   | ATTACK   | 0.9889 |    11.95 | ✅
+SQL Injection (Error-based) [path]                 | RAW      | ATTACK   | ATTACK   | 0.9945 |    12.50 | ✅
+SQL Injection (Error-based) [path]                 | ENC      | ATTACK   | ATTACK   | 0.9960 |    13.64 | ✅
+SQL Injection (Boolean Blind) [path]               | RAW      | ATTACK   | ATTACK   | 0.9981 |    12.82 | ✅
+SQL Injection (Boolean Blind) [path]               | ENC      | ATTACK   | ATTACK   | 0.9966 |    11.56 | ✅
+SQL Injection (Time-based Blind) [path]            | RAW      | ATTACK   | ATTACK   | 0.9971 |    13.17 | ✅
+SQL Injection (Time-based Blind) [path]            | ENC      | ATTACK   | ATTACK   | 0.9951 |    11.59 | ✅
+SQL Injection (Postgres Sleep) [path]              | RAW      | ATTACK   | ATTACK   | 0.9941 |    13.25 | ✅
+SQL Injection (Postgres Sleep) [path]              | ENC      | ATTACK   | ATTACK   | 0.9967 |    12.37 | ✅
+SQL Injection (Hex Bypass) [query]                 | RAW      | ATTACK   | ATTACK   | 0.8997 |    12.47 | ✅
+SQL Injection (Hex Bypass) [query]                 | ENC      | ATTACK   | ATTACK   | 0.8997 |    12.88 | ✅
+SQL Injection (Comment Obfuscation) [query]        | RAW      | ATTACK   | ATTACK   | 0.9764 |    13.05 | ✅
+SQL Injection (Comment Obfuscation) [query]        | ENC      | ATTACK   | ATTACK   | 0.9907 |    13.32 | ✅
+SQL Injection (Stacked Queries) [path]             | RAW      | ATTACK   | ATTACK   | 0.9789 |    10.87 | ✅
+SQL Injection (Stacked Queries) [path]             | ENC      | ATTACK   | ATTACK   | 0.9804 |    13.54 | ✅
+NoSQL Injection (MongoDB GT) [body]                | RAW      | ATTACK   | ATTACK   | 0.9943 |    12.50 | ✅
+NoSQL Injection (MongoDB GT) [body]                | ENC      | ATTACK   | ATTACK   | 0.9892 |    12.55 | ✅
+NoSQL Injection (Where Clause) [body]              | RAW      | ATTACK   | ATTACK   | 0.9716 |    11.62 | ✅
+NoSQL Injection (Where Clause) [body]              | ENC      | ATTACK   | ATTACK   | 0.9415 |    11.71 | ✅
+Reflected XSS [body]                               | RAW      | ATTACK   | ATTACK   | 0.9956 |    11.20 | ✅
+Reflected XSS [body]                               | ENC      | ATTACK   | ATTACK   | 0.9969 |    11.20 | ✅
+XSS via Image Attributes [body]                    | RAW      | ATTACK   | ATTACK   | 0.9881 |    11.70 | ✅
+XSS via Image Attributes [body]                    | ENC      | ATTACK   | ATTACK   | 0.9922 |    12.08 | ✅
+XSS via SVG Path [query]                           | RAW      | ATTACK   | ATTACK   | 0.9962 |    11.34 | ✅
+XSS via SVG Path [query]                           | ENC      | ATTACK   | ATTACK   | 0.9984 |    10.94 | ✅
+XSS via Javascript Protocol [headers]              | RAW      | ATTACK   | ATTACK   | 0.9860 |    11.17 | ✅
+XSS via Javascript Protocol [headers]              | ENC      | ATTACK   | ATTACK   | 0.9860 |    11.18 | ✅
+XSS via Body Tag [body]                            | RAW      | ATTACK   | ATTACK   | 0.9701 |    10.55 | ✅
+XSS via Body Tag [body]                            | ENC      | ATTACK   | ATTACK   | 0.9887 |    11.03 | ✅
+XSS with Double Encoding [path]                    | RAW      | ATTACK   | ATTACK   | 0.9647 |    10.70 | ✅
+XSS with Double Encoding [path]                    | ENC      | ATTACK   | ATTACK   | 0.9567 |    10.63 | ✅
+XSS via Iframe srcdoc [body]                       | RAW      | ATTACK   | ATTACK   | 0.9966 |    10.82 | ✅
+XSS via Iframe srcdoc [body]                       | ENC      | ATTACK   | ATTACK   | 0.9981 |    10.92 | ✅
+XSS via HTML5 Vector [body]                        | RAW      | ATTACK   | ATTACK   | 0.9902 |    10.46 | ✅
+XSS via HTML5 Vector [body]                        | ENC      | ATTACK   | ATTACK   | 0.9958 |    11.11 | ✅
+XSS via Tabbed Protocol [path]                     | RAW      | ATTACK   | ATTACK   | 0.9667 |    11.53 | ✅
+XSS via Tabbed Protocol [path]                     | ENC      | ATTACK   | ATTACK   | 0.9726 |    10.75 | ✅
+Command Injection (Basic) [body]                   | RAW      | ATTACK   | ATTACK   | 0.9317 |    11.11 | ✅
+Command Injection (Basic) [body]                   | ENC      | ATTACK   | ATTACK   | 0.9576 |    10.62 | ✅
+Command Injection (Piping) [body]                  | RAW      | ATTACK   | ATTACK   | 0.8660 |    10.38 | ✅
+Command Injection (Piping) [body]                  | ENC      | ATTACK   | ATTACK   | 0.9182 |    10.41 | ✅
+Command Injection (Subshell) [body]                | RAW      | ATTACK   | ATTACK   | 0.8791 |    10.55 | ✅
+Command Injection (Subshell) [body]                | ENC      | ATTACK   | ATTACK   | 0.8791 |    10.93 | ✅
+Command Injection (Backticks) [body]               | RAW      | ATTACK   | ATTACK   | 0.9448 |    11.32 | ✅
+Command Injection (Backticks) [body]               | ENC      | ATTACK   | ATTACK   | 0.9448 |    11.55 | ✅
+Command Injection (Logical OR) [body]              | RAW      | ATTACK   | ATTACK   | 0.9713 |    10.44 | ✅
+Command Injection (Logical OR) [body]              | ENC      | ATTACK   | ATTACK   | 0.9730 |    12.35 | ✅
+Command Injection (New line) [path]                | RAW      | ATTACK   | ATTACK   | 0.9476 |    11.08 | ✅
+Command Injection (New line) [path]                | ENC      | ATTACK   | ATTACK   | 0.7396 |    11.29 | ✅
+Path Traversal (Basic) [path]                      | RAW      | ATTACK   | ATTACK   | 0.9989 |    10.89 | ✅
+Path Traversal (Basic) [path]                      | ENC      | ATTACK   | ATTACK   | 0.9996 |    12.44 | ✅
+Path Traversal (Null Byte) [path]                  | RAW      | ATTACK   | ATTACK   | 0.9992 |    10.63 | ✅
+Path Traversal (Null Byte) [path]                  | ENC      | ATTACK   | ATTACK   | 0.9995 |    10.91 | ✅
+Path Traversal (URL Encoded) [path]                | RAW      | ATTACK   | ATTACK   | 0.9995 |    11.31 | ✅
+Path Traversal (URL Encoded) [path]                | ENC      | ATTACK   | ATTACK   | 0.9998 |    11.11 | ✅
+Path Traversal (Double URL Enc) [path]             | RAW      | ATTACK   | ATTACK   | 0.9997 |    12.28 | ✅
+Path Traversal (Double URL Enc) [path]             | ENC      | ATTACK   | ATTACK   | 0.9609 |    10.77 | ✅
+Local File Inclusion (PHP Filter) [headers]        | RAW      | ATTACK   | ATTACK   | 0.9960 |    10.76 | ✅
+Local File Inclusion (PHP Filter) [headers]        | ENC      | ATTACK   | ATTACK   | 0.9642 |    11.03 | ✅
+Local File Inclusion (Input Wrapper) [headers]     | RAW      | ATTACK   | ATTACK   | 0.9899 |    11.00 | ✅
+Local File Inclusion (Input Wrapper) [headers]     | ENC      | ATTACK   | ATTACK   | 0.9899 |    11.04 | ✅
+Remote File Inclusion [headers]                    | RAW      | ATTACK   | ATTACK   | 0.9963 |    10.92 | ✅
+Remote File Inclusion [headers]                    | ENC      | ATTACK   | ATTACK   | 0.9963 |    13.89 | ✅
+Server-Side Request Forgery (Metadata) [headers]   | RAW      | ATTACK   | ATTACK   | 0.9898 |    12.06 | ✅
+Server-Side Request Forgery (Metadata) [headers]   | ENC      | ATTACK   | ATTACK   | 0.9898 |    11.78 | ✅
+Server-Side Request Forgery (Localhost) [headers]  | RAW      | ATTACK   | ATTACK   | 0.9913 |    15.50 | ✅
+Server-Side Request Forgery (Localhost) [headers]  | ENC      | ATTACK   | ATTACK   | 0.9913 |    65.03 | ✅
+XML External Entity (XXE) [body]                   | RAW      | ATTACK   | ATTACK   | 0.9959 |    69.39 | ✅
+XML External Entity (XXE) [body]                   | ENC      | ATTACK   | ATTACK   | 0.9977 |    56.93 | ✅
+SSTI (Jinja2) [body]                               | RAW      | ATTACK   | ATTACK   | 0.9923 |    18.76 | ✅
+SSTI (Jinja2) [body]                               | ENC      | ATTACK   | ATTACK   | 0.9858 |    31.59 | ✅
+SSTI (Mako) [body]                                 | RAW      | ATTACK   | ATTACK   | 0.9223 |    26.77 | ✅
+SSTI (Mako) [body]                                 | ENC      | ATTACK   | ATTACK   | 0.9268 |    22.54 | ✅
+Log4Shell Payload [body]                           | RAW      | ATTACK   | ATTACK   | 0.9524 |    31.94 | ✅
+Log4Shell Payload [body]                           | ENC      | ATTACK   | ATTACK   | 0.9706 |    24.01 | ✅
+Shellshock [body]                                  | RAW      | ATTACK   | ATTACK   | 0.9948 |    23.32 | ✅
+Shellshock [body]                                  | ENC      | ATTACK   | ATTACK   | 0.9758 |    30.34 | ✅
+LDAP Injection [path]                              | RAW      | ATTACK   | ATTACK   | 0.9403 |    37.62 | ✅
+LDAP Injection [path]                              | ENC      | ATTACK   | ATTACK   | 0.9855 |    40.64 | ✅
+XPath Injection [path]                             | RAW      | ATTACK   | ATTACK   | 0.9651 |    37.64 | ✅
+XPath Injection [path]                             | ENC      | ATTACK   | ATTACK   | 0.9318 |    21.73 | ✅
+HTTP Parameter Pollution [query]                   | RAW      | ATTACK   | ATTACK   | 0.8785 |    29.51 | ✅
+HTTP Parameter Pollution [query]                   | ENC      | ATTACK   | ATTACK   | 0.8992 |    19.21 | ✅
+CRLF Injection [path]                              | RAW      | ATTACK   | ATTACK   | 0.9550 |    28.00 | ✅
+CRLF Injection [path]                              | ENC      | ATTACK   | ATTACK   | 0.9573 |    18.01 | ✅
+Host Header Injection [headers]                    | RAW      | ATTACK   | ATTACK   | 0.9794 |    26.72 | ✅
+Host Header Injection [headers]                    | ENC      | ATTACK   | ATTACK   | 0.9794 |    36.92 | ✅
+Prototype Pollution [query]                        | RAW      | ATTACK   | ATTACK   | 0.9413 |    14.89 | ✅
+Prototype Pollution [query]                        | ENC      | ATTACK   | ATTACK   | 0.9658 |    12.55 | ✅
+Insecure Deserialization (Pickle) [path]           | RAW      | ATTACK   | ATTACK   | 0.8925 |    12.82 | ✅
+Insecure Deserialization (Pickle) [path]           | ENC      | ATTACK   | ATTACK   | 0.9763 |    13.15 | ✅
+GraphQL Introspection [path]                       | RAW      | ATTACK   | ATTACK   | 0.9490 |    12.91 | ✅
+GraphQL Introspection [path]                       | ENC      | ATTACK   | ATTACK   | 0.9497 |    13.85 | ✅
+JWT Manipulation (alg none) [body]                 | RAW      | ATTACK   | ATTACK   | 0.9350 |    12.48 | ✅
+JWT Manipulation (alg none) [body]                 | ENC      | ATTACK   | ATTACK   | 0.9758 |    12.03 | ✅
+Open Redirect [query]                              | RAW      | ATTACK   | ATTACK   | 0.8986 |    12.07 | ✅
+Open Redirect [query]                              | ENC      | ATTACK   | ATTACK   | 0.9208 |    13.94 | ✅
+SQL Injection (Wait-for-Delay Bypass) [path]       | RAW      | ATTACK   | ATTACK   | 0.9994 |    13.01 | ✅
+SQL Injection (Wait-for-Delay Bypass) [path]       | ENC      | ATTACK   | ATTACK   | 0.9983 |    14.01 | ✅
+SQL Injection (OOB via DNS) [path]                 | RAW      | ATTACK   | ATTACK   | 0.9999 |    10.95 | ✅
+SQL Injection (OOB via DNS) [path]                 | ENC      | ATTACK   | ATTACK   | 0.9999 |    13.42 | ✅
+SQL Injection (In-band via XML) [path]             | RAW      | ATTACK   | ATTACK   | 0.9994 |    12.67 | ✅
+SQL Injection (In-band via XML) [path]             | ENC      | ATTACK   | ATTACK   | 0.9994 |    11.86 | ✅
+XSS via SVG Template [body]                        | RAW      | ATTACK   | ATTACK   | 0.9953 |    11.70 | ✅
+XSS via SVG Template [body]                        | ENC      | ATTACK   | ATTACK   | 0.9953 |    13.08 | ✅
+XSS via Polyglot Payload [headers]                 | RAW      | ATTACK   | ATTACK   | 0.9674 |    12.06 | ✅
+XSS via Polyglot Payload [headers]                 | ENC      | ATTACK   | ATTACK   | 0.9921 |    13.15 | ✅
+XSS via Mutation (mXSS) [body]                     | RAW      | ATTACK   | ATTACK   | 0.9982 |    12.07 | ✅
+XSS via Mutation (mXSS) [body]                     | ENC      | ATTACK   | ATTACK   | 0.9979 |    13.14 | ✅
+XSS via Client-Side Template Injection [body]      | RAW      | ATTACK   | ATTACK   | 0.9956 |    12.35 | ✅
+XSS via Client-Side Template Injection [body]      | ENC      | ATTACK   | ATTACK   | 0.9979 |    11.21 | ✅
+Path Traversal (UTF-8 Encoded) [path]              | RAW      | ATTACK   | ATTACK   | 0.9921 |    11.20 | ✅
+Path Traversal (UTF-8 Encoded) [path]              | ENC      | ATTACK   | ATTACK   | 0.9914 |    13.21 | ✅
+Path Traversal (Windows-specific ..\) [path]       | RAW      | ATTACK   | ATTACK   | 0.9881 |    11.69 | ✅
+Path Traversal (Windows-specific ..\) [path]       | ENC      | ATTACK   | ATTACK   | 0.9881 |    11.60 | ✅
+Path Traversal (Long Path Bypass) [path]           | RAW      | ATTACK   | ATTACK   | 0.9876 |    11.49 | ✅
+Path Traversal (Long Path Bypass) [path]           | ENC      | ATTACK   | ATTACK   | 0.9972 |    11.65 | ✅
+Command Injection (Environmental Variable) [body]  | RAW      | ATTACK   | ATTACK   | 0.9943 |    12.44 | ✅
+Command Injection (Environmental Variable) [body]  | ENC      | ATTACK   | ATTACK   | 0.9960 |    10.85 | ✅
+Command Injection (Globbing Bypass) [body]         | RAW      | ATTACK   | ATTACK   | 0.9277 |    10.94 | ✅
+Command Injection (Globbing Bypass) [body]         | ENC      | ATTACK   | ATTACK   | 0.9614 |    11.24 | ✅
+LFI via PHP Expect Wrapper [headers]               | RAW      | ATTACK   | ATTACK   | 0.9886 |    10.76 | ✅
+LFI via PHP Expect Wrapper [headers]               | ENC      | ATTACK   | ATTACK   | 0.9886 |    10.62 | ✅
+LFI via Phar Archive [headers]                     | RAW      | ATTACK   | ATTACK   | 0.9891 |    10.66 | ✅
+LFI via Phar Archive [headers]                     | ENC      | ATTACK   | ATTACK   | 0.9891 |    10.60 | ✅
+RCE via Java RMI [headers]                         | RAW      | ATTACK   | ATTACK   | 0.9963 |    11.67 | ✅
+RCE via Java RMI [headers]                         | ENC      | ATTACK   | ATTACK   | 0.9963 |    11.75 | ✅
+RCE via Python eval() in JSON [body]               | RAW      | ATTACK   | ATTACK   | 0.9709 |    11.25 | ✅
+RCE via Python eval() in JSON [body]               | ENC      | ATTACK   | ATTACK   | 0.9389 |    11.35 | ✅
+SSRF via Gopher Protocol [headers]                 | RAW      | ATTACK   | ATTACK   | 0.9728 |    10.94 | ✅
+SSRF via Gopher Protocol [headers]                 | ENC      | ATTACK   | ATTACK   | 0.9970 |    10.78 | ✅
+SSRF via Dict Protocol [headers]                   | RAW      | ATTACK   | ATTACK   | 0.9933 |    11.53 | ✅
+SSRF via Dict Protocol [headers]                   | ENC      | ATTACK   | ATTACK   | 0.9933 |    12.30 | ✅
+XXE via Parametric Entities [body]                 | RAW      | ATTACK   | ATTACK   | 0.9957 |    11.04 | ✅
+XXE via Parametric Entities [body]                 | ENC      | ATTACK   | ATTACK   | 0.9943 |    11.33 | ✅
+XXE via XInclude [body]                            | RAW      | ATTACK   | ATTACK   | 0.9946 |    11.85 | ✅
+XXE via XInclude [body]                            | ENC      | ATTACK   | ATTACK   | 0.9946 |    11.52 | ✅
+SSTI (Velocity) [query]                            | RAW      | ATTACK   | ATTACK   | 0.9983 |    12.02 | ✅
+SSTI (Velocity) [query]                            | ENC      | ATTACK   | ATTACK   | 0.9980 |    11.35 | ✅
+SSTI (Smarty) [body]                               | RAW      | ATTACK   | ATTACK   | 0.9703 |    10.67 | ✅
+SSTI (Smarty) [body]                               | ENC      | ATTACK   | ATTACK   | 0.9879 |    11.52 | ✅
+SSTI (Twice) [body]                                | RAW      | ATTACK   | ATTACK   | 0.9497 |    11.12 | ✅
+SSTI (Twice) [body]                                | ENC      | ATTACK   | ATTACK   | 0.9309 |    13.05 | ✅
+HTTP Request Smuggling (CL.TE) [headers]           | RAW      | ATTACK   | ATTACK   | 0.9806 |    11.40 | ✅
+HTTP Request Smuggling (CL.TE) [headers]           | ENC      | ATTACK   | ATTACK   | 0.9806 |    12.32 | ✅
+HTTP Request Smuggling (TE.CL) [headers]           | RAW      | ATTACK   | ATTACK   | 0.9522 |    11.67 | ✅
+HTTP Request Smuggling (TE.CL) [headers]           | ENC      | ATTACK   | ATTACK   | 0.9522 |    11.49 | ✅
+HTTP Response Splitting [path]                     | RAW      | ATTACK   | ATTACK   | 0.9978 |    11.52 | ✅
+HTTP Response Splitting [path]                     | ENC      | ATTACK   | ATTACK   | 0.9978 |    10.48 | ✅
+HTTP Response Splitting [query]                    | RAW      | ATTACK   | ATTACK   | 0.9562 |    47.76 | ✅
+HTTP Response Splitting [query]                    | ENC      | ATTACK   | ATTACK   | 0.9644 |    18.28 | ✅
+LDAP Injection (Attr filter) [query]               | RAW      | ATTACK   | ATTACK   | 0.9994 |    15.04 | ✅
+LDAP Injection (Attr filter) [query]               | ENC      | ATTACK   | ATTACK   | 0.9995 |    13.48 | ✅
+XPath Injection (Function call) [path]             | RAW      | ATTACK   | ATTACK   | 0.9871 |    12.28 | ✅
+XPath Injection (Function call) [path]             | ENC      | ATTACK   | ATTACK   | 0.9859 |    14.92 | ✅
+SMTP Injection (Header manipulation) [path]        | RAW      | ATTACK   | ATTACK   | 0.9837 |    17.89 | ✅
+SMTP Injection (Header manipulation) [path]        | ENC      | ATTACK   | ATTACK   | 0.9957 |    15.22 | ✅
+IMAP Injection [path]                              | RAW      | ATTACK   | ATTACK   | 0.9657 |    11.46 | ✅
+IMAP Injection [path]                              | ENC      | ATTACK   | ATTACK   | 0.9706 |    11.15 | ✅
+NoSQL Injection (JavaScript Execution $where) [bod | RAW      | ATTACK   | ATTACK   | 0.9937 |    14.03 | ✅
+NoSQL Injection (JavaScript Execution $where) [bod | ENC      | ATTACK   | ATTACK   | 0.9916 |    21.16 | ✅
+NoSQL Injection (Bitwise operations) [body]        | RAW      | ATTACK   | ATTACK   | 0.9953 |    14.44 | ✅
+NoSQL Injection (Bitwise operations) [body]        | ENC      | ATTACK   | ATTACK   | 0.9932 |    12.60 | ✅
+Prototype Pollution (Node.js) [body]               | RAW      | ATTACK   | ATTACK   | 0.9787 |    11.56 | ✅
+Prototype Pollution (Node.js) [body]               | ENC      | ATTACK   | ATTACK   | 0.9874 |    10.41 | ✅
+Object Injection (PHP) [headers]                   | RAW      | ATTACK   | ATTACK   | 0.9956 |    11.38 | ✅
+Object Injection (PHP) [headers]                   | ENC      | ATTACK   | ATTACK   | 0.9954 |    16.10 | ✅
+Insecure Deserialization (Java SerialVersionUID) [ | RAW      | ATTACK   | ATTACK   | 0.9207 |    11.66 | ✅
+Insecure Deserialization (Java SerialVersionUID) [ | ENC      | ATTACK   | ATTACK   | 0.9411 |    11.29 | ✅
+Insecure Deserialization (.NET TypeNameHandling) [ | RAW      | ATTACK   | ATTACK   | 0.9968 |    11.86 | ✅
+Insecure Deserialization (.NET TypeNameHandling) [ | ENC      | ATTACK   | ATTACK   | 0.9969 |    13.65 | ✅
+GraphQL Injection (Aliasing) [path]                | RAW      | ATTACK   | ATTACK   | 0.9942 |    11.79 | ✅
+GraphQL Injection (Aliasing) [path]                | ENC      | ATTACK   | ATTACK   | 0.9884 |    10.72 | ✅
+GraphQL Injection (Batching) [body]                | RAW      | ATTACK   | ATTACK   | 0.8356 |    11.08 | ✅
+GraphQL Injection (Batching) [body]                | ENC      | ATTACK   | ATTACK   | 0.9687 |    11.23 | ✅
+JWT Injection (Kid manipulation) [body]            | RAW      | ATTACK   | ATTACK   | 0.9857 |    10.39 | ✅
+JWT Injection (Kid manipulation) [body]            | ENC      | ATTACK   | ATTACK   | 0.9522 |    11.23 | ✅
+JWT Injection (Jku redirection) [body]             | RAW      | ATTACK   | ATTACK   | 0.9862 |    10.70 | ✅
+JWT Injection (Jku redirection) [body]             | ENC      | ATTACK   | ATTACK   | 0.9841 |    11.18 | ✅
+Clickjacking (X-Frame-Options bypass attempt) [bod | RAW      | ATTACK   | ATTACK   | 0.9900 |    11.34 | ✅
+Clickjacking (X-Frame-Options bypass attempt) [bod | ENC      | ATTACK   | ATTACK   | 0.9900 |    11.32 | ✅
+Tabnabbing (target="_blank" without noopener) [bod | RAW      | ATTACK   | ATTACK   | 0.9977 |    11.12 | ✅
+Tabnabbing (target="_blank" without noopener) [bod | ENC      | ATTACK   | ATTACK   | 0.9977 |    10.51 | ✅
+Cache Poisoning Request [headers]                  | RAW      | ATTACK   | ATTACK   | 0.9913 |    11.11 | ✅
+Cache Poisoning Request [headers]                  | ENC      | ATTACK   | ATTACK   | 0.9913 |    10.47 | ✅
+Slowloris Header Pattern [path]                    | RAW      | ATTACK   | NORMAL   | 0.9947 |    11.26 | ❌
+Slowloris Header Pattern [path]                    | ENC      | ATTACK   | NORMAL   | 0.7386 |    10.31 | ❌
+Slowloris Header Pattern [headers]                 | RAW      | ATTACK   | ATTACK   | 0.9776 |    12.65 | ✅
+Slowloris Header Pattern [headers]                 | ENC      | ATTACK   | ATTACK   | 0.9776 |    12.42 | ✅
+BREACH Attack Payload [path]                       | RAW      | ATTACK   | ATTACK   | 0.9603 |    11.32 | ✅
+BREACH Attack Payload [path]                       | ENC      | ATTACK   | ATTACK   | 0.9616 |    11.28 | ✅
+WebSocket Injection (Malformed frame) [path]       | RAW      | ATTACK   | ATTACK   | 0.9871 |    10.90 | ✅
+WebSocket Injection (Malformed frame) [path]       | ENC      | ATTACK   | ATTACK   | 0.9871 |    10.48 | ✅
+Server-Side Request Forgery via PDF Generator [bod | RAW      | ATTACK   | ATTACK   | 0.9920 |    12.21 | ✅
+Server-Side Request Forgery via PDF Generator [bod | ENC      | ATTACK   | ATTACK   | 0.9920 |    10.70 | ✅
+Blind SQLi via User-Agent Header [headers]         | RAW      | ATTACK   | ATTACK   | 0.9742 |    10.80 | ✅
+Blind SQLi via User-Agent Header [headers]         | ENC      | ATTACK   | ATTACK   | 0.9742 |    11.20 | ✅
+Path Traversal via ZIP Slip [path]                 | RAW      | ATTACK   | ATTACK   | 0.9999 |    10.30 | ✅
+Path Traversal via ZIP Slip [path]                 | ENC      | ATTACK   | ATTACK   | 0.9999 |    11.27 | ✅
+RCE via Spring4Shell (CVE-2022-22965) [query]      | RAW      | ATTACK   | ATTACK   | 0.9958 |    10.89 | ✅
+RCE via Spring4Shell (CVE-2022-22965) [query]      | ENC      | ATTACK   | ATTACK   | 0.9958 |    11.65 | ✅
+Real user data capture [query]                     | RAW      | ATTACK   | ATTACK   | 0.9991 |    10.46 | ✅
+Real user data capture [query]                     | ENC      | ATTACK   | ATTACK   | 0.9990 |    10.60 | ✅
+SQL Injection (Wait-for-Delay Bypass) [path]       | RAW      | ATTACK   | ATTACK   | 0.9994 |    11.02 | ✅
+SQL Injection (Wait-for-Delay Bypass) [path]       | ENC      | ATTACK   | ATTACK   | 0.9983 |    10.80 | ✅
+SQL Injection (OOB via DNS) [path]                 | RAW      | ATTACK   | ATTACK   | 0.9999 |    11.54 | ✅
+SQL Injection (OOB via DNS) [path]                 | ENC      | ATTACK   | ATTACK   | 0.9999 |    10.83 | ✅
+SQL Injection (In-band via XML) [path]             | RAW      | ATTACK   | ATTACK   | 0.9994 |    10.73 | ✅
+SQL Injection (In-band via XML) [path]             | ENC      | ATTACK   | ATTACK   | 0.9994 |    11.91 | ✅
+SQL Injection (Blind via Error Message) [path]     | RAW      | ATTACK   | ATTACK   | 0.9991 |    11.81 | ✅
+SQL Injection (Blind via Error Message) [path]     | ENC      | ATTACK   | ATTACK   | 0.9982 |    11.30 | ✅
+Java Attack [query]                                | RAW      | ATTACK   | ATTACK   | 0.9995 |    14.14 | ✅
+Java Attack [query]                                | ENC      | ATTACK   | ATTACK   | 0.9996 |    10.97 | ✅
+TestReal1 [path]                                   | RAW      | ATTACK   | NORMAL   | 0.5646 |    11.31 | ❌
+TestReal1 [path]                                   | ENC      | ATTACK   | NORMAL   | 0.5775 |    12.17 | ❌
+TestReal1 [query]                                  | RAW      | ATTACK   | ATTACK   | 0.9489 |    14.02 | ✅
+TestReal1 [query]                                  | ENC      | ATTACK   | ATTACK   | 0.9626 |    11.04 | ✅
+TestReal2 [path]                                   | RAW      | ATTACK   | NORMAL   | 0.5646 |    11.08 | ❌
+TestReal2 [path]                                   | ENC      | ATTACK   | NORMAL   | 0.5775 |    10.34 | ❌
+TestReal2 [query]                                  | RAW      | ATTACK   | ATTACK   | 0.9999 |    11.12 | ✅
+TestReal2 [query]                                  | ENC      | ATTACK   | ATTACK   | 0.9999 |    13.05 | ✅
+Attack_PDF_2 [path]                                | RAW      | ATTACK   | ATTACK   | 0.9889 |    12.32 | ✅
+Attack_PDF_2 [path]                                | ENC      | ATTACK   | ATTACK   | 0.9968 |    10.94 | ✅
+Attack_PDF_3 [path]                                | RAW      | ATTACK   | ATTACK   | 0.9359 |    10.23 | ✅
+Attack_PDF_3 [path]                                | ENC      | ATTACK   | ATTACK   | 0.9359 |    10.34 | ✅
+Attack_PDF_4 [path]                                | RAW      | ATTACK   | ATTACK   | 0.9929 |    10.42 | ✅
+Attack_PDF_4 [path]                                | ENC      | ATTACK   | ATTACK   | 0.9941 |    10.53 | ✅
+Attack_PDF_5 [query]                               | RAW      | ATTACK   | ATTACK   | 0.9998 |    13.24 | ✅
+Attack_PDF_5 [query]                               | ENC      | ATTACK   | ATTACK   | 0.9997 |    11.91 | ✅
+Attack_PDF_6 [query]                               | RAW      | ATTACK   | ATTACK   | 0.9922 |    12.10 | ✅
+Attack_PDF_6 [query]                               | ENC      | ATTACK   | ATTACK   | 0.9936 |    14.75 | ✅
+Attack_PDF_7 [path]                                | RAW      | ATTACK   | ATTACK   | 0.9975 |    13.30 | ✅
+Attack_PDF_7 [path]                                | ENC      | ATTACK   | ATTACK   | 0.9960 |    11.96 | ✅
+Attack_PDF_8 [path]                                | RAW      | ATTACK   | ATTACK   | 0.9967 |    13.83 | ✅
+Attack_PDF_8 [path]                                | ENC      | ATTACK   | ATTACK   | 0.9936 |    15.83 | ✅
+Attack_PDF_9 [path]                                | RAW      | ATTACK   | ATTACK   | 0.9916 |    17.78 | ✅
+Attack_PDF_9 [path]                                | ENC      | ATTACK   | ATTACK   | 0.9927 |    16.30 | ✅
+Attack_PDF_10 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9964 |    12.56 | ✅
+Attack_PDF_10 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9954 |    11.36 | ✅
+Attack_PDF_11 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9620 |    11.37 | ✅
+Attack_PDF_11 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9841 |    11.40 | ✅
+Attack_PDF_12 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9935 |    11.98 | ✅
+Attack_PDF_12 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9946 |    11.73 | ✅
+Attack_PDF_13 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9764 |    11.24 | ✅
+Attack_PDF_13 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9900 |    12.26 | ✅
+Attack_PDF_14 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9128 |    11.45 | ✅
+Attack_PDF_14 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9629 |    12.16 | ✅
+Attack_PDF_15 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9770 |    12.52 | ✅
+Attack_PDF_15 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9852 |    12.98 | ✅
+Attack_PDF_16 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9912 |    16.33 | ✅
+Attack_PDF_16 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9912 |    12.60 | ✅
+Attack_PDF_17 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9880 |    11.40 | ✅
+Attack_PDF_17 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9827 |    10.42 | ✅
+Attack_PDF_18 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9734 |    10.87 | ✅
+Attack_PDF_18 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9734 |    12.51 | ✅
+Attack_PDF_19 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9897 |    13.75 | ✅
+Attack_PDF_19 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9936 |    12.47 | ✅
+Attack_PDF_20 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9644 |    12.33 | ✅
+Attack_PDF_20 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9774 |    11.03 | ✅
+Attack_PDF_21 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9698 |    11.82 | ✅
+Attack_PDF_21 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9725 |    12.39 | ✅
+Attack_PDF_22 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9989 |    10.84 | ✅
+Attack_PDF_22 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9992 |    11.96 | ✅
+Attack_PDF_23 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9997 |    10.76 | ✅
+Attack_PDF_23 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9997 |    11.69 | ✅
+Attack_PDF_24 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9198 |    11.69 | ✅
+Attack_PDF_24 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9380 |    11.77 | ✅
+Attack_PDF_25 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9928 |    16.07 | ✅
+Attack_PDF_25 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9928 |    11.18 | ✅
+Attack_PDF_26 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9891 |    10.97 | ✅
+Attack_PDF_26 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9382 |    11.64 | ✅
+Attack_PDF_27 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9998 |    14.42 | ✅
+Attack_PDF_27 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9998 |    11.40 | ✅
+Attack_PDF_28 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9385 |    10.51 | ✅
+Attack_PDF_28 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9844 |    12.55 | ✅
+Attack_PDF_29 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9931 |    12.98 | ✅
+Attack_PDF_29 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9923 |    13.79 | ✅
+Attack_PDF_30 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9730 |    12.31 | ✅
+Attack_PDF_30 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9710 |    12.27 | ✅
+Attack_PDF_31 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9317 |    12.98 | ✅
+Attack_PDF_31 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9856 |    11.58 | ✅
+Attack_PDF_32 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9980 |    12.60 | ✅
+Attack_PDF_32 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9976 |    12.81 | ✅
+Attack_PDF_33 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9995 |    14.50 | ✅
+Attack_PDF_33 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9974 |    13.21 | ✅
+Attack_PDF_34 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9238 |    14.33 | ✅
+Attack_PDF_34 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9225 |    17.00 | ✅
+Attack_PDF_35 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9713 |    11.00 | ✅
+Attack_PDF_35 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9735 |    11.13 | ✅
+Attack_PDF_36 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9995 |    13.88 | ✅
+Attack_PDF_36 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9991 |    16.50 | ✅
+Attack_PDF_37 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9404 |    15.35 | ✅
+Attack_PDF_37 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9745 |    13.87 | ✅
+Attack_PDF_38 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9961 |    14.88 | ✅
+Attack_PDF_38 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9947 |    14.87 | ✅
+Attack_PDF_39 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9946 |    11.25 | ✅
+Attack_PDF_39 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9926 |    10.68 | ✅
+Attack_PDF_40 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9456 |    10.89 | ✅
+Attack_PDF_40 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9559 |    10.19 | ✅
+Attack_PDF_41 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9537 |    10.31 | ✅
+Attack_PDF_41 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9825 |    10.48 | ✅
+Attack_PDF_42 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9537 |    10.49 | ✅
+Attack_PDF_42 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9805 |    11.20 | ✅
+Attack_PDF_43 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9972 |    10.58 | ✅
+Attack_PDF_43 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9972 |    10.82 | ✅
+Attack_PDF_44 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9962 |    10.64 | ✅
+Attack_PDF_44 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9982 |    10.53 | ✅
+Attack_PDF_45 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9981 |    10.56 | ✅
+Attack_PDF_45 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9974 |    10.66 | ✅
+Attack_PDF_46 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9993 |    10.32 | ✅
+Attack_PDF_46 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9989 |    10.41 | ✅
+Attack_PDF_47 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9990 |    10.71 | ✅
+Attack_PDF_47 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9983 |    12.69 | ✅
+Attack_PDF_48 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9897 |    11.47 | ✅
+Attack_PDF_48 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9826 |    10.91 | ✅
+Attack_PDF_49 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9986 |    11.13 | ✅
+Attack_PDF_49 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9888 |    10.77 | ✅
+Attack_PDF_50 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9996 |    12.17 | ✅
+Attack_PDF_50 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9996 |    11.37 | ✅
+Attack_PDF_51 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9783 |    10.91 | ✅
+Attack_PDF_51 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9769 |    10.64 | ✅
+Attack_PDF_52 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9977 |    10.74 | ✅
+Attack_PDF_52 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9979 |    10.60 | ✅
+Attack_PDF_53 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9983 |    10.58 | ✅
+Attack_PDF_53 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9978 |    10.61 | ✅
+Attack_PDF_54 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9974 |    11.19 | ✅
+Attack_PDF_54 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9974 |    11.17 | ✅
+Attack_PDF_55 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9964 |    11.29 | ✅
+Attack_PDF_55 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9958 |    10.93 | ✅
+Attack_PDF_56 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9910 |    10.72 | ✅
+Attack_PDF_56 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9961 |    10.95 | ✅
+Attack_PDF_57 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9920 |    10.68 | ✅
+Attack_PDF_57 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9890 |    10.24 | ✅
+Attack_PDF_58 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9857 |    10.89 | ✅
+Attack_PDF_58 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9906 |    10.26 | ✅
+Attack_PDF_59 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9962 |    10.35 | ✅
+Attack_PDF_59 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9979 |    11.10 | ✅
+Attack_PDF_60 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9985 |    10.71 | ✅
+Attack_PDF_60 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9970 |    12.06 | ✅
+Attack_PDF_61 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9944 |    16.89 | ✅
+Attack_PDF_61 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9938 |    16.59 | ✅
+Attack_PDF_62 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9567 |    11.06 | ✅
+Attack_PDF_62 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9783 |    11.44 | ✅
+Attack_PDF_63 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9928 |    11.24 | ✅
+Attack_PDF_63 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9965 |    11.80 | ✅
+Attack_PDF_64 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9971 |    11.52 | ✅
+Attack_PDF_64 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9971 |    10.76 | ✅
+Attack_PDF_65 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9928 |    12.09 | ✅
+Attack_PDF_65 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9954 |    11.98 | ✅
+Attack_PDF_66 [body]                               | RAW      | ATTACK   | ATTACK   | 0.8915 |    11.02 | ✅
+Attack_PDF_66 [body]                               | ENC      | ATTACK   | ATTACK   | 0.8888 |    10.39 | ✅
+Attack_PDF_67 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9955 |    10.46 | ✅
+Attack_PDF_67 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9942 |    12.69 | ✅
+Attack_PDF_68 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9971 |    10.72 | ✅
+Attack_PDF_68 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9971 |    10.72 | ✅
+Attack_PDF_69 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9982 |    10.44 | ✅
+Attack_PDF_69 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9982 |    10.50 | ✅
+Attack_PDF_70 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9776 |    10.56 | ✅
+Attack_PDF_70 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9891 |    10.16 | ✅
+Attack_PDF_71 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9994 |    10.79 | ✅
+Attack_PDF_71 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9994 |    12.53 | ✅
+Attack_PDF_72 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9990 |    11.64 | ✅
+Attack_PDF_72 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9990 |    14.17 | ✅
+Attack_PDF_73 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9868 |    11.85 | ✅
+Attack_PDF_73 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9836 |    11.44 | ✅
+Attack_PDF_74 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9906 |    11.99 | ✅
+Attack_PDF_74 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9915 |    13.51 | ✅
+Attack_PDF_75 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9845 |    12.17 | ✅
+Attack_PDF_75 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9861 |    11.24 | ✅
+Attack_PDF_76 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9985 |    11.07 | ✅
+Attack_PDF_76 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9985 |    10.73 | ✅
+Attack_PDF_77 [body]                               | RAW      | ATTACK   | ATTACK   | 0.9735 |    10.74 | ✅
+Attack_PDF_77 [body]                               | ENC      | ATTACK   | ATTACK   | 0.9613 |    11.31 | ✅
+Attack_PDF_78 [path]                               | RAW      | ATTACK   | ATTACK   | 0.8589 |    12.61 | ✅
+Attack_PDF_78 [path]                               | ENC      | ATTACK   | ATTACK   | 0.8589 |    12.51 | ✅
+Attack_PDF_79 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9744 |    11.45 | ✅
+Attack_PDF_79 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9939 |    12.58 | ✅
+Attack_PDF_80 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9852 |    12.34 | ✅
+Attack_PDF_80 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9910 |    10.51 | ✅
+Attack_PDF_81 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9907 |    10.94 | ✅
+Attack_PDF_81 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9981 |    10.41 | ✅
+Attack_PDF_82 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9785 |    10.35 | ✅
+Attack_PDF_82 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9813 |    10.92 | ✅
+Attack_PDF_83 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9884 |    14.01 | ✅
+Attack_PDF_83 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9974 |    11.17 | ✅
+Attack_PDF_84 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9936 |    11.02 | ✅
+Attack_PDF_84 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9937 |    12.81 | ✅
+Attack_PDF_85 [headers]                            | RAW      | ATTACK   | ATTACK   | 0.9723 |    11.30 | ✅
+Attack_PDF_85 [headers]                            | ENC      | ATTACK   | ATTACK   | 0.9353 |    11.28 | ✅
+Attack_PDF_86 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9987 |    10.88 | ✅
+Attack_PDF_86 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9973 |    11.46 | ✅
+Attack_PDF_87 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9470 |    11.40 | ✅
+Attack_PDF_87 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9575 |    10.88 | ✅
+Attack_PDF_88 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9361 |    10.69 | ✅
+Attack_PDF_88 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9359 |    11.14 | ✅
+Attack_PDF_89 [headers]                            | RAW      | ATTACK   | ATTACK   | 0.9892 |    11.00 | ✅
+Attack_PDF_89 [headers]                            | ENC      | ATTACK   | ATTACK   | 0.9892 |    11.59 | ✅
+Attack_PDF_90 [headers]                            | RAW      | ATTACK   | ATTACK   | 0.9825 |    10.76 | ✅
+Attack_PDF_90 [headers]                            | ENC      | ATTACK   | ATTACK   | 0.9829 |    11.14 | ✅
+Attack_PDF_91 [headers]                            | RAW      | ATTACK   | ATTACK   | 0.9860 |    10.43 | ✅
+Attack_PDF_91 [headers]                            | ENC      | ATTACK   | ATTACK   | 0.9860 |    10.94 | ✅
+Attack_PDF_92 [headers]                            | RAW      | ATTACK   | ATTACK   | 0.9876 |    10.83 | ✅
+Attack_PDF_92 [headers]                            | ENC      | ATTACK   | ATTACK   | 0.9876 |    14.13 | ✅
+Attack_PDF_93 [headers]                            | RAW      | ATTACK   | ATTACK   | 0.9876 |    12.92 | ✅
+Attack_PDF_93 [headers]                            | ENC      | ATTACK   | ATTACK   | 0.9876 |    11.54 | ✅
+Attack_PDF_94 [headers]                            | RAW      | ATTACK   | ATTACK   | 0.9876 |    13.30 | ✅
+Attack_PDF_94 [headers]                            | ENC      | ATTACK   | ATTACK   | 0.9876 |    11.55 | ✅
+Attack_PDF_95 [headers]                            | RAW      | ATTACK   | ATTACK   | 0.9876 |    11.16 | ✅
+Attack_PDF_95 [headers]                            | ENC      | ATTACK   | ATTACK   | 0.9876 |    11.62 | ✅
+Attack_PDF_96 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9972 |    11.54 | ✅
+Attack_PDF_96 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9974 |    11.73 | ✅
+Attack_PDF_97 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9763 |    12.35 | ✅
+Attack_PDF_97 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9767 |    12.14 | ✅
+Attack_PDF_98 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9999 |    12.19 | ✅
+Attack_PDF_98 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9998 |    13.47 | ✅
+Attack_PDF_99 [path]                               | RAW      | ATTACK   | ATTACK   | 0.9580 |    13.24 | ✅
+Attack_PDF_99 [path]                               | ENC      | ATTACK   | ATTACK   | 0.9870 |    12.34 | ✅
+Attack_PDF_100 [headers]                           | RAW      | ATTACK   | ATTACK   | 0.9834 |    13.19 | ✅
+Attack_PDF_100 [headers]                           | ENC      | ATTACK   | ATTACK   | 0.9834 |    11.09 | ✅
+Attack_PDF_101 [body]                              | RAW      | ATTACK   | ATTACK   | 0.9843 |    10.93 | ✅
+Attack_PDF_101 [body]                              | ENC      | ATTACK   | ATTACK   | 0.9819 |    11.46 | ✅
+Attack_PDF_102 [body]                              | RAW      | ATTACK   | ATTACK   | 0.8973 |    10.50 | ✅
+Attack_PDF_102 [body]                              | ENC      | ATTACK   | ATTACK   | 0.9422 |    10.34 | ✅
+Attack_PDF_103 [body]                              | RAW      | ATTACK   | ATTACK   | 0.9668 |    10.47 | ✅
+Attack_PDF_103 [body]                              | ENC      | ATTACK   | ATTACK   | 0.9667 |    10.72 | ✅
+Attack_PDF_104 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9404 |    10.27 | ✅
+Attack_PDF_104 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9585 |    11.08 | ✅
+Attack_PDF_105 [path]                              | RAW      | ATTACK   | NORMAL   | 0.9958 |    12.43 | ❌
+Attack_PDF_105 [path]                              | ENC      | ATTACK   | NORMAL   | 0.7016 |    10.98 | ❌
+Attack_PDF_105 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9954 |    12.54 | ✅
+Attack_PDF_105 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9933 |    10.65 | ✅
+Attack_PDF_106 [path]                              | RAW      | ATTACK   | ATTACK   | 0.9067 |    10.16 | ✅
+Attack_PDF_106 [path]                              | ENC      | ATTACK   | ATTACK   | 0.8273 |    10.25 | ✅
+Attack_PDF_106 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9954 |    10.45 | ✅
+Attack_PDF_106 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9933 |    10.41 | ✅
+Attack_PDF_107 [path]                              | RAW      | ATTACK   | ATTACK   | 0.9808 |    10.68 | ✅
+Attack_PDF_107 [path]                              | ENC      | ATTACK   | ATTACK   | 0.9943 |    10.12 | ✅
+Attack_PDF_107 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9992 |    11.05 | ✅
+Attack_PDF_107 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9992 |    10.44 | ✅
+Attack_PDF_108 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9998 |    10.28 | ✅
+Attack_PDF_108 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9998 |    10.35 | ✅
+Attack_PDF_109 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9998 |    10.30 | ✅
+Attack_PDF_109 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9997 |    10.15 | ✅
+Attack_PDF_110 [path]                              | RAW      | ATTACK   | ATTACK   | 0.9973 |    10.27 | ✅
+Attack_PDF_110 [path]                              | ENC      | ATTACK   | ATTACK   | 0.9973 |    10.36 | ✅
+Attack_PDF_111 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9988 |    12.10 | ✅
+Attack_PDF_111 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9988 |    10.95 | ✅
+Attack_PDF_112 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9998 |    10.88 | ✅
+Attack_PDF_112 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9998 |    11.11 | ✅
+Attack_PDF_113 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9979 |    10.48 | ✅
+Attack_PDF_113 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9977 |    12.30 | ✅
+Attack_PDF_114 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9996 |    11.18 | ✅
+Attack_PDF_114 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9996 |    10.51 | ✅
+Attack_PDF_115 [path]                              | RAW      | ATTACK   | ATTACK   | 0.9955 |    10.28 | ✅
+Attack_PDF_115 [path]                              | ENC      | ATTACK   | ATTACK   | 0.9956 |    11.32 | ✅
+Attack_PDF_116 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9959 |    10.60 | ✅
+Attack_PDF_116 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9957 |    10.80 | ✅
+Attack_PDF_117 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9978 |    10.31 | ✅
+Attack_PDF_117 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9968 |    10.86 | ✅
+Attack_PDF_118 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9673 |    10.52 | ✅
+Attack_PDF_118 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9688 |    11.38 | ✅
+Attack_PDF_119 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9999 |    10.67 | ✅
+Attack_PDF_119 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9999 |    11.15 | ✅
+Attack_PDF_120 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9988 |    13.47 | ✅
+Attack_PDF_120 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9988 |    11.18 | ✅
+Attack_user_121 [query]                            | RAW      | ATTACK   | ATTACK   | 0.9897 |    11.94 | ✅
+Attack_user_121 [query]                            | ENC      | ATTACK   | ATTACK   | 0.9845 |    11.28 | ✅
+Attack_user_122 [query]                            | RAW      | ATTACK   | ATTACK   | 0.9884 |    10.50 | ✅
+Attack_user_122 [query]                            | ENC      | ATTACK   | ATTACK   | 0.9878 |    10.29 | ✅
+Attack_usr_123 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9990 |    11.17 | ✅
+Attack_usr_123 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9986 |    10.85 | ✅
+Attack_usr_124 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9994 |    10.79 | ✅
+Attack_usr_124 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9995 |    11.13 | ✅
+Attack_usr_125 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9992 |    11.44 | ✅
+Attack_usr_125 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9992 |    10.52 | ✅
+Attack_usr_126 [path]                              | RAW      | ATTACK   | ATTACK   | 0.9612 |    10.29 | ✅
+Attack_usr_126 [path]                              | ENC      | ATTACK   | ATTACK   | 0.9794 |    10.25 | ✅
+Attack_usr_127 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9952 |    10.29 | ✅
+Attack_usr_127 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9941 |    10.62 | ✅
+Attack_usr_128 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9977 |    12.67 | ✅
+Attack_usr_128 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9977 |    11.36 | ✅
+Attack_usr_129 [path]                              | RAW      | ATTACK   | ATTACK   | 0.9965 |    13.16 | ✅
+Attack_usr_129 [path]                              | ENC      | ATTACK   | ATTACK   | 0.9931 |    11.88 | ✅
+Attack_usr_130 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9999 |    20.53 | ✅
+Attack_usr_130 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9999 |    13.71 | ✅
+Attack_usr_131 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9967 |    13.10 | ✅
+Attack_usr_131 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9967 |    13.15 | ✅
+Attack_usr_132 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9611 |    15.88 | ✅
+Attack_usr_132 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9373 |    11.20 | ✅
+Attack_usr_133 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9967 |    12.10 | ✅
+Attack_usr_133 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9967 |    11.84 | ✅
+Attack_usr_134 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9982 |    11.39 | ✅
+Attack_usr_134 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9982 |    11.40 | ✅
+Attack_usr_135 [path]                              | RAW      | ATTACK   | NORMAL   | 0.9947 |    12.76 | ❌
+Attack_usr_135 [path]                              | ENC      | ATTACK   | NORMAL   | 0.7386 |    11.55 | ❌
+Attack_usr_135 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9962 |    11.31 | ✅
+Attack_usr_135 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9962 |    10.98 | ✅
+Attack_usr_136 [path]                              | RAW      | ATTACK   | NORMAL   | 0.9947 |    10.36 | ❌
+Attack_usr_136 [path]                              | ENC      | ATTACK   | NORMAL   | 0.7386 |    14.24 | ❌
+Attack_usr_136 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9990 |    10.86 | ✅
+Attack_usr_136 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9987 |    11.19 | ✅
+Attack_FP_137 [path]                               | RAW      | ATTACK   | NORMAL   | 0.6259 |    12.52 | ❌
+Attack_FP_137 [path]                               | ENC      | ATTACK   | NORMAL   | 0.6545 |    12.47 | ❌
+Attack_FP_137 [query]                              | RAW      | ATTACK   | ATTACK   | 0.9999 |    14.03 | ✅
+Attack_FP_137 [query]                              | ENC      | ATTACK   | ATTACK   | 0.9999 |    13.81 | ✅
+Attack_usr_138 [path]                              | RAW      | ATTACK   | NORMAL   | 0.6259 |    12.54 | ❌
+Attack_usr_138 [path]                              | ENC      | ATTACK   | NORMAL   | 0.6545 |    11.73 | ❌
+Attack_usr_138 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9998 |    11.06 | ✅
+Attack_usr_138 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9998 |    11.62 | ✅
+Attack_usr_139 [path]                              | RAW      | ATTACK   | NORMAL   | 0.6259 |    12.78 | ❌
+Attack_usr_139 [path]                              | ENC      | ATTACK   | NORMAL   | 0.6545 |    13.04 | ❌
+Attack_usr_139 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9999 |    11.31 | ✅
+Attack_usr_139 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9999 |    11.93 | ✅
+Attack_usr_140 [path]                              | RAW      | ATTACK   | ATTACK   | 0.9994 |    13.89 | ✅
+Attack_usr_140 [path]                              | ENC      | ATTACK   | ATTACK   | 0.9993 |    13.61 | ✅
+Attack_usr_140 [query]                             | RAW      | ATTACK   | ATTACK   | 1.0000 |    12.40 | ✅
+Attack_usr_140 [query]                             | ENC      | ATTACK   | ATTACK   | 1.0000 |    13.52 | ✅
+Attack_usr_141 [path]                              | RAW      | ATTACK   | ATTACK   | 0.9994 |    10.90 | ✅
+Attack_usr_141 [path]                              | ENC      | ATTACK   | ATTACK   | 0.9993 |    11.59 | ✅
+Attack_usr_141 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9998 |    12.70 | ✅
+Attack_usr_141 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9997 |    12.64 | ✅
+PADDED_XSS [path]                                  | RAW      | ATTACK   | NORMAL   | 0.5105 |    11.36 | ❌
+PADDED_XSS [path]                                  | ENC      | ATTACK   | NORMAL   | 0.7472 |    12.69 | ❌
+PADDED_XSS [query]                                 | RAW      | ATTACK   | ATTACK   | 0.9997 |    12.07 | ✅
+PADDED_XSS [query]                                 | ENC      | ATTACK   | ATTACK   | 0.9995 |    13.42 | ✅
+Attack_Asset_1 [path]                              | RAW      | ATTACK   | NORMAL   | 0.5989 |    14.89 | ❌
+Attack_Asset_1 [path]                              | ENC      | ATTACK   | ATTACK   | 0.5961 |    13.13 | ✅
+Attack_Asset_1 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9701 |    14.33 | ✅
+Attack_Asset_1 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9896 |    12.95 | ✅
+Attack_Asset_2 [path]                              | RAW      | ATTACK   | NORMAL   | 0.5989 |    12.37 | ❌
+Attack_Asset_2 [path]                              | ENC      | ATTACK   | ATTACK   | 0.5961 |    12.07 | ✅
+Attack_Asset_2 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9468 |    11.51 | ✅
+Attack_Asset_2 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9585 |    11.31 | ✅
+Attack_Asset_3 [path]                              | RAW      | ATTACK   | NORMAL   | 0.7304 |    14.60 | ❌
+Attack_Asset_3 [path]                              | ENC      | ATTACK   | ATTACK   | 0.6987 |    11.69 | ✅
+Attack_Asset_3 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9940 |    20.51 | ✅
+Attack_Asset_3 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9956 |    15.42 | ✅
+Attack_Asset_4 [path]                              | RAW      | ATTACK   | NORMAL   | 0.6970 |    23.19 | ❌
+Attack_Asset_4 [path]                              | ENC      | ATTACK   | ATTACK   | 0.6219 |    21.01 | ✅
+Attack_Asset_4 [query]                             | RAW      | ATTACK   | ATTACK   | 0.9972 |    14.26 | ✅
+Attack_Asset_4 [query]                             | ENC      | ATTACK   | ATTACK   | 0.9977 |    11.23 | ✅
+Attack_Joomla_LFI_Null_Byte [query]                | RAW      | ATTACK   | ATTACK   | 0.9998 |    14.15 | ✅
+Attack_Joomla_LFI_Null_Byte [query]                | ENC      | ATTACK   | ATTACK   | 0.9998 |    15.92 | ✅
+Attack_XSS_Param_hc [query]                        | RAW      | ATTACK   | ATTACK   | 0.9999 |    12.89 | ✅
+Attack_XSS_Param_hc [query]                        | ENC      | ATTACK   | ATTACK   | 0.9999 |    12.71 | ✅
+Attack_LFI_Modulepart_File [query]                 | RAW      | ATTACK   | ATTACK   | 0.9979 |    12.74 | ✅
+Attack_LFI_Modulepart_File [query]                 | ENC      | ATTACK   | ATTACK   | 0.9978 |    17.63 | ✅
+Attack_Joomla_WebTV_LFI_Null_Byte [query]          | RAW      | ATTACK   | ATTACK   | 0.9998 |    12.95 | ✅
+Attack_Joomla_WebTV_LFI_Null_Byte [query]          | ENC      | ATTACK   | ATTACK   | 0.9998 |    12.29 | ✅
+Attack_LFI_FileName_Mime [query]                   | RAW      | ATTACK   | ATTACK   | 0.9976 |    14.28 | ✅
+Attack_LFI_FileName_Mime [query]                   | ENC      | ATTACK   | ATTACK   | 0.9977 |    14.37 | ✅
+Attack_XSS_Param_color_SVG [query]                 | RAW      | ATTACK   | ATTACK   | 0.9999 |    13.06 | ✅
+Attack_XSS_Param_color_SVG [query]                 | ENC      | ATTACK   | ATTACK   | 0.9999 |    11.82 | ✅
+Attack_WordPress_WPV_Image_LFI [query]             | RAW      | ATTACK   | ATTACK   | 0.9985 |    11.94 | ✅
+Attack_WordPress_WPV_Image_LFI [query]             | ENC      | ATTACK   | ATTACK   | 0.9985 |    11.97 | ✅
+Attack_Windows_File_Read [query]                   | RAW      | ATTACK   | ATTACK   | 0.9917 |    12.23 | ✅
+Attack_Windows_File_Read [query]                   | ENC      | ATTACK   | ATTACK   | 0.9955 |    15.02 | ✅
+Attack_Joomla_JVideoDirect_LFI_Null_Byte [query]   | RAW      | ATTACK   | ATTACK   | 0.9997 |    14.21 | ✅
+Attack_Joomla_JVideoDirect_LFI_Null_Byte [query]   | ENC      | ATTACK   | ATTACK   | 0.9997 |    13.18 | ✅
+Attack_XSS_Message_Error [query]                   | RAW      | ATTACK   | ATTACK   | 0.9964 |    14.96 | ✅
+Attack_XSS_Message_Error [query]                   | ENC      | ATTACK   | ATTACK   | 0.9962 |    13.73 | ✅
+Attack_XSS_Keyword_Script [query]                  | RAW      | ATTACK   | ATTACK   | 1.0000 |    12.79 | ✅
+Attack_XSS_Keyword_Script [query]                  | ENC      | ATTACK   | ATTACK   | 1.0000 |    11.93 | ✅
+Attack_XSS_Login_Print [query]                     | RAW      | ATTACK   | ATTACK   | 0.9999 |    12.49 | ✅
+Attack_XSS_Login_Print [query]                     | ENC      | ATTACK   | ATTACK   | 0.9998 |    14.78 | ✅
+Attack_SQLi_cname_Union_MD5 [query]                | RAW      | ATTACK   | ATTACK   | 0.9995 |    17.19 | ✅
+Attack_SQLi_cname_Union_MD5 [query]                | ENC      | ATTACK   | ATTACK   | 0.9993 |    15.19 | ✅
+Attack_XSS_Message_Error_Img [query]               | RAW      | ATTACK   | ATTACK   | 0.9964 |    14.84 | ✅
+Attack_XSS_Message_Error_Img [query]               | ENC      | ATTACK   | ATTACK   | 0.9962 |    15.46 | ✅
+Attack_SQLi_q_Union_User [query]                   | RAW      | ATTACK   | ATTACK   | 0.9951 |    13.86 | ✅
+Attack_SQLi_q_Union_User [query]                   | ENC      | ATTACK   | ATTACK   | 0.9931 |    14.30 | ✅
+Attack_CFIDE_XSS_Path [path]                       | RAW      | ATTACK   | ATTACK   | 0.9998 |    13.33 | ✅
+Attack_CFIDE_XSS_Path [path]                       | ENC      | ATTACK   | ATTACK   | 0.9998 |    12.92 | ✅
+Attack_XSS_Login_Print_Duplicate [query]           | RAW      | ATTACK   | ATTACK   | 0.9999 |    14.24 | ✅
+Attack_XSS_Login_Print_Duplicate [query]           | ENC      | ATTACK   | ATTACK   | 0.9998 |    14.35 | ✅
+Attack_File_Read_dbkey_Syslog [query]              | RAW      | ATTACK   | ATTACK   | 0.9995 |    12.60 | ✅
+Attack_File_Read_dbkey_Syslog [query]              | ENC      | ATTACK   | ATTACK   | 0.9995 |    14.05 | ✅
+Attack_XSS_Message_Success_Img [query]             | RAW      | ATTACK   | ATTACK   | 0.9930 |    12.20 | ✅
+Attack_XSS_Message_Success_Img [query]             | ENC      | ATTACK   | ATTACK   | 0.9927 |    15.13 | ✅
+Attack_CFIDE_XSS_Path_Variant [path]               | RAW      | ATTACK   | ATTACK   | 0.9998 |    15.99 | ✅
+Attack_CFIDE_XSS_Path_Variant [path]               | ENC      | ATTACK   | ATTACK   | 0.9998 |    15.68 | ✅
+Attack_LFI_chemin_nomgif [query]                   | RAW      | ATTACK   | ATTACK   | 0.9977 |    13.76 | ✅
+Attack_LFI_chemin_nomgif [query]                   | ENC      | ATTACK   | ATTACK   | 0.9977 |    13.92 | ✅
+Attack_SQLi_pjAdminOrders_Controller [query]       | RAW      | ATTACK   | ATTACK   | 0.9981 |    16.48 | ✅
+Attack_SQLi_pjAdminOrders_Controller [query]       | ENC      | ATTACK   | ATTACK   | 0.9981 |    13.57 | ✅
+Attack_LFI_path_Param [query]                      | RAW      | ATTACK   | ATTACK   | 0.9970 |    13.45 | ✅
+Attack_LFI_path_Param [query]                      | ENC      | ATTACK   | ATTACK   | 0.9976 |    12.90 | ✅
+Attack_LFI_Render_File [query]                     | RAW      | ATTACK   | ATTACK   | 0.9979 |    12.04 | ✅
+Attack_LFI_Render_File [query]                     | ENC      | ATTACK   | ATTACK   | 0.9978 |    12.58 | ✅
+Attack_XSS_redirect_to [query]                     | RAW      | ATTACK   | ATTACK   | 0.9999 |    12.12 | ✅
+Attack_XSS_redirect_to [query]                     | ENC      | ATTACK   | ATTACK   | 0.9999 |    13.19 | ✅
+Attack_LFI_g_file_name [query]                     | RAW      | ATTACK   | ATTACK   | 0.9993 |    19.88 | ✅
+Attack_LFI_g_file_name [query]                     | ENC      | ATTACK   | ATTACK   | 0.9994 |    11.03 | ✅
+Attack_SQLi_pjAdminOrders_Controller_Duplicate [qu | RAW      | ATTACK   | ATTACK   | 0.9981 |    11.58 | ✅
+Attack_SQLi_pjAdminOrders_Controller_Duplicate [qu | ENC      | ATTACK   | ATTACK   | 0.9981 |    11.12 | ✅
+Attack_LFI_url_Param [query]                       | RAW      | ATTACK   | ATTACK   | 0.9976 |    10.90 | ✅
+Attack_LFI_url_Param [query]                       | ENC      | ATTACK   | ATTACK   | 0.9976 |    10.51 | ✅
+Attack_XSS_redirect_to_Duplicate [query]           | RAW      | ATTACK   | ATTACK   | 0.9999 |    10.77 | ✅
+Attack_XSS_redirect_to_Duplicate [query]           | ENC      | ATTACK   | ATTACK   | 0.9999 |    14.12 | ✅
+Attack_LFI_sys_dia_data_down [query]               | RAW      | ATTACK   | ATTACK   | 0.9993 |    13.53 | ✅
+Attack_LFI_sys_dia_data_down [query]               | ENC      | ATTACK   | ATTACK   | 0.9994 |    13.71 | ✅
+Attack_XSS_time_begin [query]                      | RAW      | ATTACK   | ATTACK   | 0.9999 |    14.02 | ✅
+Attack_XSS_time_begin [query]                      | ENC      | ATTACK   | ATTACK   | 0.9999 |    12.56 | ✅
+Attack_RCE_CVE_2020_19625_Probe [query]            | RAW      | ATTACK   | ATTACK   | 0.9347 |    13.64 | ✅
+Attack_RCE_CVE_2020_19625_Probe [query]            | ENC      | ATTACK   | ATTACK   | 0.9135 |    13.24 | ✅
+Attack_CFIDE_Admin_XSS_Path [path]                 | RAW      | ATTACK   | ATTACK   | 0.9990 |    14.53 | ✅
+Attack_CFIDE_Admin_XSS_Path [path]                 | ENC      | ATTACK   | ATTACK   | 0.9990 |    14.36 | ✅
+Attack_XSS_error_script [query]                    | RAW      | ATTACK   | ATTACK   | 0.9999 |    13.91 | ✅
+Attack_XSS_error_script [query]                    | ENC      | ATTACK   | ATTACK   | 0.9999 |    13.15 | ✅
+Attack_XSS_time_begin_Duplicate [query]            | RAW      | ATTACK   | ATTACK   | 0.9999 |    13.09 | ✅
+Attack_XSS_time_begin_Duplicate [query]            | ENC      | ATTACK   | ATTACK   | 0.9999 |    13.50 | ✅
+Attack_XSS_dataset_script [query]                  | RAW      | ATTACK   | ATTACK   | 0.9999 |    13.01 | ✅
+Attack_XSS_dataset_script [query]                  | ENC      | ATTACK   | ATTACK   | 0.9999 |    12.64 | ✅
+Attack_XSS_search_img [query]                      | RAW      | ATTACK   | ATTACK   | 0.9998 |    13.10 | ✅
+Attack_XSS_search_img [query]                      | ENC      | ATTACK   | ATTACK   | 0.9998 |    14.22 | ✅
+Attack_SQLi_WordPress_Gallery_Union [query]        | RAW      | ATTACK   | ATTACK   | 0.9999 |    12.84 | ✅
+Attack_SQLi_WordPress_Gallery_Union [query]        | ENC      | ATTACK   | ATTACK   | 0.9999 |    15.91 | ✅
+Attack_DOM_XSS_ed_Javascript [query]               | RAW      | ATTACK   | ATTACK   | 0.9994 |    13.81 | ✅
+Attack_DOM_XSS_ed_Javascript [query]               | ENC      | ATTACK   | ATTACK   | 0.9994 |    14.59 | ✅
+Attack_XSS_search_img_Duplicate [query]            | RAW      | ATTACK   | ATTACK   | 0.9998 |    12.28 | ✅
+Attack_XSS_search_img_Duplicate [query]            | ENC      | ATTACK   | ATTACK   | 0.9998 |    15.79 | ✅
+Attack_XSS_WPDA_Gallery_Index [query]              | RAW      | ATTACK   | ATTACK   | 0.9999 |    14.63 | ✅
+Attack_XSS_WPDA_Gallery_Index [query]              | ENC      | ATTACK   | ATTACK   | 0.9999 |    13.97 | ✅
+Attack_LFI_file_Param [query]                      | RAW      | ATTACK   | ATTACK   | 0.9979 |    14.55 | ✅
+Attack_LFI_file_Param [query]                      | ENC      | ATTACK   | ATTACK   | 0.9979 |    14.40 | ✅
+Attack_DOM_XSS_ed_Javascript_Duplicate [query]     | RAW      | ATTACK   | ATTACK   | 0.9994 |    10.92 | ✅
+Attack_DOM_XSS_ed_Javascript_Duplicate [query]     | ENC      | ATTACK   | ATTACK   | 0.9994 |    10.55 | ✅
+Attack_XSS_Jenkins_Label_SVG [query]               | RAW      | ATTACK   | ATTACK   | 0.9972 |    12.64 | ✅
+Attack_XSS_Jenkins_Label_SVG [query]               | ENC      | ATTACK   | ATTACK   | 0.9971 |    21.65 | ✅
+Attack_CFIDE_Wizard_XSS_Path [path]                | RAW      | ATTACK   | ATTACK   | 0.9998 |    17.32 | ✅
+Attack_CFIDE_Wizard_XSS_Path [path]                | ENC      | ATTACK   | ATTACK   | 0.9998 |    17.70 | ✅
+Attack_XSS_WPDA_Gallery_Index_Duplicate [query]    | RAW      | ATTACK   | ATTACK   | 0.9999 |    11.06 | ✅
+Attack_XSS_WPDA_Gallery_Index_Duplicate [query]    | ENC      | ATTACK   | ATTACK   | 0.9999 |    11.11 | ✅
+Attack_XSS_Jenkins_Label_SVG_Duplicate [query]     | RAW      | ATTACK   | ATTACK   | 0.9972 |    11.66 | ✅
+Attack_XSS_Jenkins_Label_SVG_Duplicate [query]     | ENC      | ATTACK   | ATTACK   | 0.9971 |    11.58 | ✅
+Attack_XSS_URL_OAST_Img [query]                    | RAW      | ATTACK   | ATTACK   | 0.9997 |    11.52 | ✅
+Attack_XSS_URL_OAST_Img [query]                    | ENC      | ATTACK   | ATTACK   | 0.9997 |    11.38 | ✅
+Attack_Env_File_Probe_Help_Path [path]             | RAW      | ATTACK   | ATTACK   | 0.9777 |    10.71 | ✅
+Attack_Env_File_Probe_Help_Path [path]             | ENC      | ATTACK   | ATTACK   | 0.9916 |    11.06 | ✅
+Attack_Env_File_Probe_Laravel_Path [path]          | RAW      | ATTACK   | ATTACK   | 0.9870 |    10.99 | ✅
+Attack_Env_File_Probe_Laravel_Path [path]          | ENC      | ATTACK   | ATTACK   | 0.9940 |    10.74 | ✅
+Attack_AWS_Config_File_Probe [path]                | RAW      | ATTACK   | ATTACK   | 0.9982 |    12.54 | ✅
+Attack_AWS_Config_File_Probe [path]                | ENC      | ATTACK   | ATTACK   | 0.9957 |    10.85 | ✅
+Attack_Env_File_Probe_Backend_Path [path]          | RAW      | ATTACK   | ATTACK   | 0.9895 |    14.18 | ✅
+Attack_Env_File_Probe_Backend_Path [path]          | ENC      | ATTACK   | ATTACK   | 0.9879 |    14.24 | ✅
+Attack_Env_File_Probe_App_Path [path]              | RAW      | ATTACK   | ATTACK   | 0.9873 |    12.74 | ✅
+Attack_Env_File_Probe_App_Path [path]              | ENC      | ATTACK   | ATTACK   | 0.9762 |    13.82 | ✅
+Attack_Env_File_Probe_API_Path [path]              | RAW      | ATTACK   | ATTACK   | 0.9873 |    15.49 | ✅
+Attack_Env_File_Probe_API_Path [path]              | ENC      | ATTACK   | ATTACK   | 0.9947 |    14.72 | ✅
+Attack_Env_File_Probe_Admin_Path [path]            | RAW      | ATTACK   | ATTACK   | 0.9920 |    13.47 | ✅
+Attack_Env_File_Probe_Admin_Path [path]            | ENC      | ATTACK   | ATTACK   | 0.9936 |    12.68 | ✅
+Attack_GitLab_CI_File_Probe [path]                 | RAW      | ATTACK   | ATTACK   | 0.9927 |    11.96 | ✅
+Attack_GitLab_CI_File_Probe [path]                 | ENC      | ATTACK   | ATTACK   | 0.9933 |    12.17 | ✅
+Attack_Git_Config_File_Probe [path]                | RAW      | ATTACK   | ATTACK   | 0.9983 |    14.07 | ✅
+Attack_Git_Config_File_Probe [path]                | ENC      | ATTACK   | ATTACK   | 0.9985 |    14.12 | ✅
+Attack_Env_File_Probe_Production [path]            | RAW      | ATTACK   | ATTACK   | 0.9985 |    13.11 | ✅
+Attack_Env_File_Probe_Production [path]            | ENC      | ATTACK   | ATTACK   | 0.9987 |    16.20 | ✅
+Attack_Env_File_Probe_Staging [path]               | RAW      | ATTACK   | ATTACK   | 0.9967 |    16.21 | ✅
+Attack_Env_File_Probe_Staging [path]               | ENC      | ATTACK   | ATTACK   | 0.9963 |    13.27 | ✅
+Attack_Env_File_Probe_Test [path]                  | RAW      | ATTACK   | ATTACK   | 0.9883 |    17.15 | ✅
+Attack_Env_File_Probe_Test [path]                  | ENC      | ATTACK   | ATTACK   | 0.9823 |    22.68 | ✅
+Attack_Env_File_Probe_Prod [path]                  | RAW      | ATTACK   | ATTACK   | 0.9956 |    18.36 | ✅
+Attack_Env_File_Probe_Prod [path]                  | ENC      | ATTACK   | ATTACK   | 0.9953 |    14.21 | ✅
+Attack_Env_File_Probe_Root [path]                  | RAW      | ATTACK   | ATTACK   | 0.9935 |    13.06 | ✅
+Attack_Env_File_Probe_Root [path]                  | ENC      | ATTACK   | ATTACK   | 0.9756 |    13.89 | ✅
+Attack_AWS_Credentials_File_Probe [path]           | RAW      | ATTACK   | ATTACK   | 0.9927 |    14.17 | ✅
+Attack_AWS_Credentials_File_Probe [path]           | ENC      | ATTACK   | ATTACK   | 0.9947 |    15.05 | ✅
+Attack_Config_JSON_File_Probe [path]               | RAW      | ATTACK   | ATTACK   | 0.9228 |    19.55 | ✅
+Attack_Config_JSON_File_Probe [path]               | ENC      | ATTACK   | ATTACK   | 0.9243 |    15.28 | ✅
+Attack_Env_File_Probe_Local [path]                 | RAW      | ATTACK   | ATTACK   | 0.9838 |    13.18 | ✅
+Attack_Env_File_Probe_Local [path]                 | ENC      | ATTACK   | ATTACK   | 0.9877 |    11.53 | ✅
+Attack_Analyzer_Combined_XSS_SQLi_HTML [path]      | RAW      | ATTACK   | NORMAL   | 0.9989 |    14.83 | ❌
+Attack_Analyzer_Combined_XSS_SQLi_HTML [path]      | ENC      | ATTACK   | NORMAL   | 0.7659 |    13.02 | ❌
+Attack_Analyzer_Combined_XSS_SQLi_HTML [query]     | RAW      | ATTACK   | ATTACK   | 0.9993 |    13.73 | ✅
+Attack_Analyzer_Combined_XSS_SQLi_HTML [query]     | ENC      | ATTACK   | ATTACK   | 0.9993 |    12.71 | ✅
+Homepage Access [path]                             | RAW      | NORMAL   | NORMAL   | 0.9947 |    11.41 | ✅
+Homepage Access [path]                             | ENC      | NORMAL   | NORMAL   | 0.7386 |    10.92 | ✅
+Static Asset (CSS) [path]                          | RAW      | NORMAL   | NORMAL   | 0.9869 |    11.61 | ✅
+Static Asset (CSS) [path]                          | ENC      | NORMAL   | NORMAL   | 0.9766 |    14.25 | ✅
+Static Asset (JS) [path]                           | RAW      | NORMAL   | NORMAL   | 0.9483 |    12.05 | ✅
+Static Asset (JS) [path]                           | ENC      | NORMAL   | NORMAL   | 0.8863 |    11.57 | ✅
+Static Asset (Image) [path]                        | RAW      | NORMAL   | NORMAL   | 0.9855 |    12.57 | ✅
+Static Asset (Image) [path]                        | ENC      | NORMAL   | NORMAL   | 0.9829 |    11.13 | ✅
+Static Asset (Favicon) [path]                      | RAW      | NORMAL   | NORMAL   | 0.9927 |    11.28 | ✅
+Static Asset (Favicon) [path]                      | ENC      | NORMAL   | NORMAL   | 0.9624 |    12.13 | ✅
+Robots.txt [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9935 |    11.91 | ✅
+Robots.txt [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9638 |    16.54 | ✅
+Sitemap [path]                                     | RAW      | NORMAL   | NORMAL   | 0.6997 |    12.93 | ✅
+Sitemap [path]                                     | ENC      | NORMAL   | NORMAL   | 0.6292 |    13.12 | ✅
+Health Check [path]                                | RAW      | NORMAL   | NORMAL   | 0.9811 |    12.20 | ✅
+Health Check [path]                                | ENC      | NORMAL   | NORMAL   | 0.9950 |    11.59 | ✅
+API Ping [path]                                    | RAW      | NORMAL   | NORMAL   | 0.9966 |    11.29 | ✅
+API Ping [path]                                    | ENC      | NORMAL   | NORMAL   | 0.9765 |    10.98 | ✅
+Login Page Load [path]                             | RAW      | NORMAL   | NORMAL   | 0.9178 |    10.58 | ✅
+Login Page Load [path]                             | ENC      | NORMAL   | NORMAL   | 0.9685 |    10.64 | ✅
+Search Query (Simple) [path]                       | RAW      | NORMAL   | NORMAL   | 0.9588 |    13.17 | ✅
+Search Query (Simple) [path]                       | ENC      | NORMAL   | NORMAL   | 0.9370 |    10.80 | ✅
+Search Query (Simple) [query]                      | RAW      | NORMAL   | NORMAL   | 0.9700 |    10.63 | ✅
+Search Query (Simple) [query]                      | ENC      | NORMAL   | NORMAL   | 0.9700 |    10.64 | ✅
+Search Query (Spaces) [path]                       | RAW      | NORMAL   | NORMAL   | 0.9588 |    10.92 | ✅
+Search Query (Spaces) [path]                       | ENC      | NORMAL   | NORMAL   | 0.9370 |    10.43 | ✅
+Search Query (Spaces) [query]                      | RAW      | NORMAL   | NORMAL   | 0.9848 |    10.58 | ✅
+Search Query (Spaces) [query]                      | ENC      | NORMAL   | NORMAL   | 0.9789 |    10.84 | ✅
+Search Query (Symbols) [path]                      | RAW      | NORMAL   | NORMAL   | 0.9588 |    10.51 | ✅
+Search Query (Symbols) [path]                      | ENC      | NORMAL   | NORMAL   | 0.9370 |    13.06 | ✅
+Search Query (Symbols) [query]                     | RAW      | NORMAL   | NORMAL   | 0.9674 |    11.93 | ✅
+Search Query (Symbols) [query]                     | ENC      | NORMAL   | NORMAL   | 0.9674 |    12.59 | ✅
+Search Query (Quote) [path]                        | RAW      | NORMAL   | NORMAL   | 0.9588 |    11.32 | ✅
+Search Query (Quote) [path]                        | ENC      | NORMAL   | NORMAL   | 0.9370 |    11.22 | ✅
+Search Query (Quote) [query]                       | RAW      | NORMAL   | NORMAL   | 0.9612 |    11.21 | ✅
+Search Query (Quote) [query]                       | ENC      | NORMAL   | NORMAL   | 0.9559 |    10.99 | ✅
+Search Query (Math) [path]                         | RAW      | NORMAL   | NORMAL   | 0.9588 |    10.79 | ✅
+Search Query (Math) [path]                         | ENC      | NORMAL   | NORMAL   | 0.9370 |    10.88 | ✅
+Search Query (Math) [query]                        | RAW      | NORMAL   | NORMAL   | 0.9907 |    11.19 | ✅
+Search Query (Math) [query]                        | ENC      | NORMAL   | NORMAL   | 0.9894 |    11.58 | ✅
+API GET (List Products) [path]                     | RAW      | NORMAL   | NORMAL   | 0.9910 |    16.88 | ✅
+API GET (List Products) [path]                     | ENC      | NORMAL   | NORMAL   | 0.9854 |    18.33 | ✅
+API GET (Single Product) [path]                    | RAW      | NORMAL   | NORMAL   | 0.9922 |    18.40 | ✅
+API GET (Single Product) [path]                    | ENC      | NORMAL   | NORMAL   | 0.9925 |    22.85 | ✅
+API POST (Login) [path]                            | RAW      | NORMAL   | NORMAL   | 0.9854 |    12.41 | ✅
+API POST (Login) [path]                            | ENC      | NORMAL   | NORMAL   | 0.9844 |    17.46 | ✅
+API POST (Login) [body]                            | RAW      | NORMAL   | NORMAL   | 0.9922 |    23.31 | ✅
+API POST (Login) [body]                            | ENC      | NORMAL   | NORMAL   | 0.9856 |    23.29 | ✅
+API POST (Submit Order) [path]                     | RAW      | NORMAL   | NORMAL   | 0.9625 |    16.09 | ✅
+API POST (Submit Order) [path]                     | ENC      | NORMAL   | NORMAL   | 0.9560 |    17.44 | ✅
+API POST (Submit Order) [body]                     | RAW      | NORMAL   | NORMAL   | 0.9542 |    13.65 | ✅
+API POST (Submit Order) [body]                     | ENC      | NORMAL   | NORMAL   | 0.9370 |    13.72 | ✅
+API PUT (Update Profile) [path]                    | RAW      | NORMAL   | NORMAL   | 0.9892 |    16.55 | ✅
+API PUT (Update Profile) [path]                    | ENC      | NORMAL   | NORMAL   | 0.9848 |    15.61 | ✅
+API PUT (Update Profile) [body]                    | RAW      | NORMAL   | NORMAL   | 0.9542 |    14.05 | ✅
+API PUT (Update Profile) [body]                    | ENC      | NORMAL   | NORMAL   | 0.9370 |    19.74 | ✅
+API PATCH (Update Setting) [path]                  | RAW      | NORMAL   | NORMAL   | 0.9965 |    13.12 | ✅
+API PATCH (Update Setting) [path]                  | ENC      | NORMAL   | NORMAL   | 0.9950 |    18.22 | ✅
+API DELETE (Remove Item) [path]                    | RAW      | NORMAL   | NORMAL   | 0.9920 |    17.44 | ✅
+API DELETE (Remove Item) [path]                    | ENC      | NORMAL   | NORMAL   | 0.9888 |    21.43 | ✅
+Form Submit (Contact Us) [path]                    | RAW      | NORMAL   | NORMAL   | 0.9878 |    14.11 | ✅
+Form Submit (Contact Us) [path]                    | ENC      | NORMAL   | NORMAL   | 0.9834 |    19.53 | ✅
+Form Submit (Contact Us) [body]                    | RAW      | NORMAL   | NORMAL   | 0.9492 |    14.03 | ✅
+Form Submit (Contact Us) [body]                    | ENC      | NORMAL   | NORMAL   | 0.9351 |    16.35 | ✅
+Form Submit (Signup) [path]                        | RAW      | NORMAL   | NORMAL   | 0.9066 |    13.37 | ✅
+Form Submit (Signup) [path]                        | ENC      | NORMAL   | NORMAL   | 0.9309 |    20.25 | ✅
+Form Submit (Signup) [body]                        | RAW      | NORMAL   | NORMAL   | 0.9697 |    46.97 | ✅
+Form Submit (Signup) [body]                        | ENC      | NORMAL   | NORMAL   | 0.8390 |    23.84 | ✅
+OAuth Auth Flow [path]                             | RAW      | NORMAL   | NORMAL   | 0.9746 |    16.44 | ✅
+OAuth Auth Flow [path]                             | ENC      | NORMAL   | NORMAL   | 0.9741 |    16.07 | ✅
+Analytics Event [path]                             | RAW      | NORMAL   | NORMAL   | 0.9872 |    18.87 | ✅
+Analytics Event [path]                             | ENC      | NORMAL   | NORMAL   | 0.9805 |    14.34 | ✅
+Analytics Event [query]                            | RAW      | NORMAL   | NORMAL   | 0.9639 |    12.29 | ✅
+Analytics Event [query]                            | ENC      | NORMAL   | NORMAL   | 0.9399 |    14.56 | ✅
+Error Logging [path]                               | RAW      | NORMAL   | NORMAL   | 0.9930 |    18.75 | ✅
+Error Logging [path]                               | ENC      | NORMAL   | NORMAL   | 0.9928 |    13.99 | ✅
+Error Logging [body]                               | RAW      | NORMAL   | NORMAL   | 0.8813 |    17.85 | ✅
+Error Logging [body]                               | ENC      | NORMAL   | NORMAL   | 0.8815 |    15.31 | ✅
+User Profile View [path]                           | RAW      | NORMAL   | NORMAL   | 0.9768 |    15.62 | ✅
+User Profile View [path]                           | ENC      | NORMAL   | NORMAL   | 0.9801 |    19.36 | ✅
+Dashboard Page [path]                              | RAW      | NORMAL   | NORMAL   | 0.9942 |    13.68 | ✅
+Dashboard Page [path]                              | ENC      | NORMAL   | NORMAL   | 0.9849 |    19.22 | ✅
+Dashboard Page [query]                             | RAW      | NORMAL   | NORMAL   | 0.9634 |    48.13 | ✅
+Dashboard Page [query]                             | ENC      | NORMAL   | NORMAL   | 0.9173 |    20.96 | ✅
+Settings Navigation [path]                         | RAW      | NORMAL   | NORMAL   | 0.9756 |    24.14 | ✅
+Settings Navigation [path]                         | ENC      | NORMAL   | NORMAL   | 0.9742 |    13.18 | ✅
+Password Reset Request [path]                      | RAW      | NORMAL   | NORMAL   | 0.9742 |    12.76 | ✅
+Password Reset Request [path]                      | ENC      | NORMAL   | NORMAL   | 0.9432 |    13.85 | ✅
+Newsletter Subscription [path]                     | RAW      | NORMAL   | NORMAL   | 0.9273 |    13.51 | ✅
+Newsletter Subscription [path]                     | ENC      | NORMAL   | NORMAL   | 0.9261 |    12.21 | ✅
+Cart Add Item [path]                               | RAW      | NORMAL   | NORMAL   | 0.9848 |    15.03 | ✅
+Cart Add Item [path]                               | ENC      | NORMAL   | NORMAL   | 0.9355 |    12.39 | ✅
+Cart Add Item [query]                              | RAW      | NORMAL   | NORMAL   | 0.9793 |    12.22 | ✅
+Cart Add Item [query]                              | ENC      | NORMAL   | NORMAL   | 0.9763 |    11.98 | ✅
+Checkout Page [path]                               | RAW      | NORMAL   | NORMAL   | 0.9803 |    12.68 | ✅
+Checkout Page [path]                               | ENC      | NORMAL   | NORMAL   | 0.9619 |    14.58 | ✅
+Order Success [path]                               | RAW      | NORMAL   | NORMAL   | 0.9900 |    12.46 | ✅
+Order Success [path]                               | ENC      | NORMAL   | NORMAL   | 0.9419 |    10.82 | ✅
+Order Success [query]                              | RAW      | NORMAL   | NORMAL   | 0.9697 |    13.02 | ✅
+Order Success [query]                              | ENC      | NORMAL   | NORMAL   | 0.9697 |    11.72 | ✅
+Webhook (GitHub) [path]                            | RAW      | NORMAL   | NORMAL   | 0.9585 |    11.43 | ✅
+Webhook (GitHub) [path]                            | ENC      | NORMAL   | NORMAL   | 0.9376 |    10.87 | ✅
+Webhook (GitHub) [body]                            | RAW      | NORMAL   | NORMAL   | 0.9285 |    12.16 | ✅
+Webhook (GitHub) [body]                            | ENC      | NORMAL   | NORMAL   | 0.9027 |    13.41 | ✅
+Webhook (Stripe) [path]                            | RAW      | NORMAL   | NORMAL   | 0.9758 |    14.43 | ✅
+Webhook (Stripe) [path]                            | ENC      | NORMAL   | NORMAL   | 0.9633 |    12.20 | ✅
+Webhook (Stripe) [body]                            | RAW      | NORMAL   | NORMAL   | 0.9780 |    12.19 | ✅
+Webhook (Stripe) [body]                            | ENC      | NORMAL   | NORMAL   | 0.9418 |    11.95 | ✅
+HEAD Request (CDN) [path]                          | RAW      | NORMAL   | NORMAL   | 0.9884 |    12.35 | ✅
+HEAD Request (CDN) [path]                          | ENC      | NORMAL   | NORMAL   | 0.9885 |    13.05 | ✅
+OPTIONS Preflight (CORS) [path]                    | RAW      | NORMAL   | NORMAL   | 0.9981 |    12.35 | ✅
+OPTIONS Preflight (CORS) [path]                    | ENC      | NORMAL   | NORMAL   | 0.9934 |    11.83 | ✅
+Font Loading [path]                                | RAW      | NORMAL   | NORMAL   | 0.9746 |    12.68 | ✅
+Font Loading [path]                                | ENC      | NORMAL   | NORMAL   | 0.9750 |    12.43 | ✅
+Manifest Loading [path]                            | RAW      | NORMAL   | NORMAL   | 0.9436 |    12.07 | ✅
+Manifest Loading [path]                            | ENC      | NORMAL   | NORMAL   | 0.9563 |    12.20 | ✅
+i18n Localization [path]                           | RAW      | NORMAL   | NORMAL   | 0.9562 |    12.33 | ✅
+i18n Localization [path]                           | ENC      | NORMAL   | NORMAL   | 0.9540 |    11.96 | ✅
+GraphQL Query (User) [path]                        | RAW      | NORMAL   | NORMAL   | 0.9771 |    12.74 | ✅
+GraphQL Query (User) [path]                        | ENC      | NORMAL   | NORMAL   | 0.9078 |    12.82 | ✅
+GraphQL Query (User) [body]                        | RAW      | NORMAL   | NORMAL   | 0.9432 |    13.82 | ✅
+GraphQL Query (User) [body]                        | ENC      | NORMAL   | NORMAL   | 0.8762 |    12.16 | ✅
+Documentation Access [path]                        | RAW      | NORMAL   | NORMAL   | 0.9756 |    18.30 | ✅
+Documentation Access [path]                        | ENC      | NORMAL   | NORMAL   | 0.9751 |    11.77 | ✅
+Blog Article [path]                                | RAW      | NORMAL   | NORMAL   | 0.9711 |    10.98 | ✅
+Blog Article [path]                                | ENC      | NORMAL   | NORMAL   | 0.9706 |    10.88 | ✅
+Comment Submission [path]                          | RAW      | NORMAL   | NORMAL   | 0.9124 |    11.46 | ✅
+Comment Submission [path]                          | ENC      | NORMAL   | NORMAL   | 0.9244 |    11.52 | ✅
+Comment Submission [body]                          | RAW      | NORMAL   | NORMAL   | 0.9750 |    12.83 | ✅
+Comment Submission [body]                          | ENC      | NORMAL   | NORMAL   | 0.9676 |    11.38 | ✅
+Video Fragment [path]                              | RAW      | NORMAL   | NORMAL   | 0.9703 |    11.77 | ✅
+Video Fragment [path]                              | ENC      | NORMAL   | NORMAL   | 0.9397 |    11.86 | ✅
+Map Tile Request [path]                            | RAW      | NORMAL   | NORMAL   | 0.9888 |    10.81 | ✅
+Map Tile Request [path]                            | ENC      | NORMAL   | NORMAL   | 0.9766 |    11.83 | ✅
+Admin Statistics [path]                            | RAW      | NORMAL   | NORMAL   | 0.9940 |    11.58 | ✅
+Admin Statistics [path]                            | ENC      | NORMAL   | NORMAL   | 0.9859 |    10.94 | ✅
+File Download (PDF) [path]                         | RAW      | NORMAL   | NORMAL   | 0.9385 |    12.30 | ✅
+File Download (PDF) [path]                         | ENC      | NORMAL   | NORMAL   | 0.9374 |    13.33 | ✅
+User Login (Multi-factor Auth Step) [path]         | RAW      | NORMAL   | NORMAL   | 0.9803 |    12.05 | ✅
+User Login (Multi-factor Auth Step) [path]         | ENC      | NORMAL   | NORMAL   | 0.9762 |    13.31 | ✅
+User Login (Multi-factor Auth Step) [body]         | RAW      | NORMAL   | NORMAL   | 0.9654 |    19.70 | ✅
+User Login (Multi-factor Auth Step) [body]         | ENC      | NORMAL   | NORMAL   | 0.9526 |    12.58 | ✅
+File Upload (Profile Picture JPEG) [path]          | RAW      | NORMAL   | NORMAL   | 0.9962 |    13.13 | ✅
+File Upload (Profile Picture JPEG) [path]          | ENC      | NORMAL   | NORMAL   | 0.9952 |    13.30 | ✅
+File Upload (Profile Picture JPEG) [body]          | RAW      | NORMAL   | NORMAL   | 0.9639 |    12.73 | ✅
+File Upload (Profile Picture JPEG) [body]          | ENC      | NORMAL   | NORMAL   | 0.8839 |    13.37 | ✅
+File Upload (Document PDF) [path]                  | RAW      | NORMAL   | NORMAL   | 0.9909 |    11.66 | ✅
+File Upload (Document PDF) [path]                  | ENC      | NORMAL   | NORMAL   | 0.9846 |    13.26 | ✅
+File Upload (Document PDF) [body]                  | RAW      | NORMAL   | NORMAL   | 0.9785 |    11.64 | ✅
+File Upload (Document PDF) [body]                  | ENC      | NORMAL   | NORMAL   | 0.9776 |    12.09 | ✅
+Search (Autocomplete API) [path]                   | RAW      | NORMAL   | NORMAL   | 0.9894 |    12.61 | ✅
+Search (Autocomplete API) [path]                   | ENC      | NORMAL   | NORMAL   | 0.9818 |    14.46 | ✅
+Search (Autocomplete API) [query]                  | RAW      | NORMAL   | NORMAL   | 0.9700 |    16.35 | ✅
+Search (Autocomplete API) [query]                  | ENC      | NORMAL   | NORMAL   | 0.9700 |    12.01 | ✅
+Search (Filter by Category) [path]                 | RAW      | NORMAL   | NORMAL   | 0.9818 |    12.77 | ✅
+Search (Filter by Category) [path]                 | ENC      | NORMAL   | NORMAL   | 0.9785 |    11.93 | ✅
+Search (Filter by Category) [query]                | RAW      | NORMAL   | NORMAL   | 0.9874 |    11.50 | ✅
+Search (Filter by Category) [query]                | ENC      | NORMAL   | NORMAL   | 0.9838 |    12.04 | ✅
+Search (Sort by Price) [path]                      | RAW      | NORMAL   | NORMAL   | 0.9818 |    11.30 | ✅
+Search (Sort by Price) [path]                      | ENC      | NORMAL   | NORMAL   | 0.9785 |    11.90 | ✅
+Search (Sort by Price) [query]                     | RAW      | NORMAL   | NORMAL   | 0.9459 |    12.29 | ✅
+Search (Sort by Price) [query]                     | ENC      | NORMAL   | NORMAL   | 0.8557 |    11.71 | ✅
+API POST (Create Comment) [path]                   | RAW      | NORMAL   | NORMAL   | 0.9945 |    10.78 | ✅
+API POST (Create Comment) [path]                   | ENC      | NORMAL   | NORMAL   | 0.9927 |    13.35 | ✅
+API POST (Create Comment) [body]                   | RAW      | NORMAL   | NORMAL   | 0.9827 |    11.55 | ✅
+API POST (Create Comment) [body]                   | ENC      | NORMAL   | NORMAL   | 0.9820 |    11.42 | ✅
+API PUT (Update Avatar) [path]                     | RAW      | NORMAL   | NORMAL   | 0.9981 |    11.18 | ✅
+API PUT (Update Avatar) [path]                     | ENC      | NORMAL   | NORMAL   | 0.9979 |    12.02 | ✅
+API PUT (Update Avatar) [body]                     | RAW      | NORMAL   | NORMAL   | 0.9860 |    11.38 | ✅
+API PUT (Update Avatar) [body]                     | ENC      | NORMAL   | NORMAL   | 0.9784 |    11.73 | ✅
+API GET (Paginated Users List) [path]              | RAW      | NORMAL   | NORMAL   | 0.9881 |    12.45 | ✅
+API GET (Paginated Users List) [path]              | ENC      | NORMAL   | NORMAL   | 0.9659 |    14.15 | ✅
+API GET (Paginated Users List) [query]             | RAW      | NORMAL   | NORMAL   | 0.9910 |    12.26 | ✅
+API GET (Paginated Users List) [query]             | ENC      | NORMAL   | NORMAL   | 0.9640 |    11.41 | ✅
+API GET (CSV Export Request) [path]                | RAW      | NORMAL   | NORMAL   | 0.9701 |    12.70 | ✅
+API GET (CSV Export Request) [path]                | ENC      | NORMAL   | NORMAL   | 0.9284 |    11.54 | ✅
+API GET (CSV Export Request) [query]               | RAW      | NORMAL   | NORMAL   | 0.9864 |    12.23 | ✅
+API GET (CSV Export Request) [query]               | ENC      | NORMAL   | NORMAL   | 0.9864 |    12.39 | ✅
+Password Change (Current/New Password) [path]      | RAW      | NORMAL   | NORMAL   | 0.9904 |    13.05 | ✅
+Password Change (Current/New Password) [path]      | ENC      | NORMAL   | NORMAL   | 0.9886 |    11.65 | ✅
+Password Change (Current/New Password) [body]      | RAW      | NORMAL   | NORMAL   | 0.9956 |    12.27 | ✅
+Password Change (Current/New Password) [body]      | ENC      | NORMAL   | NORMAL   | 0.9922 |    11.90 | ✅
+Two-Factor Secret Setup [path]                     | RAW      | NORMAL   | NORMAL   | 0.9508 |    11.43 | ✅
+Two-Factor Secret Setup [path]                     | ENC      | NORMAL   | NORMAL   | 0.9390 |    15.39 | ✅
+Newsletter Unsubscribe Link [path]                 | RAW      | NORMAL   | NORMAL   | 0.9815 |    12.50 | ✅
+Newsletter Unsubscribe Link [path]                 | ENC      | NORMAL   | NORMAL   | 0.9811 |    13.63 | ✅
+Newsletter Unsubscribe Link [query]                | RAW      | NORMAL   | NORMAL   | 0.9334 |    13.29 | ✅
+Newsletter Unsubscribe Link [query]                | ENC      | NORMAL   | NORMAL   | 0.9154 |    12.48 | ✅
+Email Verification Link Click [path]               | RAW      | NORMAL   | NORMAL   | 0.9920 |    13.62 | ✅
+Email Verification Link Click [path]               | ENC      | NORMAL   | NORMAL   | 0.9898 |    14.40 | ✅
+Email Verification Link Click [query]              | RAW      | NORMAL   | NORMAL   | 0.9547 |    12.31 | ✅
+Email Verification Link Click [query]              | ENC      | NORMAL   | NORMAL   | 0.9480 |    11.43 | ✅
+Invite Team Member Submit [path]                   | RAW      | NORMAL   | NORMAL   | 0.9785 |    11.31 | ✅
+Invite Team Member Submit [path]                   | ENC      | NORMAL   | NORMAL   | 0.8327 |    10.83 | ✅
+Invite Team Member Submit [body]                   | RAW      | NORMAL   | NORMAL   | 0.9808 |    12.53 | ✅
+Invite Team Member Submit [body]                   | ENC      | NORMAL   | NORMAL   | 0.9761 |    11.29 | ✅
+Project Creation (JSON naming) [path]              | RAW      | NORMAL   | NORMAL   | 0.9919 |    12.19 | ✅
+Project Creation (JSON naming) [path]              | ENC      | NORMAL   | NORMAL   | 0.9869 |    11.39 | ✅
+Project Creation (JSON naming) [body]              | RAW      | NORMAL   | NORMAL   | 0.9659 |    11.96 | ✅
+Project Creation (JSON naming) [body]              | ENC      | NORMAL   | NORMAL   | 0.9538 |    14.23 | ✅
+Billing Address Update [path]                      | RAW      | NORMAL   | NORMAL   | 0.9768 |    14.37 | ✅
+Billing Address Update [path]                      | ENC      | NORMAL   | NORMAL   | 0.9640 |    16.72 | ✅
+Billing Address Update [body]                      | RAW      | NORMAL   | NORMAL   | 0.9953 |    12.50 | ✅
+Billing Address Update [body]                      | ENC      | NORMAL   | NORMAL   | 0.9927 |    13.47 | ✅
+Credit Card Tokenization (Stripe/Internal) [path]  | RAW      | NORMAL   | NORMAL   | 0.9857 |    15.10 | ✅
+Credit Card Tokenization (Stripe/Internal) [path]  | ENC      | NORMAL   | NORMAL   | 0.9763 |    18.66 | ✅
+Credit Card Tokenization (Stripe/Internal) [body]  | RAW      | NORMAL   | NORMAL   | 0.9844 |    13.94 | ✅
+Credit Card Tokenization (Stripe/Internal) [body]  | ENC      | NORMAL   | NORMAL   | 0.9762 |    15.32 | ✅
+Order History Search [path]                        | RAW      | NORMAL   | NORMAL   | 0.9648 |    17.52 | ✅
+Order History Search [path]                        | ENC      | NORMAL   | NORMAL   | 0.9573 |    14.09 | ✅
+Order History Search [query]                       | RAW      | NORMAL   | NORMAL   | 0.9901 |    14.65 | ✅
+Order History Search [query]                       | ENC      | NORMAL   | NORMAL   | 0.9890 |    12.82 | ✅
+Knowledge Base Search [path]                       | RAW      | NORMAL   | NORMAL   | 0.9447 |    12.34 | ✅
+Knowledge Base Search [path]                       | ENC      | NORMAL   | NORMAL   | 0.9004 |    16.36 | ✅
+Knowledge Base Search [query]                      | RAW      | NORMAL   | NORMAL   | 0.9744 |    16.96 | ✅
+Knowledge Base Search [query]                      | ENC      | NORMAL   | NORMAL   | 0.9705 |    32.02 | ✅
+API POST (Log Frontend Error) [path]               | RAW      | NORMAL   | NORMAL   | 0.9857 |    30.05 | ✅
+API POST (Log Frontend Error) [path]               | ENC      | NORMAL   | NORMAL   | 0.9663 |    17.62 | ✅
+API POST (Log Frontend Error) [body]               | RAW      | NORMAL   | NORMAL   | 0.9924 |    15.18 | ✅
+API POST (Log Frontend Error) [body]               | ENC      | NORMAL   | NORMAL   | 0.9914 |    13.59 | ✅
+API POST (Metric Tracking) [path]                  | RAW      | NORMAL   | NORMAL   | 0.9827 |    12.05 | ✅
+API POST (Metric Tracking) [path]                  | ENC      | NORMAL   | NORMAL   | 0.9762 |    14.92 | ✅
+API POST (Metric Tracking) [body]                  | RAW      | NORMAL   | NORMAL   | 0.9883 |    13.17 | ✅
+API POST (Metric Tracking) [body]                  | ENC      | NORMAL   | NORMAL   | 0.9801 |    15.17 | ✅
+WebSocket Handshake (Normal) [path]                | RAW      | NORMAL   | NORMAL   | 0.9599 |    17.32 | ✅
+WebSocket Handshake (Normal) [path]                | ENC      | NORMAL   | NORMAL   | 0.9447 |    17.85 | ✅
+WebSocket Handshake (Normal) [headers]             | RAW      | NORMAL   | NORMAL   | 0.9634 |    14.07 | ✅
+WebSocket Handshake (Normal) [headers]             | ENC      | NORMAL   | NORMAL   | 0.9634 |    13.91 | ✅
+WebSocket Heartbeat (Ping) [body]                  | RAW      | NORMAL   | NORMAL   | 0.9779 |    15.21 | ✅
+WebSocket Heartbeat (Ping) [body]                  | ENC      | NORMAL   | NORMAL   | 0.9643 |    15.84 | ✅
+Resource Loading (SVG Icon) [path]                 | RAW      | NORMAL   | NORMAL   | 0.9855 |    17.02 | ✅
+Resource Loading (SVG Icon) [path]                 | ENC      | NORMAL   | NORMAL   | 0.9852 |    12.54 | ✅
+Resource Loading (WebP Image) [path]               | RAW      | NORMAL   | NORMAL   | 0.9473 |    13.75 | ✅
+Resource Loading (WebP Image) [path]               | ENC      | NORMAL   | NORMAL   | 0.9447 |    19.01 | ✅
+Resource Loading (JSON Config) [path]              | RAW      | NORMAL   | NORMAL   | 0.9899 |    21.29 | ✅
+Resource Loading (JSON Config) [path]              | ENC      | NORMAL   | NORMAL   | 0.9885 |    19.29 | ✅
+i18n Change (Language Toggle) [path]               | RAW      | NORMAL   | NORMAL   | 0.9818 |    40.99 | ✅
+i18n Change (Language Toggle) [path]               | ENC      | NORMAL   | NORMAL   | 0.9802 |    22.75 | ✅
+i18n Change (Language Toggle) [query]              | RAW      | NORMAL   | NORMAL   | 0.9846 |    20.05 | ✅
+i18n Change (Language Toggle) [query]              | ENC      | NORMAL   | NORMAL   | 0.9822 |    18.53 | ✅
+Dark Mode Theme Toggle [path]                      | RAW      | NORMAL   | NORMAL   | 0.9975 |    14.03 | ✅
+Dark Mode Theme Toggle [path]                      | ENC      | NORMAL   | NORMAL   | 0.9866 |    13.84 | ✅
+Dark Mode Theme Toggle [body]                      | RAW      | NORMAL   | NORMAL   | 0.9827 |    14.05 | ✅
+Dark Mode Theme Toggle [body]                      | ENC      | NORMAL   | NORMAL   | 0.9567 |    12.16 | ✅
+User Notification Dismiss [path]                   | RAW      | NORMAL   | NORMAL   | 0.9878 |    12.36 | ✅
+User Notification Dismiss [path]                   | ENC      | NORMAL   | NORMAL   | 0.9839 |    12.12 | ✅
+In-App Message Read Receipt [path]                 | RAW      | NORMAL   | NORMAL   | 0.9881 |    11.67 | ✅
+In-App Message Read Receipt [path]                 | ENC      | NORMAL   | NORMAL   | 0.9879 |    11.63 | ✅
+In-App Message Read Receipt [body]                 | RAW      | NORMAL   | NORMAL   | 0.9841 |    13.41 | ✅
+In-App Message Read Receipt [body]                 | ENC      | NORMAL   | NORMAL   | 0.9839 |    11.66 | ✅
+Video Playback Progress Sync [path]                | RAW      | NORMAL   | NORMAL   | 0.9634 |    13.35 | ✅
+Video Playback Progress Sync [path]                | ENC      | NORMAL   | NORMAL   | 0.9566 |    12.78 | ✅
+Video Playback Progress Sync [body]                | RAW      | NORMAL   | NORMAL   | 0.9855 |    12.17 | ✅
+Video Playback Progress Sync [body]                | ENC      | NORMAL   | NORMAL   | 0.9799 |    11.71 | ✅
+Audio Stream Fragment Load [path]                  | RAW      | NORMAL   | NORMAL   | 0.9873 |    11.78 | ✅
+Audio Stream Fragment Load [path]                  | ENC      | NORMAL   | NORMAL   | 0.9628 |    12.37 | ✅
+Map Zoom/Pan Coordinates [path]                    | RAW      | NORMAL   | NORMAL   | 0.9939 |    11.87 | ✅
+Map Zoom/Pan Coordinates [path]                    | ENC      | NORMAL   | NORMAL   | 0.9834 |    11.46 | ✅
+Map Zoom/Pan Coordinates [query]                   | RAW      | NORMAL   | NORMAL   | 0.9794 |    11.92 | ✅
+Map Zoom/Pan Coordinates [query]                   | ENC      | NORMAL   | NORMAL   | 0.9791 |    12.49 | ✅
+Dashboard Widget Refresh [path]                    | RAW      | NORMAL   | NORMAL   | 0.9963 |    12.44 | ✅
+Dashboard Widget Refresh [path]                    | ENC      | NORMAL   | NORMAL   | 0.9957 |    12.45 | ✅
+Report Generation (Polling status) [path]          | RAW      | NORMAL   | NORMAL   | 0.9976 |    11.66 | ✅
+Report Generation (Polling status) [path]          | ENC      | NORMAL   | NORMAL   | 0.9972 |    12.18 | ✅
+Terms of Service Acceptance [path]                 | RAW      | NORMAL   | NORMAL   | 0.9495 |    13.80 | ✅
+Terms of Service Acceptance [path]                 | ENC      | NORMAL   | NORMAL   | 0.9403 |    12.21 | ✅
+Terms of Service Acceptance [body]                 | RAW      | NORMAL   | NORMAL   | 0.9844 |    17.17 | ✅
+Terms of Service Acceptance [body]                 | ENC      | NORMAL   | NORMAL   | 0.9710 |    17.37 | ✅
+GDPR Consent Modal Submit [path]                   | RAW      | NORMAL   | NORMAL   | 0.9816 |    19.09 | ✅
+GDPR Consent Modal Submit [path]                   | ENC      | NORMAL   | NORMAL   | 0.9507 |    16.51 | ✅
+GDPR Consent Modal Submit [body]                   | RAW      | NORMAL   | NORMAL   | 0.9965 |    13.28 | ✅
+GDPR Consent Modal Submit [body]                   | ENC      | NORMAL   | NORMAL   | 0.9943 |    12.83 | ✅
+Site Search (Complex query with AND, OR) [path]    | RAW      | NORMAL   | NORMAL   | 0.9588 |    16.20 | ✅
+Site Search (Complex query with AND, OR) [path]    | ENC      | NORMAL   | NORMAL   | 0.9370 |    15.16 | ✅
+Site Search (Complex query with AND, OR) [query]   | RAW      | NORMAL   | NORMAL   | 0.9706 |    12.02 | ✅
+Site Search (Complex query with AND, OR) [query]   | ENC      | NORMAL   | NORMAL   | 0.9724 |    17.87 | ✅
+Product Review Submit (Text + Star rating) [path]  | RAW      | NORMAL   | NORMAL   | 0.9700 |    19.87 | ✅
+Product Review Submit (Text + Star rating) [path]  | ENC      | NORMAL   | NORMAL   | 0.9806 |    15.57 | ✅
+Product Review Submit (Text + Star rating) [body]  | RAW      | NORMAL   | NORMAL   | 0.9965 |    13.76 | ✅
+Product Review Submit (Text + Star rating) [body]  | ENC      | NORMAL   | NORMAL   | 0.9954 |    11.90 | ✅
+Wishlist Add Request [path]                        | RAW      | NORMAL   | NORMAL   | 0.9232 |    11.86 | ✅
+Wishlist Add Request [path]                        | ENC      | NORMAL   | NORMAL   | 0.9004 |    12.65 | ✅
+Wishlist Add Request [body]                        | RAW      | NORMAL   | NORMAL   | 0.9775 |    12.41 | ✅
+Wishlist Add Request [body]                        | ENC      | NORMAL   | NORMAL   | 0.9699 |    10.97 | ✅
+Compare Products Modal Access [path]               | RAW      | NORMAL   | NORMAL   | 0.9743 |    14.47 | ✅
+Compare Products Modal Access [path]               | ENC      | NORMAL   | NORMAL   | 0.9518 |    13.94 | ✅
+Compare Products Modal Access [query]              | RAW      | NORMAL   | NORMAL   | 0.9704 |    15.38 | ✅
+Compare Products Modal Access [query]              | ENC      | NORMAL   | NORMAL   | 0.9120 |    11.75 | ✅
+Store Locator Search (Zip codes) [path]            | RAW      | NORMAL   | NORMAL   | 0.9758 |    11.73 | ✅
+Store Locator Search (Zip codes) [path]            | ENC      | NORMAL   | NORMAL   | 0.9463 |    11.23 | ✅
+Store Locator Search (Zip codes) [query]           | RAW      | NORMAL   | NORMAL   | 0.9885 |    12.57 | ✅
+Store Locator Search (Zip codes) [query]           | ENC      | NORMAL   | NORMAL   | 0.9768 |    11.93 | ✅
+Career Page (Job application submit) [path]        | RAW      | NORMAL   | NORMAL   | 0.9592 |    14.65 | ✅
+Career Page (Job application submit) [path]        | ENC      | NORMAL   | NORMAL   | 0.9623 |    14.10 | ✅
+Career Page (Job application submit) [body]        | RAW      | NORMAL   | NORMAL   | 0.9939 |    12.86 | ✅
+Career Page (Job application submit) [body]        | ENC      | NORMAL   | NORMAL   | 0.9931 |    16.04 | ✅
+Support Ticket Attachments [path]                  | RAW      | NORMAL   | NORMAL   | 0.9972 |    13.90 | ✅
+Support Ticket Attachments [path]                  | ENC      | NORMAL   | NORMAL   | 0.9972 |    11.64 | ✅
+Live Chat Initiation [path]                        | RAW      | NORMAL   | NORMAL   | 0.9863 |    10.94 | ✅
+Live Chat Initiation [path]                        | ENC      | NORMAL   | NORMAL   | 0.9424 |    11.02 | ✅
+Live Chat Initiation [body]                        | RAW      | NORMAL   | NORMAL   | 0.9969 |    10.99 | ✅
+Live Chat Initiation [body]                        | ENC      | NORMAL   | NORMAL   | 0.9942 |    11.83 | ✅
+RSS Feed Access [path]                             | RAW      | NORMAL   | NORMAL   | 0.9754 |    10.84 | ✅
+RSS Feed Access [path]                             | ENC      | NORMAL   | NORMAL   | 0.9030 |    10.65 | ✅
+Podcast RSS Metadata [path]                        | RAW      | NORMAL   | NORMAL   | 0.9614 |    11.44 | ✅
+Podcast RSS Metadata [path]                        | ENC      | NORMAL   | NORMAL   | 0.9610 |    11.88 | ✅
+E-book Kindle Delivery Request [path]              | RAW      | NORMAL   | NORMAL   | 0.9721 |    12.53 | ✅
+E-book Kindle Delivery Request [path]              | ENC      | NORMAL   | NORMAL   | 0.9469 |    10.98 | ✅
+E-book Kindle Delivery Request [body]              | RAW      | NORMAL   | NORMAL   | 0.9674 |    10.73 | ✅
+E-book Kindle Delivery Request [body]              | ENC      | NORMAL   | NORMAL   | 0.9172 |    15.98 | ✅
+Logout Confirmation Access [path]                  | RAW      | NORMAL   | NORMAL   | 0.9521 |    14.99 | ✅
+Logout Confirmation Access [path]                  | ENC      | NORMAL   | NORMAL   | 0.9513 |    12.24 | ✅
+Test [path]                                        | RAW      | NORMAL   | NORMAL   | 0.9461 |    16.26 | ✅
+Test [path]                                        | ENC      | NORMAL   | NORMAL   | 0.9866 |    13.93 | ✅
+Test2 [path]                                       | RAW      | NORMAL   | NORMAL   | 0.9820 |    17.24 | ✅
+Test2 [path]                                       | ENC      | NORMAL   | NORMAL   | 0.9703 |    15.96 | ✅
+Test2 [query]                                      | RAW      | NORMAL   | NORMAL   | 0.9975 |    14.74 | ✅
+Test2 [query]                                      | ENC      | NORMAL   | NORMAL   | 0.9975 |    16.51 | ✅
+Test3 [path]                                       | RAW      | NORMAL   | NORMAL   | 0.9947 |    18.00 | ✅
+Test3 [path]                                       | ENC      | NORMAL   | NORMAL   | 0.7386 |    15.81 | ✅
+Test3 [query]                                      | RAW      | NORMAL   | NORMAL   | 0.9916 |    16.38 | ✅
+Test3 [query]                                      | ENC      | NORMAL   | NORMAL   | 0.9916 |    19.04 | ✅
+Only slash [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9521 |    15.45 | ✅
+Only slash [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9035 |    14.42 | ✅
+Only slash [body]                                  | RAW      | NORMAL   | NORMAL   | 0.9460 |    19.19 | ✅
+Only slash [body]                                  | ENC      | NORMAL   | NORMAL   | 0.9329 |    17.61 | ✅
+FP1 [path]                                         | RAW      | NORMAL   | NORMAL   | 0.5646 |    17.03 | ✅
+FP1 [path]                                         | ENC      | NORMAL   | NORMAL   | 0.5775 |    12.89 | ✅
+FP1 [query]                                        | RAW      | NORMAL   | NORMAL   | 0.9981 |    19.50 | ✅
+FP1 [query]                                        | ENC      | NORMAL   | NORMAL   | 0.9986 |    20.71 | ✅
+FP2 [path]                                         | RAW      | NORMAL   | NORMAL   | 0.5646 |    15.99 | ✅
+FP2 [path]                                         | ENC      | NORMAL   | NORMAL   | 0.5775 |    13.78 | ✅
+FP2 [query]                                        | RAW      | NORMAL   | NORMAL   | 0.9959 |    16.78 | ✅
+FP2 [query]                                        | ENC      | NORMAL   | NORMAL   | 0.9957 |    12.32 | ✅
+FP3 [path]                                         | RAW      | NORMAL   | NORMAL   | 0.9202 |    14.61 | ✅
+FP3 [path]                                         | ENC      | NORMAL   | NORMAL   | 0.9202 |    15.38 | ✅
+FP3 [query]                                        | RAW      | NORMAL   | NORMAL   | 0.9989 |    14.38 | ✅
+FP3 [query]                                        | ENC      | NORMAL   | NORMAL   | 0.9989 |    13.54 | ✅
+FP_PDF_2 [path]                                    | RAW      | NORMAL   | NORMAL   | 0.9981 |    34.12 | ✅
+FP_PDF_2 [path]                                    | ENC      | NORMAL   | NORMAL   | 0.9990 |    21.34 | ✅
+FP_PDF_3 [path]                                    | RAW      | NORMAL   | NORMAL   | 0.9913 |    21.04 | ✅
+FP_PDF_3 [path]                                    | ENC      | NORMAL   | NORMAL   | 0.8835 |    18.83 | ✅
+FP_PDF_4 [path]                                    | RAW      | NORMAL   | NORMAL   | 0.9637 |    13.88 | ✅
+FP_PDF_4 [path]                                    | ENC      | NORMAL   | NORMAL   | 0.9627 |    18.74 | ✅
+FP_PDF_5 [query]                                   | RAW      | NORMAL   | NORMAL   | 0.9708 |    16.20 | ✅
+FP_PDF_5 [query]                                   | ENC      | NORMAL   | NORMAL   | 0.9041 |    11.90 | ✅
+FP_PDF_6 [path]                                    | RAW      | NORMAL   | NORMAL   | 0.9323 |    12.09 | ✅
+FP_PDF_6 [path]                                    | ENC      | NORMAL   | NORMAL   | 0.8157 |    20.39 | ✅
+FP_PDF_7 [path]                                    | RAW      | NORMAL   | NORMAL   | 0.9662 |    15.69 | ✅
+FP_PDF_7 [path]                                    | ENC      | NORMAL   | NORMAL   | 0.9778 |    11.87 | ✅
+FP_PDF_8 [path]                                    | RAW      | NORMAL   | NORMAL   | 0.8988 |    12.58 | ✅
+FP_PDF_8 [path]                                    | ENC      | NORMAL   | NORMAL   | 0.9684 |    25.82 | ✅
+FP_PDF_9 [path]                                    | RAW      | NORMAL   | NORMAL   | 0.9766 |    34.89 | ✅
+FP_PDF_9 [path]                                    | ENC      | NORMAL   | NORMAL   | 0.9794 |    30.58 | ✅
+FP_PDF_10 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9962 |    12.07 | ✅
+FP_PDF_10 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9979 |    11.65 | ✅
+FP_PDF_11 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9958 |    12.30 | ✅
+FP_PDF_11 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9964 |    12.75 | ✅
+FP_PDF_12 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9896 |    14.02 | ✅
+FP_PDF_12 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9924 |    15.69 | ✅
+FP_PDF_13 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9995 |    21.13 | ✅
+FP_PDF_13 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9995 |    13.81 | ✅
+FP_PDF_14 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9955 |    18.16 | ✅
+FP_PDF_14 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9961 |    31.99 | ✅
+FP_PDF_15 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9977 |    17.51 | ✅
+FP_PDF_15 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9982 |    36.12 | ✅
+FP_PDF_16 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9972 |    15.60 | ✅
+FP_PDF_16 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9974 |    14.17 | ✅
+FP_PDF_17 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9839 |    12.02 | ✅
+FP_PDF_17 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9887 |    11.39 | ✅
+FP_PDF_18 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9977 |    11.36 | ✅
+FP_PDF_18 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9977 |    12.88 | ✅
+FP_PDF_19 [headers]                                | RAW      | NORMAL   | NORMAL   | 0.9837 |    12.50 | ✅
+FP_PDF_19 [headers]                                | ENC      | NORMAL   | NORMAL   | 0.9837 |    14.59 | ✅
+FP_PDF_20 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9943 |    13.52 | ✅
+FP_PDF_20 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9949 |    12.03 | ✅
+FP_PDF_21 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9963 |    12.08 | ✅
+FP_PDF_21 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9972 |    13.40 | ✅
+FP_PDF_22 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9902 |    11.46 | ✅
+FP_PDF_22 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9734 |    11.47 | ✅
+FP_PDF_23 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9974 |    11.46 | ✅
+FP_PDF_23 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9975 |    14.97 | ✅
+FP_PDF_24 [body]                                   | RAW      | NORMAL   | NORMAL   | 0.9558 |    12.83 | ✅
+FP_PDF_24 [body]                                   | ENC      | NORMAL   | NORMAL   | 0.8942 |    14.61 | ✅
+FP_PDF_25 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9968 |    14.20 | ✅
+FP_PDF_25 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9964 |    11.62 | ✅
+FP_PDF_26 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9909 |    12.57 | ✅
+FP_PDF_26 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9909 |    11.90 | ✅
+FP_PDF_27 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9690 |    11.89 | ✅
+FP_PDF_27 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9334 |    12.25 | ✅
+FP_PDF_28 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9697 |    12.63 | ✅
+FP_PDF_28 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9287 |    14.98 | ✅
+FP_PDF_29 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9975 |    13.10 | ✅
+FP_PDF_29 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9984 |    12.02 | ✅
+FP_PDF_30 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9897 |    12.10 | ✅
+FP_PDF_30 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9898 |    12.81 | ✅
+FP_PDF_31 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9330 |    11.50 | ✅
+FP_PDF_31 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9330 |    12.19 | ✅
+FP_PDF_32 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9841 |    12.66 | ✅
+FP_PDF_32 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9844 |    13.22 | ✅
+FP_PDF_33 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9169 |    12.91 | ✅
+FP_PDF_33 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9598 |    13.02 | ✅
+FP_PDF_34 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.8032 |    14.62 | ✅
+FP_PDF_34 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.7835 |    11.67 | ✅
+FP_PDF_35 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9848 |    11.63 | ✅
+FP_PDF_35 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9714 |    38.60 | ✅
+FP_PDF_36 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9113 |    13.50 | ✅
+FP_PDF_36 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.8379 |    12.34 | ✅
+FP_PDF_37 [headers]                                | RAW      | NORMAL   | NORMAL   | 0.9948 |    13.27 | ✅
+FP_PDF_37 [headers]                                | ENC      | NORMAL   | NORMAL   | 0.9949 |    11.87 | ✅
+FP_PDF_38 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9838 |    10.89 | ✅
+FP_PDF_38 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9274 |    11.36 | ✅
+FP_PDF_39 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9179 |    11.85 | ✅
+FP_PDF_39 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.8981 |    11.48 | ✅
+FP_PDF_40 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9879 |    11.37 | ✅
+FP_PDF_40 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9863 |    12.74 | ✅
+FP_PDF_41 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9735 |    11.52 | ✅
+FP_PDF_41 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9180 |    11.71 | ✅
+FP_PDF_42 [query]                                  | RAW      | NORMAL   | NORMAL   | 0.9767 |    11.51 | ✅
+FP_PDF_42 [query]                                  | ENC      | NORMAL   | NORMAL   | 0.9244 |    12.79 | ✅
+FP_PDF_43 [query]                                  | RAW      | NORMAL   | NORMAL   | 0.9383 |    13.38 | ✅
+FP_PDF_43 [query]                                  | ENC      | NORMAL   | NORMAL   | 0.9210 |    13.19 | ✅
+FP_PDF_44 [query]                                  | RAW      | NORMAL   | NORMAL   | 0.9741 |    13.99 | ✅
+FP_PDF_44 [query]                                  | ENC      | NORMAL   | NORMAL   | 0.9758 |    15.68 | ✅
+FP_PDF_45 [body]                                   | RAW      | NORMAL   | NORMAL   | 0.9858 |    15.41 | ✅
+FP_PDF_45 [body]                                   | ENC      | NORMAL   | NORMAL   | 0.9845 |    16.30 | ✅
+FP_PDF_46 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9874 |    13.69 | ✅
+FP_PDF_46 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9748 |    25.91 | ✅
+FP_PDF_47 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9936 |    13.92 | ✅
+FP_PDF_47 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9946 |    17.39 | ✅
+Fix_Samples_1 [path]                               | RAW      | NORMAL   | NORMAL   | 0.9925 |    17.47 | ✅
+Fix_Samples_1 [path]                               | ENC      | NORMAL   | NORMAL   | 0.9188 |    14.26 | ✅
+Fix_Samples_1 [body]                               | RAW      | NORMAL   | NORMAL   | 0.9893 |    17.36 | ✅
+Fix_Samples_1 [body]                               | ENC      | NORMAL   | NORMAL   | 0.9886 |    14.81 | ✅
+FP_PDF_48 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9690 |    19.23 | ✅
+FP_PDF_48 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.8658 |    16.29 | ✅
+FP_PDF_48 [query]                                  | RAW      | NORMAL   | NORMAL   | 0.9981 |    14.18 | ✅
+FP_PDF_48 [query]                                  | ENC      | NORMAL   | NORMAL   | 0.9986 |    14.79 | ✅
+FP_PDF_49 [path]                                   | RAW      | NORMAL   | NORMAL   | 0.9775 |    12.56 | ✅
+FP_PDF_49 [path]                                   | ENC      | NORMAL   | NORMAL   | 0.9717 |    15.67 | ✅
+FP_PDF_49 [query]                                  | RAW      | NORMAL   | NORMAL   | 0.9972 |    12.42 | ✅
+FP_PDF_49 [query]                                  | ENC      | NORMAL   | NORMAL   | 0.9972 |    12.53 | ✅
+FP_USER_50 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9997 |    19.35 | ✅
+FP_USER_50 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9996 |    13.15 | ✅
+FP_USER_51 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9943 |    16.73 | ✅
+FP_USER_51 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9968 |    15.31 | ✅
+FP_USER_52 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9909 |    12.53 | ✅
+FP_USER_52 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9874 |    12.16 | ✅
+FP_USER_52 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9998 |    23.38 | ✅
+FP_USER_52 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9998 |    16.55 | ✅
+FP_USER_53 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9949 |    13.47 | ✅
+FP_USER_53 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9948 |    21.07 | ✅
+FP_USER_53 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9994 |    19.83 | ✅
+FP_USER_53 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9994 |    13.98 | ✅
+FP_USER_54 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9356 |    12.56 | ✅
+FP_USER_54 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.8704 |    25.02 | ✅
+FP_USER_54 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9638 |    45.47 | ✅
+FP_USER_54 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9638 |    15.28 | ✅
+FP_USER_55 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.6259 |    12.87 | ✅
+FP_USER_55 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.6545 |    11.40 | ✅
+FP_USER_55 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9999 |    17.36 | ✅
+FP_USER_55 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9998 |    21.47 | ✅
+FP_USER_56 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9477 |    17.71 | ✅
+FP_USER_56 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9713 |    16.32 | ✅
+FP_USER_57 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.7776 |    15.20 | ✅
+FP_USER_57 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.7327 |    13.44 | ✅
+FP_USER_57 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9961 |    15.55 | ✅
+FP_USER_57 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9964 |    12.73 | ✅
+FP_USER_58 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.7776 |    13.29 | ✅
+FP_USER_58 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.7327 |    12.23 | ✅
+FP_USER_58 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9990 |    16.15 | ✅
+FP_USER_58 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9987 |    18.67 | ✅
+FP_OAUTH_1 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9759 |    14.80 | ✅
+FP_OAUTH_1 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9211 |    11.29 | ✅
+FP_OAUTH_1 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9928 |    11.81 | ✅
+FP_OAUTH_1 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9934 |    12.56 | ✅
+Benign Blog Post [path]                            | RAW      | NORMAL   | NORMAL   | 0.9682 |    12.03 | ✅
+Benign Blog Post [path]                            | ENC      | NORMAL   | NORMAL   | 0.9672 |    11.27 | ✅
+Benign Blog Post [body]                            | RAW      | NORMAL   | NORMAL   | 0.9528 |    11.37 | ✅
+Benign Blog Post [body]                            | ENC      | NORMAL   | NORMAL   | 0.9604 |    11.03 | ✅
+Benign Search Query [path]                         | RAW      | NORMAL   | NORMAL   | 0.9588 |    10.32 | ✅
+Benign Search Query [path]                         | ENC      | NORMAL   | NORMAL   | 0.9370 |    10.96 | ✅
+Benign Search Query [query]                        | RAW      | NORMAL   | NORMAL   | 0.9480 |    10.75 | ✅
+Benign Search Query [query]                        | ENC      | NORMAL   | NORMAL   | 0.8443 |    10.66 | ✅
+Benign Search Query [body]                         | RAW      | NORMAL   | NORMAL   | 0.9528 |    14.48 | ✅
+Benign Search Query [body]                         | ENC      | NORMAL   | NORMAL   | 0.9604 |    13.35 | ✅
+Benign Comment [path]                              | RAW      | NORMAL   | NORMAL   | 0.9482 |    22.97 | ✅
+Benign Comment [path]                              | ENC      | NORMAL   | NORMAL   | 0.9536 |    12.49 | ✅
+Benign Comment [body]                              | RAW      | NORMAL   | NORMAL   | 0.9905 |    11.45 | ✅
+Benign Comment [body]                              | ENC      | NORMAL   | NORMAL   | 0.9802 |    10.86 | ✅
+Benign Tutorial [path]                             | RAW      | NORMAL   | NORMAL   | 0.9637 |    10.71 | ✅
+Benign Tutorial [path]                             | ENC      | NORMAL   | NORMAL   | 0.9589 |    10.87 | ✅
+Benign Tutorial [body]                             | RAW      | NORMAL   | NORMAL   | 0.9528 |    10.71 | ✅
+Benign Tutorial [body]                             | ENC      | NORMAL   | NORMAL   | 0.9604 |    11.34 | ✅
+Benign Asset [path]                                | RAW      | NORMAL   | NORMAL   | 0.5989 |    11.55 | ✅
+Benign Asset [path]                                | ENC      | NORMAL   | ATTACK   | 0.5961 |    11.12 | ❌
+Benign Asset [body]                                | RAW      | NORMAL   | NORMAL   | 0.9528 |    11.45 | ✅
+Benign Asset [body]                                | ENC      | NORMAL   | NORMAL   | 0.9604 |    10.89 | ✅
+Benign NLP Query 1 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9588 |    10.91 | ✅
+Benign NLP Query 1 [path]                          | ENC      | NORMAL   | NORMAL   | 0.9370 |    10.90 | ✅
+Benign NLP Query 1 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9904 |    11.23 | ✅
+Benign NLP Query 1 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9888 |    12.58 | ✅
+Benign NLP Query 1 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    12.72 | ✅
+Benign NLP Query 1 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    12.08 | ✅
+Benign NLP Query 2 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9955 |    12.28 | ✅
+Benign NLP Query 2 [path]                          | ENC      | NORMAL   | NORMAL   | 0.9888 |    11.13 | ✅
+Benign NLP Query 2 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9921 |    12.61 | ✅
+Benign NLP Query 2 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9918 |    11.54 | ✅
+Benign NLP Query 2 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    11.65 | ✅
+Benign NLP Query 2 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    13.80 | ✅
+Benign NLP Query 3 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9765 |    11.77 | ✅
+Benign NLP Query 3 [path]                          | ENC      | NORMAL   | NORMAL   | 0.9214 |    11.28 | ✅
+Benign NLP Query 3 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9969 |    12.21 | ✅
+Benign NLP Query 3 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9968 |    12.19 | ✅
+Benign NLP Query 3 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    10.68 | ✅
+Benign NLP Query 3 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    11.71 | ✅
+Benign NLP Query 4 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9697 |    74.01 | ✅
+Benign NLP Query 4 [path]                          | ENC      | NORMAL   | NORMAL   | 0.9899 |    31.39 | ✅
+Benign NLP Query 4 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9972 |    12.84 | ✅
+Benign NLP Query 4 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9971 |    14.71 | ✅
+Benign NLP Query 4 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    12.22 | ✅
+Benign NLP Query 4 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    12.90 | ✅
+Benign NLP Query 5 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9941 |    13.00 | ✅
+Benign NLP Query 5 [path]                          | ENC      | NORMAL   | NORMAL   | 0.9903 |    12.65 | ✅
+Benign NLP Query 5 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9917 |    13.85 | ✅
+Benign NLP Query 5 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9917 |    13.04 | ✅
+Benign NLP Query 5 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    16.71 | ✅
+Benign NLP Query 5 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    18.36 | ✅
+Benign NLP Query 6 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9943 |    14.13 | ✅
+Benign NLP Query 6 [path]                          | ENC      | NORMAL   | NORMAL   | 0.9760 |    17.83 | ✅
+Benign NLP Query 6 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9952 |    15.17 | ✅
+Benign NLP Query 6 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9948 |    12.70 | ✅
+Benign NLP Query 6 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    12.68 | ✅
+Benign NLP Query 6 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    15.15 | ✅
+Benign NLP Query 7 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9588 |    12.18 | ✅
+Benign NLP Query 7 [path]                          | ENC      | NORMAL   | NORMAL   | 0.9370 |    15.87 | ✅
+Benign NLP Query 7 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9941 |    15.22 | ✅
+Benign NLP Query 7 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9933 |    20.42 | ✅
+Benign NLP Query 7 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    15.38 | ✅
+Benign NLP Query 7 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    22.74 | ✅
+Benign NLP Query 8 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9678 |    17.04 | ✅
+Benign NLP Query 8 [path]                          | ENC      | NORMAL   | NORMAL   | 0.9920 |    14.43 | ✅
+Benign NLP Query 8 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9846 |    12.04 | ✅
+Benign NLP Query 8 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9846 |    11.53 | ✅
+Benign NLP Query 8 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    11.15 | ✅
+Benign NLP Query 8 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    15.32 | ✅
+Benign NLP Query 9 [path]                          | RAW      | NORMAL   | NORMAL   | 0.9686 |    14.60 | ✅
+Benign NLP Query 9 [path]                          | ENC      | NORMAL   | NORMAL   | 0.8770 |    20.42 | ✅
+Benign NLP Query 9 [query]                         | RAW      | NORMAL   | NORMAL   | 0.9947 |    14.94 | ✅
+Benign NLP Query 9 [query]                         | ENC      | NORMAL   | NORMAL   | 0.9947 |    13.54 | ✅
+Benign NLP Query 9 [body]                          | RAW      | NORMAL   | NORMAL   | 0.9528 |    14.21 | ✅
+Benign NLP Query 9 [body]                          | ENC      | NORMAL   | NORMAL   | 0.9604 |    15.44 | ✅
+Benign NLP Query 10 [path]                         | RAW      | NORMAL   | NORMAL   | 0.9588 |    13.02 | ✅
+Benign NLP Query 10 [path]                         | ENC      | NORMAL   | NORMAL   | 0.9370 |    14.33 | ✅
+Benign NLP Query 10 [query]                        | RAW      | NORMAL   | NORMAL   | 0.9959 |    15.59 | ✅
+Benign NLP Query 10 [query]                        | ENC      | NORMAL   | NORMAL   | 0.9949 |    15.65 | ✅
+Benign NLP Query 10 [body]                         | RAW      | NORMAL   | NORMAL   | 0.9528 |    12.26 | ✅
+Benign NLP Query 10 [body]                         | ENC      | NORMAL   | NORMAL   | 0.9604 |    11.57 | ✅
+FP_USER_59 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.5105 |    11.73 | ✅
+FP_USER_59 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.7472 |    13.21 | ✅
+FP_USER_59 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9973 |    12.16 | ✅
+FP_USER_59 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9973 |    12.89 | ✅
+FP_USER_60 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.5105 |    16.23 | ✅
+FP_USER_60 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.7472 |    12.18 | ✅
+FP_USER_61 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9266 |    15.73 | ✅
+FP_USER_61 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9266 |    13.44 | ✅
+FP_USER_62 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9936 |    17.43 | ✅
+FP_USER_62 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9936 |    11.58 | ✅
+FP_USER_62 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9986 |    13.81 | ✅
+FP_USER_62 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9988 |    22.04 | ✅
+FP_USER_63 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9947 |    17.83 | ✅
+FP_USER_63 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.7386 |    16.21 | ✅
+FP_USER_64 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9946 |    13.30 | ✅
+FP_USER_64 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9943 |    13.81 | ✅
+FP_USER_65 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9941 |    14.61 | ✅
+FP_USER_65 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9907 |    19.02 | ✅
+FP_USER_65 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9449 |    11.90 | ✅
+FP_USER_65 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9393 |    11.91 | ✅
+FP_USER_66 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9941 |    13.20 | ✅
+FP_USER_66 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9907 |    11.36 | ✅
+FP_USER_66 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9698 |    13.19 | ✅
+FP_USER_66 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9684 |    13.13 | ✅
+FP_USER_67 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9622 |    11.08 | ✅
+FP_USER_67 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9622 |    11.30 | ✅
+Benign Alerting Webhook JSON [path]                | RAW      | NORMAL   | NORMAL   | 0.9825 |    10.82 | ✅
+Benign Alerting Webhook JSON [path]                | ENC      | NORMAL   | NORMAL   | 0.9825 |    10.71 | ✅
+Benign Alerting Webhook JSON [body]                | RAW      | NORMAL   | NORMAL   | 0.9896 |    11.47 | ✅
+Benign Alerting Webhook JSON [body]                | ENC      | NORMAL   | NORMAL   | 0.9889 |    11.88 | ✅
+Benign Alerting Webhook URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9825 |    11.09 | ✅
+Benign Alerting Webhook URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9825 |    10.77 | ✅
+Benign Alerting Webhook URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9641 |    11.02 | ✅
+Benign Alerting Webhook URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9176 |    11.25 | ✅
+Benign Metadata Fetch URL [path]                   | RAW      | NORMAL   | NORMAL   | 0.9885 |    11.38 | ✅
+Benign Metadata Fetch URL [path]                   | ENC      | NORMAL   | NORMAL   | 0.9884 |    10.57 | ✅
+Benign Metadata Fetch URL [query]                  | RAW      | NORMAL   | NORMAL   | 0.9906 |    10.55 | ✅
+Benign Metadata Fetch URL [query]                  | ENC      | NORMAL   | NORMAL   | 0.9898 |    10.90 | ✅
+Benign Status Update URL [path]                    | RAW      | NORMAL   | NORMAL   | 0.9725 |    11.74 | ✅
+Benign Status Update URL [path]                    | ENC      | NORMAL   | NORMAL   | 0.9632 |    10.59 | ✅
+Benign Status Update URL [query]                   | RAW      | NORMAL   | NORMAL   | 0.9974 |    11.51 | ✅
+Benign Status Update URL [query]                   | ENC      | NORMAL   | NORMAL   | 0.9974 |    11.88 | ✅
+Benign Telemetry URL [path]                        | RAW      | NORMAL   | NORMAL   | 0.9366 |    10.77 | ✅
+Benign Telemetry URL [path]                        | ENC      | NORMAL   | NORMAL   | 0.9262 |    11.46 | ✅
+Benign Telemetry URL [query]                       | RAW      | NORMAL   | NORMAL   | 0.9929 |    11.03 | ✅
+Benign Telemetry URL [query]                       | ENC      | NORMAL   | NORMAL   | 0.9926 |    10.82 | ✅
+Benign Flash Sale URL [path]                       | RAW      | NORMAL   | NORMAL   | 0.9958 |    10.72 | ✅
+Benign Flash Sale URL [path]                       | ENC      | NORMAL   | NORMAL   | 0.9956 |    10.52 | ✅
+Benign Next Static Chunk URL [path]                | RAW      | NORMAL   | NORMAL   | 0.9996 |    11.02 | ✅
+Benign Next Static Chunk URL [path]                | ENC      | NORMAL   | NORMAL   | 0.9996 |    12.16 | ✅
+Benign Blocks Filter URL [path]                    | RAW      | NORMAL   | NORMAL   | 0.9843 |    11.91 | ✅
+Benign Blocks Filter URL [path]                    | ENC      | NORMAL   | NORMAL   | 0.9645 |    11.61 | ✅
+Benign Blocks Filter URL [query]                   | RAW      | NORMAL   | NORMAL   | 0.9864 |    15.40 | ✅
+Benign Blocks Filter URL [query]                   | ENC      | NORMAL   | NORMAL   | 0.9927 |    11.83 | ✅
+Benign Category Listing URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9810 |    15.53 | ✅
+Benign Category Listing URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9363 |    23.92 | ✅
+Benign Category Listing URL [query]                | RAW      | NORMAL   | NORMAL   | 0.9944 |    34.86 | ✅
+Benign Category Listing URL [query]                | ENC      | NORMAL   | NORMAL   | 0.9938 |    11.01 | ✅
+Benign Category Listing URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9810 |    11.59 | ✅
+Benign Category Listing URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9363 |    11.65 | ✅
+Benign Category Listing URL [query]                | RAW      | NORMAL   | NORMAL   | 0.9930 |    14.73 | ✅
+Benign Category Listing URL [query]                | ENC      | NORMAL   | NORMAL   | 0.9930 |    13.67 | ✅
+Benign Status Update URL [path]                    | RAW      | NORMAL   | NORMAL   | 0.9982 |    19.87 | ✅
+Benign Status Update URL [path]                    | ENC      | NORMAL   | NORMAL   | 0.9982 |    25.57 | ✅
+Benign Category Page URL [path]                    | RAW      | NORMAL   | NORMAL   | 0.9785 |    17.67 | ✅
+Benign Category Page URL [path]                    | ENC      | NORMAL   | NORMAL   | 0.9773 |    16.50 | ✅
+Benign Category Page URL [query]                   | RAW      | NORMAL   | NORMAL   | 0.9938 |    24.06 | ✅
+Benign Category Page URL [query]                   | ENC      | NORMAL   | NORMAL   | 0.9938 |    16.37 | ✅
+Benign Login Return URL [path]                     | RAW      | NORMAL   | NORMAL   | 0.9178 |    20.70 | ✅
+Benign Login Return URL [path]                     | ENC      | NORMAL   | NORMAL   | 0.9685 |    18.38 | ✅
+Benign Login Return URL [query]                    | RAW      | NORMAL   | NORMAL   | 0.9896 |    19.20 | ✅
+Benign Login Return URL [query]                    | ENC      | NORMAL   | NORMAL   | 0.9896 |    14.87 | ✅
+Benign Placeholder Image URL [path]                | RAW      | NORMAL   | NORMAL   | 0.9994 |    15.96 | ✅
+Benign Placeholder Image URL [path]                | ENC      | NORMAL   | NORMAL   | 0.9994 |    14.49 | ✅
+Benign Status Update URL [path]                    | RAW      | NORMAL   | NORMAL   | 0.9885 |    24.34 | ✅
+Benign Status Update URL [path]                    | ENC      | NORMAL   | NORMAL   | 0.9679 |    17.64 | ✅
+Benign Status Update URL [query]                   | RAW      | NORMAL   | NORMAL   | 0.9979 |    15.08 | ✅
+Benign Status Update URL [query]                   | ENC      | NORMAL   | NORMAL   | 0.9979 |    12.22 | ✅
+Benign Metadata Fetch URL [path]                   | RAW      | NORMAL   | NORMAL   | 0.9885 |    12.60 | ✅
+Benign Metadata Fetch URL [path]                   | ENC      | NORMAL   | NORMAL   | 0.9884 |    12.27 | ✅
+Benign Metadata Fetch URL [query]                  | RAW      | NORMAL   | NORMAL   | 0.9906 |    13.04 | ✅
+Benign Metadata Fetch URL [query]                  | ENC      | NORMAL   | NORMAL   | 0.9906 |    26.43 | ✅
+Benign Status Update URL [path]                    | RAW      | NORMAL   | NORMAL   | 0.9885 |    12.94 | ✅
+Benign Status Update URL [path]                    | ENC      | NORMAL   | NORMAL   | 0.9679 |    21.42 | ✅
+Benign Status Update URL [query]                   | RAW      | NORMAL   | NORMAL   | 0.9972 |    11.28 | ✅
+Benign Status Update URL [query]                   | ENC      | NORMAL   | NORMAL   | 0.9972 |    12.48 | ✅
+Benign Auth Login URL [path]                       | RAW      | NORMAL   | NORMAL   | 0.9940 |    14.85 | ✅
+Benign Auth Login URL [path]                       | ENC      | NORMAL   | NORMAL   | 0.9920 |    19.20 | ✅
+Benign Auth Login URL [query]                      | RAW      | NORMAL   | NORMAL   | 0.9991 |    28.03 | ✅
+Benign Auth Login URL [query]                      | ENC      | NORMAL   | NORMAL   | 0.9991 |    23.13 | ✅
+Benign EA Agent Logging URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9820 |    14.78 | ✅
+Benign EA Agent Logging URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9605 |    16.40 | ✅
+Benign EA Agent Logging URL [query]                | RAW      | NORMAL   | NORMAL   | 0.9969 |    13.70 | ✅
+Benign EA Agent Logging URL [query]                | ENC      | NORMAL   | NORMAL   | 0.9968 |    14.06 | ✅
+Benign Next Static Font URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9992 |    14.54 | ✅
+Benign Next Static Font URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9992 |    13.72 | ✅
+Benign Next Static Font URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9983 |    15.09 | ✅
+Benign Next Static Font URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9984 |    13.61 | ✅
+Benign Voucher Subchannels URL [path]              | RAW      | NORMAL   | NORMAL   | 0.9968 |    12.69 | ✅
+Benign Voucher Subchannels URL [path]              | ENC      | NORMAL   | NORMAL   | 0.9968 |    13.54 | ✅
+Benign Metadata Fetch URL [path]                   | RAW      | NORMAL   | NORMAL   | 0.9885 |    12.41 | ✅
+Benign Metadata Fetch URL [path]                   | ENC      | NORMAL   | NORMAL   | 0.9884 |    13.57 | ✅
+Benign Metadata Fetch URL [query]                  | RAW      | NORMAL   | NORMAL   | 0.9947 |    14.25 | ✅
+Benign Metadata Fetch URL [query]                  | ENC      | NORMAL   | NORMAL   | 0.9947 |    12.21 | ✅
+Benign Next Static Font URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9986 |    12.54 | ✅
+Benign Next Static Font URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9987 |    12.29 | ✅
+Benign Next Static Font URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.9984 |    13.39 | ✅
+Benign Next Static Font URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.9985 |    13.21 | ✅
+Benign Placeholder Image URL [path]                | RAW      | NORMAL   | NORMAL   | 0.9992 |    12.67 | ✅
+Benign Placeholder Image URL [path]                | ENC      | NORMAL   | NORMAL   | 0.9993 |    12.56 | ✅
+Benign Product Page URL [path]                     | RAW      | NORMAL   | NORMAL   | 0.9891 |    13.09 | ✅
+Benign Product Page URL [path]                     | ENC      | NORMAL   | NORMAL   | 0.9795 |    12.07 | ✅
+Benign Product Page URL [query]                    | RAW      | NORMAL   | NORMAL   | 0.9574 |    12.25 | ✅
+Benign Product Page URL [query]                    | ENC      | NORMAL   | NORMAL   | 0.9574 |    14.78 | ✅
+Benign Issue Collection Path [path]                | RAW      | NORMAL   | NORMAL   | 0.5105 |    14.67 | ✅
+Benign Issue Collection Path [path]                | ENC      | NORMAL   | NORMAL   | 0.7472 |    15.73 | ✅
+Benign Issue Detail Path [path]                    | RAW      | NORMAL   | NORMAL   | 0.9989 |    24.45 | ✅
+Benign Issue Detail Path [path]                    | ENC      | NORMAL   | NORMAL   | 0.7659 |    29.87 | ✅
+FP_USER_68 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9951 |    17.68 | ✅
+FP_USER_68 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9948 |    13.54 | ✅
+FP_USER_68 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9953 |    13.55 | ✅
+FP_USER_68 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9944 |    14.87 | ✅
+FP_USER_69 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9912 |    14.35 | ✅
+FP_USER_69 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9863 |    13.26 | ✅
+FP_USER_69 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9882 |    12.73 | ✅
+FP_USER_69 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9882 |    12.36 | ✅
+Benign Auth Login URL [path]                       | RAW      | NORMAL   | NORMAL   | 0.9940 |    14.11 | ✅
+Benign Auth Login URL [path]                       | ENC      | NORMAL   | NORMAL   | 0.9920 |    13.12 | ✅
+Benign Auth Login URL [query]                      | RAW      | NORMAL   | NORMAL   | 0.9946 |    12.81 | ✅
+Benign Auth Login URL [query]                      | ENC      | NORMAL   | NORMAL   | 0.9946 |    24.42 | ✅
+Benign Empty State SVG URL [path]                  | RAW      | NORMAL   | NORMAL   | 0.9503 |    12.10 | ✅
+Benign Empty State SVG URL [path]                  | ENC      | NORMAL   | NORMAL   | 0.9503 |    11.00 | ✅
+Benign Blocks Filter URL [path]                    | RAW      | NORMAL   | NORMAL   | 0.9843 |    12.17 | ✅
+Benign Blocks Filter URL [path]                    | ENC      | NORMAL   | NORMAL   | 0.9645 |    14.24 | ✅
+Benign Blocks Filter URL [query]                   | RAW      | NORMAL   | NORMAL   | 0.9880 |    12.56 | ✅
+Benign Blocks Filter URL [query]                   | ENC      | NORMAL   | NORMAL   | 0.9880 |    11.68 | ✅
+Benign Login Return URL [path]                     | RAW      | NORMAL   | NORMAL   | 0.9178 |    11.61 | ✅
+Benign Login Return URL [path]                     | ENC      | NORMAL   | NORMAL   | 0.9685 |    12.07 | ✅
+Benign Login Return URL [query]                    | RAW      | NORMAL   | NORMAL   | 0.9949 |    11.91 | ✅
+Benign Login Return URL [query]                    | ENC      | NORMAL   | NORMAL   | 0.9946 |    12.07 | ✅
+Benign Auth Login URL [path]                       | RAW      | NORMAL   | NORMAL   | 0.9940 |    11.71 | ✅
+Benign Auth Login URL [path]                       | ENC      | NORMAL   | NORMAL   | 0.9920 |    11.58 | ✅
+Benign Auth Login URL [query]                      | RAW      | NORMAL   | NORMAL   | 0.9798 |    11.80 | ✅
+Benign Auth Login URL [query]                      | ENC      | NORMAL   | NORMAL   | 0.9798 |    12.00 | ✅
+Benign Static JS URL [path]                        | RAW      | NORMAL   | NORMAL   | 0.9566 |    11.75 | ✅
+Benign Static JS URL [path]                        | ENC      | NORMAL   | NORMAL   | 0.9510 |    11.68 | ✅
+Benign Product Page URL [path]                     | RAW      | NORMAL   | NORMAL   | 0.9891 |    12.40 | ✅
+Benign Product Page URL [path]                     | ENC      | NORMAL   | NORMAL   | 0.9795 |    11.58 | ✅
+Benign Product Page URL [query]                    | RAW      | NORMAL   | NORMAL   | 0.9574 |    11.84 | ✅
+Benign Product Page URL [query]                    | ENC      | NORMAL   | NORMAL   | 0.9574 |    11.70 | ✅
+Benign Login Return URL [path]                     | RAW      | NORMAL   | NORMAL   | 0.9178 |    11.95 | ✅
+Benign Login Return URL [path]                     | ENC      | NORMAL   | NORMAL   | 0.9685 |    11.74 | ✅
+Benign Login Return URL [query]                    | RAW      | NORMAL   | NORMAL   | 0.9949 |    13.43 | ✅
+Benign Login Return URL [query]                    | ENC      | NORMAL   | NORMAL   | 0.9946 |    18.13 | ✅
+Benign Static JS Source Map URL [path]             | RAW      | NORMAL   | NORMAL   | 0.9673 |    13.20 | ✅
+Benign Static JS Source Map URL [path]             | ENC      | NORMAL   | NORMAL   | 0.9631 |    12.66 | ✅
+Benign Auth Login URL [path]                       | RAW      | NORMAL   | NORMAL   | 0.9940 |    12.41 | ✅
+Benign Auth Login URL [path]                       | ENC      | NORMAL   | NORMAL   | 0.9920 |    12.15 | ✅
+Benign Auth Login URL [query]                      | RAW      | NORMAL   | NORMAL   | 0.9984 |    11.36 | ✅
+Benign Auth Login URL [query]                      | ENC      | NORMAL   | NORMAL   | 0.9985 |    11.14 | ✅
+FP_USER_70 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9975 |    11.27 | ✅
+FP_USER_70 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9958 |    11.14 | ✅
+FP_USER_70 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9882 |    13.30 | ✅
+FP_USER_70 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9882 |    12.64 | ✅
+FP_USER_71 [path]                                  | RAW      | NORMAL   | NORMAL   | 0.9970 |    11.48 | ✅
+FP_USER_71 [path]                                  | ENC      | NORMAL   | NORMAL   | 0.9954 |    26.36 | ✅
+FP_USER_71 [query]                                 | RAW      | NORMAL   | NORMAL   | 0.9882 |    12.61 | ✅
+FP_USER_71 [query]                                 | ENC      | NORMAL   | NORMAL   | 0.9882 |    15.50 | ✅
+Benign Workspace Modules API [path]                | RAW      | NORMAL   | NORMAL   | 0.9805 |    10.98 | ✅
+Benign Workspace Modules API [path]                | ENC      | NORMAL   | NORMAL   | 0.9793 |    10.92 | ✅
+Benign Sidebar Preferences API [path]              | RAW      | NORMAL   | NORMAL   | 0.9889 |    11.47 | ✅
+Benign Sidebar Preferences API [path]              | ENC      | NORMAL   | NORMAL   | 0.9880 |    10.68 | ✅
+Benign Insky Issues Path (short) [path]            | RAW      | NORMAL   | NORMAL   | 0.9958 |    11.15 | ✅
+Benign Insky Issues Path (short) [path]            | ENC      | NORMAL   | NORMAL   | 0.7016 |    13.23 | ✅
+Benign S3 Upload Signed URL [path]                 | RAW      | NORMAL   | NORMAL   | 0.6259 |    15.10 | ✅
+Benign S3 Upload Signed URL [path]                 | ENC      | NORMAL   | NORMAL   | 0.6545 |    11.49 | ✅
+Benign S3 Upload Signed URL [query]                | RAW      | NORMAL   | NORMAL   | 0.9999 |    11.40 | ✅
+Benign S3 Upload Signed URL [query]                | ENC      | NORMAL   | NORMAL   | 0.9999 |    11.55 | ✅
+Benign S3 Upload Path Only [path]                  | RAW      | NORMAL   | NORMAL   | 0.6259 |    10.99 | ✅
+Benign S3 Upload Path Only [path]                  | ENC      | NORMAL   | NORMAL   | 0.6545 |    11.69 | ✅
+Benign S3 Upload Path Only (duplicate) [path]      | RAW      | NORMAL   | NORMAL   | 0.6259 |    11.51 | ✅
+Benign S3 Upload Path Only (duplicate) [path]      | ENC      | NORMAL   | NORMAL   | 0.6545 |    12.05 | ✅
+Benign Issue Detail GET expand [path]              | RAW      | NORMAL   | NORMAL   | 0.9989 |    10.93 | ✅
+Benign Issue Detail GET expand [path]              | ENC      | NORMAL   | NORMAL   | 0.7659 |    11.49 | ✅
+Benign Issue Detail GET expand [query]             | RAW      | NORMAL   | NORMAL   | 0.9997 |    11.47 | ✅
+Benign Issue Detail GET expand [query]             | ENC      | NORMAL   | NORMAL   | 0.9996 |    13.12 | ✅
+Benign Issue Detail PATCH path [path]              | RAW      | NORMAL   | NORMAL   | 0.9989 |    11.83 | ✅
+Benign Issue Detail PATCH path [path]              | ENC      | NORMAL   | NORMAL   | 0.7659 |    11.25 | ✅
+Benign S3 Upload Signed URL v2 [path]              | RAW      | NORMAL   | NORMAL   | 0.6259 |    11.34 | ✅
+Benign S3 Upload Signed URL v2 [path]              | ENC      | NORMAL   | NORMAL   | 0.6545 |    12.06 | ✅
+Benign S3 Upload Signed URL v2 [query]             | RAW      | NORMAL   | NORMAL   | 0.9999 |    12.26 | ✅
+Benign S3 Upload Signed URL v2 [query]             | ENC      | NORMAL   | NORMAL   | 0.9999 |    12.09 | ✅
+Benign Insky Edge Proxy Headers Kubuntu Chrome 130 | RAW      | NORMAL   | NORMAL   | 0.9947 |    11.05 | ✅
+Benign Insky Edge Proxy Headers Kubuntu Chrome 130 | ENC      | NORMAL   | NORMAL   | 0.7386 |    11.48 | ✅
+Benign Insky Edge Proxy Headers Kubuntu Chrome 130 | RAW      | NORMAL   | NORMAL   | 0.9999 |    12.10 | ✅
+Benign Insky Edge Proxy Headers Kubuntu Chrome 130 | ENC      | NORMAL   | NORMAL   | 0.9999 |    12.94 | ✅
+Benign Insky Edge Proxy Headers Linux Firefox 3.6  | RAW      | NORMAL   | NORMAL   | 0.9947 |    11.32 | ✅
+Benign Insky Edge Proxy Headers Linux Firefox 3.6  | ENC      | NORMAL   | NORMAL   | 0.7386 |    13.84 | ✅
+Benign Insky Edge Proxy Headers Linux Firefox 3.6  | RAW      | NORMAL   | NORMAL   | 0.9999 |    12.83 | ✅
+Benign Insky Edge Proxy Headers Linux Firefox 3.6  | ENC      | NORMAL   | NORMAL   | 0.9999 |    12.19 | ✅
+Benign Insky Edge Proxy Headers Windows Firefox 14 | RAW      | NORMAL   | NORMAL   | 0.9947 |    12.38 | ✅
+Benign Insky Edge Proxy Headers Windows Firefox 14 | ENC      | NORMAL   | NORMAL   | 0.7386 |    11.21 | ✅
+Benign Insky Edge Proxy Headers Windows Firefox 14 | RAW      | NORMAL   | NORMAL   | 0.9999 |    11.50 | ✅
+Benign Insky Edge Proxy Headers Windows Firefox 14 | ENC      | NORMAL   | NORMAL   | 0.9999 |    12.18 | ✅
+Benign Insky Edge Proxy Headers macOS Chrome 116 [ | RAW      | NORMAL   | NORMAL   | 0.9947 |    12.86 | ✅
+Benign Insky Edge Proxy Headers macOS Chrome 116 [ | ENC      | NORMAL   | NORMAL   | 0.7386 |    11.56 | ✅
+Benign Insky Edge Proxy Headers macOS Chrome 116 [ | RAW      | NORMAL   | NORMAL   | 0.9999 |    11.98 | ✅
+Benign Insky Edge Proxy Headers macOS Chrome 116 [ | ENC      | NORMAL   | NORMAL   | 0.9999 |    17.90 | ✅
+Benign Insky Edge Proxy Headers Firefox 130 Accept | RAW      | NORMAL   | NORMAL   | 0.9947 |    15.97 | ✅
+Benign Insky Edge Proxy Headers Firefox 130 Accept | ENC      | NORMAL   | NORMAL   | 0.7386 |    26.20 | ✅
+Benign Insky Edge Proxy Headers Firefox 130 Accept | RAW      | NORMAL   | NORMAL   | 0.9999 |    26.46 | ✅
+Benign Insky Edge Proxy Headers Firefox 130 Accept | ENC      | NORMAL   | NORMAL   | 0.9999 |    17.02 | ✅
+Benign Insky Edge Proxy Headers macOS Chrome 126 [ | RAW      | NORMAL   | NORMAL   | 0.9947 |    12.30 | ✅
+Benign Insky Edge Proxy Headers macOS Chrome 126 [ | ENC      | NORMAL   | NORMAL   | 0.7386 |    11.78 | ✅
+Benign Insky Edge Proxy Headers macOS Chrome 126 [ | RAW      | NORMAL   | NORMAL   | 0.9999 |    11.60 | ✅
+Benign Insky Edge Proxy Headers macOS Chrome 126 [ | ENC      | NORMAL   | NORMAL   | 0.9999 |    12.14 | ✅
+Benign Insky Edge Proxy Headers Generic Hop Loop [ | RAW      | NORMAL   | NORMAL   | 0.9947 |    11.60 | ✅
+Benign Insky Edge Proxy Headers Generic Hop Loop [ | ENC      | NORMAL   | NORMAL   | 0.7386 |    11.83 | ✅
+Benign Insky Edge Proxy Headers Generic Hop Loop [ | RAW      | NORMAL   | NORMAL   | 0.9998 |    11.41 | ✅
+Benign Insky Edge Proxy Headers Generic Hop Loop [ | ENC      | NORMAL   | NORMAL   | 0.9998 |    12.36 | ✅
+Benign Static Root Script JS [path]                | RAW      | NORMAL   | NORMAL   | 0.9683 |    11.23 | ✅
+Benign Static Root Script JS [path]                | ENC      | NORMAL   | NORMAL   | 0.9676 |    12.10 | ✅
+Benign Static Root Script JS Versioned [path]      | RAW      | NORMAL   | NORMAL   | 0.9683 |    11.84 | ✅
+Benign Static Root Script JS Versioned [path]      | ENC      | NORMAL   | NORMAL   | 0.9676 |    10.93 | ✅
+Benign Static Root Script JS Versioned [query]     | RAW      | NORMAL   | NORMAL   | 0.9370 |    10.80 | ✅
+Benign Static Root Script JS Versioned [query]     | ENC      | NORMAL   | NORMAL   | 0.9159 |    10.58 | ✅
+Benign Dynamic Host Script JS URL [path]           | RAW      | NORMAL   | NORMAL   | 0.9683 |    11.12 | ✅
+Benign Dynamic Host Script JS URL [path]           | ENC      | NORMAL   | NORMAL   | 0.9676 |    10.93 | ✅
+Benign Dynamic Host Script JS URL Versioned [path] | RAW      | NORMAL   | NORMAL   | 0.9683 |    11.04 | ✅
+Benign Dynamic Host Script JS URL Versioned [path] | ENC      | NORMAL   | NORMAL   | 0.9676 |    10.97 | ✅
+Benign Dynamic Host Script JS URL Versioned [query | RAW      | NORMAL   | NORMAL   | 0.9854 |    10.64 | ✅
+Benign Dynamic Host Script JS URL Versioned [query | ENC      | NORMAL   | NORMAL   | 0.9840 |    11.30 | ✅
+Benign Fluent Bit Splunk Headers [headers]         | RAW      | NORMAL   | NORMAL   | 0.9960 |    10.99 | ✅
+Benign Fluent Bit Splunk Headers [headers]         | ENC      | NORMAL   | NORMAL   | 0.9960 |    11.14 | ✅
+Benign Evaluation Combo Path [path]                | RAW      | NORMAL   | NORMAL   | 0.9993 |    13.11 | ✅
+Benign Evaluation Combo Path [path]                | ENC      | NORMAL   | NORMAL   | 0.9973 |    12.05 | ✅
+Benign Placeholder Image PNG Path [path]           | RAW      | NORMAL   | NORMAL   | 0.9996 |    10.64 | ✅
+Benign Placeholder Image PNG Path [path]           | ENC      | NORMAL   | NORMAL   | 0.9993 |    11.57 | ✅
+Benign Messages Beta API Path [path]               | RAW      | NORMAL   | NORMAL   | 0.9993 |    10.79 | ✅
+Benign Messages Beta API Path [path]               | ENC      | NORMAL   | NORMAL   | 0.9892 |    10.64 | ✅
+Benign Messages Beta API Path [query]              | RAW      | NORMAL   | NORMAL   | 0.9995 |    10.29 | ✅
+Benign Messages Beta API Path [query]              | ENC      | NORMAL   | NORMAL   | 0.9994 |    10.54 | ✅
+Benign Servlet Agent Auth Path [path]              | RAW      | NORMAL   | NORMAL   | 0.9850 |    11.37 | ✅
+Benign Servlet Agent Auth Path [path]              | ENC      | NORMAL   | NORMAL   | 0.9848 |    10.97 | ✅
+Benign Servlet Agent Auth Full Request [path]      | RAW      | NORMAL   | NORMAL   | 0.9850 |    11.17 | ✅
+Benign Servlet Agent Auth Full Request [path]      | ENC      | NORMAL   | NORMAL   | 0.9848 |    10.83 | ✅
+Benign Servlet Agent Auth Full Request [query]     | RAW      | NORMAL   | NORMAL   | 0.9992 |    12.03 | ✅
+Benign Servlet Agent Auth Full Request [query]     | ENC      | NORMAL   | NORMAL   | 0.9996 |    11.38 | ✅
+Benign Servlet Agent Auth Full Request [headers]   | RAW      | NORMAL   | NORMAL   | 0.9998 |    11.65 | ✅
+Benign Servlet Agent Auth Full Request [headers]   | ENC      | NORMAL   | NORMAL   | 0.9998 |    11.03 | ✅
+Benign DesktopCentral CSR Signing Path [path]      | RAW      | NORMAL   | NORMAL   | 0.9937 |    10.39 | ✅
+Benign DesktopCentral CSR Signing Path [path]      | ENC      | NORMAL   | NORMAL   | 0.9937 |    10.73 | ✅
+Benign DesktopCentral CSR Signing Full Request [pa | RAW      | NORMAL   | NORMAL   | 0.9937 |    11.45 | ✅
+Benign DesktopCentral CSR Signing Full Request [pa | ENC      | NORMAL   | NORMAL   | 0.9937 |    11.18 | ✅
+Benign DesktopCentral CSR Signing Full Request [qu | RAW      | NORMAL   | NORMAL   | 0.9903 |    10.88 | ✅
+Benign DesktopCentral CSR Signing Full Request [qu | ENC      | NORMAL   | NORMAL   | 0.9861 |    10.90 | ✅
+Benign DesktopCentral CSR Signing Full Request [he | RAW      | NORMAL   | NORMAL   | 0.9998 |    11.93 | ✅
+Benign DesktopCentral CSR Signing Full Request [he | ENC      | NORMAL   | NORMAL   | 0.9998 |    10.94 | ✅
+Benign QA Platform Root Path [path]                | RAW      | NORMAL   | NORMAL   | 0.9820 |    11.14 | ✅
+Benign QA Platform Root Path [path]                | ENC      | NORMAL   | NORMAL   | 0.9839 |    10.67 | ✅
+Benign Collector Event Path [path]                 | RAW      | NORMAL   | NORMAL   | 0.9973 |    10.88 | ✅
+Benign Collector Event Path [path]                 | ENC      | NORMAL   | NORMAL   | 0.9946 |    11.07 | ✅
+Benign DesktopCentral Patchscan Path [path]        | RAW      | NORMAL   | NORMAL   | 0.9996 |    10.66 | ✅
+Benign DesktopCentral Patchscan Path [path]        | ENC      | NORMAL   | NORMAL   | 0.9985 |    10.97 | ✅
+Benign DesktopCentral Patchscan Headers [headers]  | RAW      | NORMAL   | NORMAL   | 0.9999 |    11.44 | ✅
+Benign DesktopCentral Patchscan Headers [headers]  | ENC      | NORMAL   | NORMAL   | 0.9999 |    10.87 | ✅
+Benign DesktopCentral Patchscan Full Request [path | RAW      | NORMAL   | NORMAL   | 0.9996 |    10.67 | ✅
+Benign DesktopCentral Patchscan Full Request [path | ENC      | NORMAL   | NORMAL   | 0.9985 |    10.90 | ✅
+Benign DesktopCentral Patchscan Full Request [head | RAW      | NORMAL   | NORMAL   | 0.9999 |    10.82 | ✅
+Benign DesktopCentral Patchscan Full Request [head | ENC      | NORMAL   | NORMAL   | 0.9999 |    10.77 | ✅
+Benign Fluent Bit Short Headers [headers]          | RAW      | NORMAL   | NORMAL   | 0.9881 |    11.09 | ✅
+Benign Fluent Bit Short Headers [headers]          | ENC      | NORMAL   | NORMAL   | 0.9881 |    11.85 | ✅
+-------------------------------------------------------------------------------------------------------------------
+SUMMARY: 1481/1508 Passed (98.21%)
+Detailed categorical report saved to /Users/dmac/Desktop/MyEveryThings/workspace/src/github.com/ml/reports/xgboost/categorical_results.json

@@ -244,7 +244,7 @@ detector, err := waf.NewModel(waf.ModelXGBoost, "xgboost/assets", sharedLibPath)
 
 `pkg/waf` matches Python multipart inference: for each non-empty field in `field_order`, it builds a feature row with only that field set, runs ONNX, and uses the **maximum** attack probability as `PredictScore`.
 
-**XGBoost ONNX note:** XGBoost treats absent sparse entries as *missing*, not zero. Go and Python ONNX inference encode zero-valued features as `NaN` so results match sparse `joblib` training. RF and LR use dense `0.0` for absent features.
+**XGBoost ONNX note:** XGBoost treats absent sparse entries as *missing*, not zero. Go and Python ONNX inference encode zero-valued features as `NaN` so categorical `joblib` and ONNX regression currently align. Exact probability parity on `src/xgboost/check_parity.py` is still not guaranteed and should be treated as an open export-quality issue. RF and LR use dense `0.0` for absent features.
 
 ---
 
@@ -261,10 +261,11 @@ Latest logistic regression refresh, run on **June 11, 2026** after retraining an
 - **Logistic Regression**: `1476 / 1508` (`97.88%`) on both `python src/logistic_regression/test_categories.py` and `python src/logistic_regression/test_categories.py --onnx`
 - Current misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-136 [path]`, `Attack_FP_137 [path]`, `Attack_usr_138-139 [path]`, `PADDED_XSS [path]`, `Attack_Asset_1-4 [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, plus false positives on `FP_USER_55 [query]` and `FP_USER_57 [query]`
 
-Latest XGBoost refresh, run on **June 5, 2026** after retraining and ONNX export:
+Latest XGBoost refresh, run on **June 12, 2026** after retraining and ONNX export:
 
-- **XGBoost**: `1478 / 1506` (`98.14%`) on both `python src/xgboost/test_categories.py` and `python src/xgboost/test_categories.py --onnx`
-- Current misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-136 [path]`, `Attack_FP_137 [path]`, `Attack_usr_138-139 [path]`, `PADDED_XSS [path]`, `Attack_Asset_1-4 [path]`, and `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`
+- **XGBoost**: `1481 / 1508` (`98.21%`) on both `python src/xgboost/test_categories.py` and `python src/xgboost/test_categories.py --onnx`
+- Current misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-139 [path]`, `Attack_FP_137 [path]`, `PADDED_XSS [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, one-sided misses on `Attack_Asset_1-4 [path]`, and one false positive on `Benign Asset [path]` (ENC)
+- `python src/xgboost/check_parity.py` currently reports a probability mismatch between sparse `joblib` inference and ONNX on its sample payload, even though the categorical suite outcome matches across both backends.
 
 Historical ONNX baselines from **May 26, 2026** against `data/attack_fields.txt` + `data/normal_fields.txt` (`742` field cases, `1484` RAW + ENC evaluations):
 
