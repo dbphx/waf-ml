@@ -35,7 +35,6 @@ The model must generalize beyond known rules and signatures.
 │   ├── preprocessing.py
 │   ├── feature_engineering.py
 │   ├── train.py
-│   ├── evaluate.py
 │   └── predict.py
 │
 ├── models/

@@ -120,6 +120,8 @@ Current ONNX layout for both TF-IDF bundles:
 
 All commands assume repository root with `venv` activated.
 
+The maintained regression entry points are `test_categories.py`, `test_holdout_regression.py`, `test_samples.py`, and `test_specific_payload.py`. Legacy one-off logistic regression helper scripts have been removed.
+
 ### Categorical regression (`test_categories.py`)
 
 Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1508` cases total in the current suite. The current benign header regressions include both `Benign Fluent Bit Splunk Headers` and `Benign Fluent Bit Short Headers`.
