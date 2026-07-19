@@ -269,3 +269,4 @@ Categories of Normal Traffic (50 Categories)
 262. Benign DesktopCentral Patchscan Headers: Authorization: bearer Cache-Control: no-cache Connection: Close Content-Length: 84 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent
 263. Benign DesktopCentral Patchscan Full Request: POST /patchscan Authorization: bearer Cache-Control: no-cache Connection: Close Content-Length: 84 Host: sgec.vnpay.vn Pragma: no-cache User-Agent: DesktopCentral Agent
 264. Benign Fluent Bit Short Headers: Content-Length: 2963 User-Agent: Fluent-Bit
+265. Benign Insky vLLM Browser Identity Headers: GET https://dyn2c2e23482854.sunny.edgevnpay.vn/ Accept: */* Accept-Encoding: identity Connection: close Host: vllm.ai.insky.io.vn User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36

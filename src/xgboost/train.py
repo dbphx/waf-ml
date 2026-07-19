@@ -73,6 +73,7 @@ def train_model():
         "Benign Insky Edge Proxy Headers Firefox 130 Accept Html",
         "Benign Insky Edge Proxy Headers macOS Chrome 126",
         "Benign Insky Edge Proxy Headers Generic Hop Loop",
+        "Benign Insky vLLM Browser Identity Headers",
         "Benign Evaluation Combo Path",
         "Benign Placeholder Image PNG Path",
         "Benign Messages Beta API Path",
