@@ -118,13 +118,13 @@ Current ONNX layout for both TF-IDF bundles:
 
 ## Running tests
 
-All commands assume repository root with `venv` activated.
+All commands assume repository root with a Python virtual environment activated. The latest local run used `.venv/bin/python` because the system `python3` environment did not have `pandas` installed.
 
 The maintained regression entry points are `test_categories.py`, `test_holdout_regression.py`, `test_samples.py`, and `test_specific_payload.py`. Legacy one-off logistic regression helper scripts have been removed.
 
 ### Categorical regression (`test_categories.py`)
 
-Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1508` cases total in the current suite. The current benign header regressions include both `Benign Fluent Bit Splunk Headers` and `Benign Fluent Bit Short Headers`.
+Tests read `data/attack_fields.txt` and `data/normal_fields.txt`. Each category is exercised as both `RAW` and `ENC` (URL-encoded components), for `1512` cases total in the current suite. The current benign header regressions include both `Benign Fluent Bit Splunk Headers` and `Benign Fluent Bit Short Headers`.
 
 | Mode | Flags | Uses |
 | ---- | ----- | ---- |
@@ -252,22 +252,28 @@ detector, err := waf.NewModel(waf.ModelXGBoost, "xgboost/assets", sharedLibPath)
 
 ## Model performance
 
-Latest random forest refresh, run on **June 8, 2026** after retraining and ONNX export:
+Latest categorical regression refresh, run on **July 25, 2026** against `data/attack_fields.txt` + `data/normal_fields.txt` (`1512` RAW + ENC evaluations):
 
-- **Random Forest**: `1481 / 1508` (`98.21%`) on `python src/random_forest/test_categories.py`
-- Added benign regression: `Benign Fluent Bit Short Headers [headers]` (`Content-Length: 2963 User-Agent: Fluent-Bit`), now passing as `NORMAL` in both RAW and ENC variants.
-- Current misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-139 [path]`, `Attack_FP_137 [path]`, `PADDED_XSS [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, one-sided misses on `Attack_Asset_1-4 [path]`, and one false positive on `Benign Asset [path]` (ENC).
+| Model | Backend | Result | Failures | Notes |
+| ----- | ------- | ------ | -------- | ----- |
+| **Random Forest** | joblib | `1485 / 1512` (`98.21%`) | 27 | 26 false negatives, 1 false positive |
+| **Random Forest** | ONNX | `1485 / 1512` (`98.21%`) | 27 | Matches joblib outcome |
+| **Logistic Regression** | joblib | `1480 / 1512` (`97.88%`) | 32 | 30 false negatives, 2 false positives |
+| **Logistic Regression** | ONNX | `1480 / 1512` (`97.88%`) | 32 | Matches joblib outcome |
+| **XGBoost** | joblib | `1484 / 1512` (`98.15%`) | 28 | 19 false negatives, 9 false positives |
+| **XGBoost** | ONNX | `1485 / 1512` (`98.21%`) | 27 | 26 false negatives, 1 false positive |
 
-Latest logistic regression refresh, run on **June 11, 2026** after retraining and ONNX export:
+Current Random Forest misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-136 [path]`, `Attack_FP_137 [path]`, `Attack_usr_138-139 [path]`, `PADDED_XSS [path]`, `Attack_Asset_1-4 [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, plus one false positive on `Benign Asset [path]`.
 
-- **Logistic Regression**: `1476 / 1508` (`97.88%`) on both `python src/logistic_regression/test_categories.py` and `python src/logistic_regression/test_categories.py --onnx`
-- Current misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-136 [path]`, `Attack_FP_137 [path]`, `Attack_usr_138-139 [path]`, `PADDED_XSS [path]`, `Attack_Asset_1-4 [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, plus false positives on `FP_USER_55 [query]` and `FP_USER_57 [query]`
+Current Logistic Regression misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-136 [path]`, `Attack_FP_137 [path]`, `Attack_usr_138-139 [path]`, `PADDED_XSS [path]`, `Attack_Asset_1-4 [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, plus false positives on `FP_USER_55 [query]` and `FP_USER_57 [query]`.
 
-Latest XGBoost refresh, run on **June 12, 2026** after retraining and ONNX export:
+Current XGBoost joblib misses: `Slowloris Header Pattern [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-136 [path]`, `Attack_FP_137 [path]`, `Attack_usr_138-139 [path]`, `PADDED_XSS [path]`, `Attack_Asset_3-4 [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, plus false positives on `FP1 [path]`, `FP2 [path]`, `Benign Asset [path]`, `FP_USER_59 [path]`, `FP_USER_60 [path]`, and `Benign Issue Collection Path [path]`.
 
-- **XGBoost**: `1481 / 1508` (`98.21%`) on both `python src/xgboost/test_categories.py` and `python src/xgboost/test_categories.py --onnx`
-- Current misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-139 [path]`, `Attack_FP_137 [path]`, `PADDED_XSS [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, one-sided misses on `Attack_Asset_1-4 [path]`, and one false positive on `Benign Asset [path]` (ENC)
-- `python src/xgboost/check_parity.py` currently reports a probability mismatch between sparse `joblib` inference and ONNX on its sample payload, even though the categorical suite outcome matches across both backends.
+Current XGBoost ONNX misses: `Slowloris Header Pattern [path]`, `TestReal1 [path]`, `TestReal2 [path]`, `Attack_PDF_105 [path]`, `Attack_usr_135-136 [path]`, `Attack_FP_137 [path]`, `Attack_usr_138-139 [path]`, `PADDED_XSS [path]`, `Attack_Asset_1-4 [path]`, `Attack_Analyzer_Combined_XSS_SQLi_HTML [path]`, plus one false positive on `Benign Asset [path]`.
+
+The July 25 run emitted `InconsistentVersionWarning` from scikit-learn while unpickling artifacts with mismatched scikit-learn versions. XGBoost joblib also warned about loading an older serialized model with XGBoost `2.1.4`; results should be interpreted with those environment mismatches in mind.
+
+`python src/xgboost/check_parity.py` has historically reported a probability mismatch between sparse `joblib` inference and ONNX on its sample payload; categorical results above confirm the backends still do not have exact outcome parity.
 
 Historical ONNX baselines from **May 26, 2026** against `data/attack_fields.txt` + `data/normal_fields.txt` (`742` field cases, `1484` RAW + ENC evaluations):
 
