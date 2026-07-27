@@ -1,5 +1,7 @@
 # WAF Model - HTTP Attack Detection (Go + ONNX)
 
+Language: English | [Tiếng Việt](README.vi.md)
+
 This project implements a high-performance Web Application Firewall (WAF) detection model. It uses machine learning to identify HTTP attacks (SQLi, XSS, LFI, RCE, etc.) with native support for both Python (training) and Golang (inference) for the **TF-IDF + sklearn** models.
 
 We support three Python model bundles side-by-side:
