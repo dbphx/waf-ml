@@ -21,48 +21,6 @@ Du an ho tro song song ba goi mo hinh Python:
 - **Go runtime**: Moi model trien khai interface `waf.Model`; ONNX duoc load qua `onnxruntime` voi `model_metadata.json` dung chung (`field_order`, vocabulary + IDF theo tung field, keywords).
 - **Reputation co trang thai** (Go): `ReputationManager` cham diem client theo thoi gian.
 
-## Cau truc du an
-
-```text
-.
-├── application/go/
-│   ├── pkg/waf/
-│   │   ├── model.go              # Model interface, NewModel factory
-│   │   ├── engine.go             # Shared ONNX + feature engineering
-│   │   ├── random_forest.go      # RandomForestModel
-│   │   ├── logistic_regression.go
-│   │   ├── xgboost.go            # XGBoostModel (NaN encoding)
-│   │   └── reputation.go
-│   ├── random_forest/assets/     # model.onnx, model_metadata.json
-│   ├── logistic_regression/assets/
-│   ├── xgboost/assets/
-│   └── example.go
-├── data/
-│   ├── processed/              # train.csv, val.csv (from standardize_data.py)
-│   ├── attack.txt              # Category list (attacks) - source for training + field expansion
-│   ├── normal.txt              # Category list (benign)
-│   ├── attack_fields.txt       # Field-level attack cases (generated; used by test_categories.py)
-│   └── normal_fields.txt       # Field-level benign cases (generated)
-├── models/
-│   ├── random_forest/
-│   ├── logistic_regression/
-│   └── xgboost/
-├── reports/                    # JSON + optional test logs
-└── src/
-    ├── feature_engineering.py
-    ├── standardize_data.py
-    ├── parse_category_files.py
-    ├── preprocessing.py
-    ├── random_forest/
-    ├── logistic_regression/
-    ├── xgboost/
-    ├── test_samples.py
-    ├── test_specific_payload.py
-    └── test_holdout_regression.py
-```
-
----
-
 ## Bat dau nhanh
 
 Lam viec trong virtual environment cuc bo:
@@ -118,11 +76,38 @@ Bo cuc ONNX hien tai cho ca hai goi TF-IDF:
 
 ---
 
-## Chay test
+## Quy trinh benchmark
 
 Tat ca lenh gia dinh dang o root repository va da kich hoat Python virtual environment. Lan chay local gan nhat dung `.venv/bin/python` vi moi truong `python3` cua he thong khong co `pandas`.
 
-Cac entry point regression dang duoc duy tri la `test_categories.py`, `test_holdout_regression.py`, `test_samples.py`, va `test_specific_payload.py`. Cac script helper logistic regression cu kieu one-off da bi go bo.
+Dung sequence nay khi can so benchmark co the lap lai:
+
+```bash
+# 1. Tuy chon: rebuild processed dataset sau khi sua data/attack.txt hoac data/normal.txt
+python src/standardize_data.py
+
+# 2. Tuy chon: retrain models sau khi du lieu thay doi
+python src/random_forest/train.py
+python src/logistic_regression/train.py
+python src/xgboost/train.py
+
+# 3. Tuy chon: refresh ONNX artifacts dung cho Go/runtime benchmark
+python src/random_forest/export_for_go.py
+python src/logistic_regression/export_for_go.py
+python src/xgboost/export_for_go.py
+
+# 4. Chay categorical benchmark voi joblib artifacts
+python src/random_forest/test_categories.py --log reports/random_forest/categorical_test_joblib.log
+python src/logistic_regression/test_categories.py --log reports/logistic_regression/categorical_test_joblib.log
+python src/xgboost/test_categories.py --log reports/xgboost/categorical_test_joblib.log
+
+# 5. Chay categorical benchmark voi ONNX artifacts
+python src/random_forest/test_categories.py --onnx --log reports/random_forest/categorical_test_onnx.log
+python src/logistic_regression/test_categories.py --onnx --log reports/logistic_regression/categorical_test_onnx.log
+python src/xgboost/test_categories.py --onnx --log reports/xgboost/categorical_test_onnx.log
+```
+
+Cac entry point benchmark dang duoc duy tri la `test_categories.py`, `test_holdout_regression.py`, `test_samples.py`, va `test_specific_payload.py`. Cac script helper logistic regression cu kieu one-off da bi go bo.
 
 ### Regression theo category (`test_categories.py`)
 
@@ -178,77 +163,6 @@ python src/test_samples.py --model xgboost
 python src/test_holdout_regression.py --model both          # chi RF + LR
 python src/test_holdout_regression.py --model all
 ```
-
----
-
-## Su dung ung dung Go
-
-Nam trong `application/go`. Ca ba model deu trien khai interface `waf.Model` va duoc tao qua `waf.NewModel` hoac `waf.NewModelWithConfig`.
-
-### Dieu kien can
-
-- Go 1.22+
-- Thu vien chia se ONNX Runtime (`libonnxruntime.dylib` / `.so`)
-
-### Chay vi du
-
-```bash
-cd application/go
-
-go run example.go -model random_forest -lib /path/to/libonnxruntime.dylib
-go run example.go -model logistic_regression -lib /path/to/libonnxruntime.dylib
-go run example.go -model xgboost -lib /path/to/libonnxruntime.dylib
-```
-
-Payload tuy chon lay tu mot dong trong file `.txt`:
-
-```bash
-go run example.go -model random_forest -lib /path/to/libonnxruntime.dylib \
-  -payload-file ../../data/attack.txt -payload-contains "SQL Injection"
-```
-
-### Tich hop (interface `waf.Model`)
-
-```go
-import "waf-detector-lib/pkg/waf"
-
-cfg, err := waf.DefaultConfig(waf.ModelRandomForest)
-if err != nil {
-    // handle unknown model type
-}
-
-detector, err := waf.NewModelWithConfig(cfg, "/path/to/libonnxruntime.so")
-if err != nil {
-    // handle init error
-}
-defer detector.Destroy()
-
-requestMap := map[string]string{
-    "method": "GET",
-    "path":   "/search",
-    "query":  "q=test",
-}
-
-score, _ := detector.PredictScore(requestMap) // max over per-field scores
-isAttack := detector.Predict(requestMap)
-blocked, score, reason := detector.PredictSemantic("192.168.1.10", requestMap)
-```
-
-Factory shorthand:
-
-```go
-detector, err := waf.NewModel(waf.ModelXGBoost, "xgboost/assets", sharedLibPath)
-```
-
-| Type constant | Go struct | Stateless threshold | Semantic (block / suspicion) |
-| ------------- | --------- | ------------------- | ---------------------------- |
-| `waf.ModelRandomForest` | `RandomForestModel` | `0.55` | `0.55` / `0.35` |
-| `waf.ModelLogisticRegression` | `LogisticRegressionModel` | `0.77` | `0.77` / `0.50` |
-| `waf.ModelXGBoost` | `XGBoostModel` | `0.55` | `0.55` / `0.35` |
-
-`pkg/waf` khop voi inference multipart cua Python: voi moi field khong rong trong `field_order`, no tao mot feature row chi set field do, chay ONNX, va dung xac suat attack **lon nhat** lam `PredictScore`.
-
-**Ghi chu ONNX cua XGBoost:** XGBoost xem cac entry sparse vang mat la *missing*, khong phai zero. Go va Python ONNX inference encode cac feature co gia tri zero thanh `NaN` de regression categorical giua `joblib` va ONNX hien dang khop. Parity xac suat tuyet doi tren `src/xgboost/check_parity.py` van chua duoc dam bao va nen xem la mot van de chat luong export con mo. RF va LR dung dense `0.0` cho feature vang mat.
 
 ---
 

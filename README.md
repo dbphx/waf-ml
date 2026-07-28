@@ -21,48 +21,6 @@ We support three Python model bundles side-by-side:
 - **Go runtime**: Each model implements the `waf.Model` interface; ONNX loads via `onnxruntime` with shared `model_metadata.json` (`field_order`, per-field vocabularies + IDF, keywords).
 - **Stateful reputation** (Go): `ReputationManager` scores clients over time.
 
-## Project structure
-
-```
-.
-├── application/go/
-│   ├── pkg/waf/
-│   │   ├── model.go              # Model interface, NewModel factory
-│   │   ├── engine.go             # Shared ONNX + feature engineering
-│   │   ├── random_forest.go      # RandomForestModel
-│   │   ├── logistic_regression.go
-│   │   ├── xgboost.go            # XGBoostModel (NaN encoding)
-│   │   └── reputation.go
-│   ├── random_forest/assets/     # model.onnx, model_metadata.json
-│   ├── logistic_regression/assets/
-│   ├── xgboost/assets/
-│   └── example.go
-├── data/
-│   ├── processed/              # train.csv, val.csv (from standardize_data.py)
-│   ├── attack.txt              # Category list (attacks) — source for training + field expansion
-│   ├── normal.txt              # Category list (benign)
-│   ├── attack_fields.txt       # Field-level attack cases (generated; used by test_categories.py)
-│   └── normal_fields.txt       # Field-level benign cases (generated)
-├── models/
-│   ├── random_forest/
-│   ├── logistic_regression/
-│   └── xgboost/
-├── reports/                    # JSON + optional test logs
-└── src/
-    ├── feature_engineering.py
-    ├── standardize_data.py
-    ├── parse_category_files.py
-    ├── preprocessing.py
-    ├── random_forest/
-    ├── logistic_regression/
-    ├── xgboost/
-    ├── test_samples.py
-    ├── test_specific_payload.py
-    └── test_holdout_regression.py
-```
-
----
-
 ## Quick start
 
 Work inside a local virtual environment:
@@ -118,11 +76,38 @@ Current ONNX layout for both TF-IDF bundles:
 
 ---
 
-## Running tests
+## Benchmark workflow
 
 All commands assume repository root with a Python virtual environment activated. The latest local run used `.venv/bin/python` because the system `python3` environment did not have `pandas` installed.
 
-The maintained regression entry points are `test_categories.py`, `test_holdout_regression.py`, `test_samples.py`, and `test_specific_payload.py`. Legacy one-off logistic regression helper scripts have been removed.
+Use this sequence when you need reproducible benchmark numbers:
+
+```bash
+# 1. Optional: rebuild the processed dataset after editing data/attack.txt or data/normal.txt
+python src/standardize_data.py
+
+# 2. Optional: retrain models after dataset changes
+python src/random_forest/train.py
+python src/logistic_regression/train.py
+python src/xgboost/train.py
+
+# 3. Optional: refresh ONNX artifacts used by Go/runtime benchmarks
+python src/random_forest/export_for_go.py
+python src/logistic_regression/export_for_go.py
+python src/xgboost/export_for_go.py
+
+# 4. Run categorical benchmark against joblib artifacts
+python src/random_forest/test_categories.py --log reports/random_forest/categorical_test_joblib.log
+python src/logistic_regression/test_categories.py --log reports/logistic_regression/categorical_test_joblib.log
+python src/xgboost/test_categories.py --log reports/xgboost/categorical_test_joblib.log
+
+# 5. Run categorical benchmark against ONNX artifacts
+python src/random_forest/test_categories.py --onnx --log reports/random_forest/categorical_test_onnx.log
+python src/logistic_regression/test_categories.py --onnx --log reports/logistic_regression/categorical_test_onnx.log
+python src/xgboost/test_categories.py --onnx --log reports/xgboost/categorical_test_onnx.log
+```
+
+The maintained benchmark entry points are `test_categories.py`, `test_holdout_regression.py`, `test_samples.py`, and `test_specific_payload.py`. Legacy one-off logistic regression helper scripts have been removed.
 
 ### Categorical regression (`test_categories.py`)
 
@@ -178,77 +163,6 @@ python src/test_samples.py --model xgboost
 python src/test_holdout_regression.py --model both          # RF + LR only
 python src/test_holdout_regression.py --model all
 ```
-
----
-
-## Go application usage
-
-Located in `application/go`. All three models implement the `waf.Model` interface and are created via `waf.NewModel` or `waf.NewModelWithConfig`.
-
-### Prerequisites
-
-- Go 1.22+
-- ONNX Runtime shared library (`libonnxruntime.dylib` / `.so`)
-
-### Run example
-
-```bash
-cd application/go
-
-go run example.go -model random_forest -lib /path/to/libonnxruntime.dylib
-go run example.go -model logistic_regression -lib /path/to/libonnxruntime.dylib
-go run example.go -model xgboost -lib /path/to/libonnxruntime.dylib
-```
-
-Optional payload from a line in a `.txt` file:
-
-```bash
-go run example.go -model random_forest -lib /path/to/libonnxruntime.dylib \
-  -payload-file ../../data/attack.txt -payload-contains "SQL Injection"
-```
-
-### Integration (`waf.Model` interface)
-
-```go
-import "waf-detector-lib/pkg/waf"
-
-cfg, err := waf.DefaultConfig(waf.ModelRandomForest)
-if err != nil {
-    // handle unknown model type
-}
-
-detector, err := waf.NewModelWithConfig(cfg, "/path/to/libonnxruntime.so")
-if err != nil {
-    // handle init error
-}
-defer detector.Destroy()
-
-requestMap := map[string]string{
-    "method": "GET",
-    "path":   "/search",
-    "query":  "q=test",
-}
-
-score, _ := detector.PredictScore(requestMap) // max over per-field scores
-isAttack := detector.Predict(requestMap)
-blocked, score, reason := detector.PredictSemantic("192.168.1.10", requestMap)
-```
-
-Factory shorthand:
-
-```go
-detector, err := waf.NewModel(waf.ModelXGBoost, "xgboost/assets", sharedLibPath)
-```
-
-| Type constant | Go struct | Stateless threshold | Semantic (block / suspicion) |
-| ------------- | --------- | ------------------- | ---------------------------- |
-| `waf.ModelRandomForest` | `RandomForestModel` | `0.55` | `0.55` / `0.35` |
-| `waf.ModelLogisticRegression` | `LogisticRegressionModel` | `0.77` | `0.77` / `0.50` |
-| `waf.ModelXGBoost` | `XGBoostModel` | `0.55` | `0.55` / `0.35` |
-
-`pkg/waf` matches Python multipart inference: for each non-empty field in `field_order`, it builds a feature row with only that field set, runs ONNX, and uses the **maximum** attack probability as `PredictScore`.
-
-**XGBoost ONNX note:** XGBoost treats absent sparse entries as *missing*, not zero. Go and Python ONNX inference encode zero-valued features as `NaN` so categorical `joblib` and ONNX regression currently align. Exact probability parity on `src/xgboost/check_parity.py` is still not guaranteed and should be treated as an open export-quality issue. RF and LR use dense `0.0` for absent features.
 
 ---
 
